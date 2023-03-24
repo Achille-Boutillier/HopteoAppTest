@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
 import { StyleSheet, View, Text, TouchableOpacity, } from "react-native";
 import { Colors } from "../../constant/Colors";
+import Chip from "../Chip";
 // import SecondaryButton from "../SecondaryButton";
 
 export default function OptionComponent({optionSynthese, optionDetail}) {
   const [isPressed, setIsPressed ] = useState(false);
-  const [optionToSchow, setOptionToSchow] = useState();
+  const [optionToSchow, setOptionToSchow] = useState([]);
   const [buttonName, setButtonName] = useState();
 
+  const optionSyntheseList = optionSynthese.split(", ");
+  const optionDetailList = optionDetail.split(', ')
 
   function onPress(){
     setIsPressed(bool => !bool)
@@ -15,18 +18,29 @@ export default function OptionComponent({optionSynthese, optionDetail}) {
   
   useEffect(() => {
     if (isPressed) {
-      setOptionToSchow(optionDetail);
+      console.log(optionDetailList)
+      setOptionToSchow(optionDetailList);
+      // setOptionToSchow(optionDetail);
       setButtonName("Voir la synthèse");
 
     } else {
-      setOptionToSchow(optionSynthese);
+      setOptionToSchow(optionSyntheseList);
+      // setOptionToSchow(optionSynthese);
       setButtonName("Voir le détail");
+      console.log(optionSyntheseList);
+
     } 
   }, [isPressed])
 
   return (
     <TouchableOpacity style={styles.mainContainer} onPress={onPress}> 
-      <Text style={styles.textStyle} >{optionToSchow}</Text>
+      {/* <Text style={styles.textStyle} >{optionToSchow}</Text> */}
+      <View style={styles.chipContainer}>
+        {optionToSchow.map((item, index)=>
+          <Chip key={index} >{item}</Chip>
+          )
+        }
+      </View>
 
       <View style={styles.buttonContainer} >
         <Text style={styles.textStyle}>{buttonName}</Text>
@@ -45,11 +59,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: 1.5,
     borderColor: Colors.orange100,
-    width: "70%",
+    width: "90%",
     borderRadius: 10,
     paddingHorizontal: "3%",
     // marginBottom: 50,
     paddingVertical: 10,
+  },
+
+  chipContainer:{
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   textStyle: {

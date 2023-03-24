@@ -21,6 +21,7 @@ import SignUp from "./screen/AuthScreen/SignUp";
 import ModifyPassword from "./screen/SettingScreen/ModifyPassword";
 import AppInfo from "./screen/SettingScreen/AppInfo";
 import PrivacyPolicy from "./screen/SettingScreen/PrivacyPolicy";
+import Explore from "./screen/BottomTabScreen/Explore";
 
 
 
@@ -70,6 +71,18 @@ function ScreensWithBottomTab() {
           tabBarLabel: "Classement",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="ribbon" size={size} color={color} />
+          ),
+        }}
+      />
+      <BottomTab.Screen
+        name="Explore"
+        component={Explore}
+        options={{
+          headerTitle: () => <BrandComponent />,
+          title: "Explore",
+          tabBarLabel: "Explore",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="search" size={size} color={color} />
           ),
         }}
       />
