@@ -2,7 +2,7 @@
   "expo": {
     "name": "Hopteo",
     "slug": "Hopteo",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -21,8 +21,8 @@
       "supportsTablet": true
     },
     "android": {
-      "package": "com0hopteo.hopteoApp",
-      "versionCode": 0,
+      "package": "com.hopteo.hopteoApp",
+      "versionCode": 2,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
@@ -30,6 +30,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "2f78e601-678f-4ca6-8d9c-bfeb46871aad"
+      }
     }
   }
 }

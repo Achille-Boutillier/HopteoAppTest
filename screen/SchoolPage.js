@@ -1,5 +1,5 @@
 import { View, StyleSheet, Text, ScrollView } from "react-native";
-import EStyleSheet from "react-native-extended-stylesheet";
+// import EStyleSheet from "react-native-extended-stylesheet";    // fonctionne pas
 
 import PrimaryButton from "../component/PrimaryButton";
 import { Colors } from "../constant/Colors";
@@ -246,7 +246,3 @@ const styles = StyleSheet.create({
   },
 });
 
-
-const EStyles = EStyleSheet.create( {
-
-});

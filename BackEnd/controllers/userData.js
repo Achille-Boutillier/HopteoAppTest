@@ -1,4 +1,4 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SecureStore from "expo-secure-store";       // voir doc expo pour ios (peut etre une props a set to false)
 // import * as Keychain from "react-native-keychain";           // marche pas sur expo
 // "email": "omer972@hotmail.fr",
