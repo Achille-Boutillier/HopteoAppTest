@@ -13,17 +13,17 @@ import SchoolRanking from "./screen/BottomTabScreen/SchoolRanking";
 import { Colors } from "./constant/Colors";
 import SchoolPage from "./screen/SchoolPage";
 import Settings from "./screen/SettingScreen/Settings";
-import {BrandComponent} from "./component/TopBar";
+import { BrandComponent } from "./component/TopBar";
 import FirstQuestionsScreen from "./screen/FirstQuestionsScreen";
-import ChargingScreen from "./screen/ChargingScreen";
+import SplashScreen from "./screen/SplashScreen";
 import Login from "./screen/AuthScreen/Login";
 import SignUp from "./screen/AuthScreen/SignUp";
 import ModifyPassword from "./screen/SettingScreen/ModifyPassword";
 import AppInfo from "./screen/SettingScreen/AppInfo";
 import PrivacyPolicy from "./screen/SettingScreen/PrivacyPolicy";
 import Explore from "./screen/BottomTabScreen/Explore";
-
-
+import { Provider } from "react-redux";
+import store from "./core";
 
 const BottomTab = createBottomTabNavigator();
 const NativeStack = createNativeStackNavigator();
@@ -31,15 +31,12 @@ const NativeStack = createNativeStackNavigator();
 // import { createStackNavigator } from "@react-navigation/stack";
 // const Stack = createStackNavigator();
 
-
-
 function ScreensWithBottomTab() {
-  
   return (
     <BottomTab.Navigator
       screenOptions={{
         headerShown: true,
-        headerTitleAlign: "left",   // vérif si fonctionne sur IOS
+        headerTitleAlign: "left", // vérif si fonctionne sur IOS
         // headerTransparent: true,
         headerStyle: { backgroundColor: Colors.backgroundColor },
         tabBarStyle: { backgroundColor: Colors.navBarColor },
@@ -56,7 +53,7 @@ function ScreensWithBottomTab() {
           title: "Swipe",
           tabBarLabel: "Swipe",
           tabBarIcon: ({ color, size }) => (
-            <CardsIcon width={size+5} height={size+5} fill={color} />
+            <CardsIcon width={size + 5} height={size + 5} fill={color} />
             // <FontAwesome icon={cardsBlank} />   // marche pas
             // <FontAwesome icon={validIcon}/>
           ),
@@ -86,19 +83,13 @@ function ScreensWithBottomTab() {
           ),
         }}
       />
-      
     </BottomTab.Navigator>
   );
 }
 
 export default function App() {
-  
   // const [isScreenCharged, setIsScreenCharged] = useState(false);
-  const [initialRouteName, setInitialRouteName] = useState("Login Screen");
-
-  
-
-
+  const [initialRouteName, setInitialRouteName] = useState("Splash Screen");
 
   // useEffect(() => {
   //   setInitialRouteName("Login Screen");
@@ -106,25 +97,22 @@ export default function App() {
   // }, [] )
 
   // if (isScreenCharged) {
-    return (
+  return (
+    <Provider store={store}>
       <SafeAreaView style={{ flex: 1 }}>
         <StatusBar
           barStyle={"dark-content"}
           backgroundColor={Colors.backgroundColor}
         />
-        <NavigationContainer >
+        <NavigationContainer>
           <NativeStack.Navigator
             screenOptions={{ headerShown: false }}
             initialRouteName={initialRouteName}
           >
-            <NativeStack.Screen
-              name="Login Screen"
-              component={Login}
-            />
-            <NativeStack.Screen
-              name="Sign Up Screen"
-              component={SignUp}
-            />
+            <NativeStack.Screen name="Splash Screen" component={SplashScreen} />
+
+            <NativeStack.Screen name="Login Screen" component={Login} />
+            <NativeStack.Screen name="Sign Up Screen" component={SignUp} />
             <NativeStack.Screen
               name="First Questions Screen"
               component={FirstQuestionsScreen}
@@ -136,11 +124,15 @@ export default function App() {
             />
             <NativeStack.Screen name="School Page" component={SchoolPage} />
             <NativeStack.Screen name="Settings" component={Settings} />
-            <NativeStack.Screen name="Modify Password" component={ModifyPassword} />
+            <NativeStack.Screen
+              name="Modify Password"
+              component={ModifyPassword}
+            />
             <NativeStack.Screen name="App Info" component={AppInfo} />
-            <NativeStack.Screen name="Privacy Policy" component={PrivacyPolicy} />
-           
-
+            <NativeStack.Screen
+              name="Privacy Policy"
+              component={PrivacyPolicy}
+            />
 
             {/* <NativeStack.Group screenOptions={{ presetation: "modal"}}>
 
@@ -148,7 +140,8 @@ export default function App() {
           </NativeStack.Navigator>
         </NavigationContainer>
       </SafeAreaView>
-    );
+    </Provider>
+  );
   // }
   // else {
   //   return (<ChargingScreen/>)

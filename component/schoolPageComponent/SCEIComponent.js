@@ -25,9 +25,6 @@ function DotComponent({list, currentNumber}) {
 return (
   <View style={styles.dotContainer}>
     {dotContent}
-    {/* {list.map((item, index) => 
-      <Text key={item} style={currentNumber==index ? styles.ActivatedDot : styles.dot}> { "\u2022"  } </Text>
-    )} */}
           
   </View>
 )
@@ -41,18 +38,9 @@ export default function SCEIComponent({parcoursChoix, rangMedian, nombrePlace, f
   const [currentParcours, setCurrentParcours] = useState(parcoursChoixKeys[parcoursSlide]);  // == parcoursChoix[0]
   const [figureSlide, setFigureSlide ] = useState(0);
 
-  useEffect(()=> {
-    console.log(parcoursChoix);
-    console.log(rangMedian);
-    console.log(nombrePlace);
-    console.log(filiereList);
-  }, [])
 
   useEffect(()=> {
     setCurrentParcours(parcoursChoixKeys[parcoursSlide]);    // == parcoursChoixKeys[1] == "parcours1"  (ou 2 ou 3...)
-    // console.log(parcoursChoixKeys[parcoursSlide]);
-    // console.log(currentParcours)
-    // console.log(rangMedian["parcours1"]);
   }, [parcoursSlide])
   
   
@@ -60,10 +48,8 @@ export default function SCEIComponent({parcoursChoix, rangMedian, nombrePlace, f
   function onScrollParcours(nativeEvent) {
     if (nativeEvent) {
     const newSlide = Math.ceil(nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width -0.5); // -0.5 pour effectuer le chgmt au milieu du slide
-    // console.log(newSlide);
       if (newSlide != parcoursSlide) {
         setParcoursSlide(newSlide);
-        // setCurrentParcours(parcoursChoix[parcoursChoixKeys[newSlide]])
       }
     }
   }
@@ -71,7 +57,6 @@ export default function SCEIComponent({parcoursChoix, rangMedian, nombrePlace, f
   function onScrollFigure(nativeEvent) {
     if (nativeEvent) {
     const newSlide = Math.ceil(nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width -0.5);
-    // console.log(newSlide);
       if (newSlide != figureSlide) {
         setFigureSlide(newSlide);
       }
@@ -143,53 +128,6 @@ export default function SCEIComponent({parcoursChoix, rangMedian, nombrePlace, f
 
       <DotComponent list={filiereList} currentNumber={figureSlide} />
  
-      
-
-
-
-
-      {/* <FlatList
-        data={parcoursChoixKeys}
-        renderItem={({item}) => {
-          return(
-            <View style={styles.parcoursContainer}>
-              <Text style={styles.subTitle}>{"yessaie"}</Text>
-            </View>
-          );
-
-        }}
-        keyExtractor={(item)=>item }
-        horizontal
-        // leftOpenValue={0}
-        // rightOpenValue={parcoursChoixLength}
-      
-      /> */}
-
-
-      
-      {/* <View style={styles.parcoursContainer}>
-        <Text style={styles.subTitle}>{parcoursChoix.parcours1}</Text>
-      </View>
-
-      <View style={styles.figureContainer}>
-
-        <View style={styles.leftContainer}>
-          <View style={styles.fieldContainer}>
-            <Text style={styles.figureText}>PSI</Text>
-          </View>
-          
-        </View>
-        <View style={styles.middleContainer}>
-          <Text style={styles.subTitle}>Rang médian</Text>
-          <Text style={styles.subTitle}>Places</Text>
-        </View>
-        <View style={styles.rightContainer}>
-          <Text style={styles.figureText}>{rangMedian.parcours1.PSI}</Text>
-          <Text style={styles.figureText}>{nombrePlace.parcours1.PSI}</Text>
-        </View>
-
-        
-      </View> */}
     </View>
   );
 
@@ -250,6 +188,7 @@ const styles = StyleSheet.create({
     color: Colors.grey ,
     fontWeight: "500",
     fontSize: 14,
+    textTransform: 'capitalize',
     // textAlign: "center",
     verticalAlign: "center",
     // alignSelf: "center",

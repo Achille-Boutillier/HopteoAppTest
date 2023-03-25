@@ -41,7 +41,7 @@ export default function SwipeLevel({absoluteIndex, minSwipeForRanking, progressB
   }
 
   function goToRanking() {
-    // handleLevelModal();
+    handleLevelModal();
     navigation.navigate("SchoolRanking");
   }
 
@@ -64,7 +64,7 @@ export default function SwipeLevel({absoluteIndex, minSwipeForRanking, progressB
             <Text style={{fontSize:20, textAlign: 'center', width: "80%", marginTop: -20}}>Félicitation, un nouveau classement est disponible !!</Text>
             {/* <Text style={{fontSize:20, textAlign: 'center', marginHorizontal: 10, marginVertical: 20}}>Cliquez Ici pour découvrir votre classement d'école :</Text> */}
             {/* <PrimaryButton onPress={goToRanking} name="ribbon" size={60} color={Colors.orange500} /> */}
-            <SecondaryButton onPress={goToRanking} fontSize={20} buttonText="Voir Le classement" preSized={false} />
+            <SecondaryButton onPress={goToRanking} fontSize={20} buttonText="Voir le classement" preSized={false} />
             </View>
           </View>
       </Modal>

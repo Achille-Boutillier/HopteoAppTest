@@ -8,18 +8,23 @@ import SecondaryHeader from "../component/secondaryHeader";
 // import ScoreBar from "../component/ScoreBar";
 // import ScorePerTheme from "../component/ScorePerTheme";
 import { useState, useEffect } from "react";
-import { onSchoolLike, getLikeValue } from "../BackEnd/controllers/classement";
+import {
+  onSchoolLike,
+  getLikeValue,
+  onSchoolLike2,
+} from "../BackEnd/controllers/classement";
 import SCEIComponent from "../component/schoolPageComponent/SCEIComponent";
 import MainNumberComponent from "../component/schoolPageComponent/MainNumberComponent";
 import OptionComponent from "../component/schoolPageComponent/OptionComponent";
 import ProfessionalOpportunities from "../component/schoolPageComponent/ProfessionalOpportunities";
+import { useDispatch } from "react-redux";
 // import { isSchoolLikedBack } from "../../BackEnd/controllers/classement";
 
 export default function SchoolPage({ navigation, route }) {
-  const schoolPressedData = route.params.schoolPressedData;   
-  console.log(schoolPressedData)  ;
+  const schoolPressedData = route.params.schoolPressedData;
+  // console.log(schoolPressedData);
   const id = schoolPressedData.id;
-
+  const dispatch = useDispatch();
   // --------------------------------------------------------------------------
 
   // const [schoolPressedData, setSchoolPressedData] = useState();
@@ -34,41 +39,38 @@ export default function SchoolPage({ navigation, route }) {
     setInitialLike(schoolPressedData.like);
     setIsSchoolLiked(schoolPressedData.like);
   }
-  
 
   useEffect(() => {
-    const loadOnFocus = navigation.addListener('focus', () => {
-      askLikeStatus();   
-    // const data = route.params.schoolPressedData;
-    // setIsSchoolLiked(data.like);
-    // setSchoolPressedData(data);
-    // const id = schoolPressedData.id;
+    const loadOnFocus = navigation.addListener("focus", () => {
+      askLikeStatus();
+      // const data = route.params.schoolPressedData;
+      // setIsSchoolLiked(data.like);
+      // setSchoolPressedData(data);
+      // const id = schoolPressedData.id;
     });
     return loadOnFocus;
   }, [navigation]);
 
-  
-  
   async function handleLikePress() {
     const like = isSchoolLiked;
     console.log(!like);
     setIsSchoolLiked((bool) => !bool);
-    const likeSuccess = await onSchoolLike(id, !like);
+    const a = await onSchoolLike2(dispatch, id, like);
+    a();
     schoolPressedData.like = !like;
-       
-
-  };
-  
+  }
 
   return (
     <View style={styles.mainContainer}>
-
       <View style={styles.headerContainer}>
         <PrimaryButton
           onPress={() => {
-            console.log("je quitte schoolPage -----------------------------------");
-            if(initialLike === schoolPressedData.like) return navigation.navigate("SchoolRanking");
-            navigation.navigate("SchoolRanking", {school : schoolPressedData});
+            console.log(
+              "je quitte schoolPage -----------------------------------"
+            );
+            if (initialLike === schoolPressedData.like)
+              return navigation.navigate("SchoolRanking");
+            navigation.navigate("SchoolRanking", { school: schoolPressedData });
           }}
           name="arrow-back"
           size={28}
@@ -82,16 +84,30 @@ export default function SchoolPage({ navigation, route }) {
         />
       </View>
 
-
-      <ScrollView style={styles.bodyContainer} showsVerticalScrollIndicator={false}>
-      {/* <View style={styles.bodyContainer} showsVerticalScrollIndicator={false}> */}
+      <ScrollView
+        style={styles.bodyContainer}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* <View style={styles.bodyContainer} showsVerticalScrollIndicator={false}> */}
 
         <View style={styles.imageContainer} />
         <View style={styles.schoolHeadInfo}>
-          <View style={{flexDirection: "row", justifyContent: "center", alignItems: "center",}}>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
             <View style={styles.rankContainer}>
               <Text
-                style={{ color: Colors.grey, fontWeight: "500", fontSize: 14, textAlign: "center", marginTop: -2, }}
+                style={{
+                  color: Colors.grey,
+                  fontWeight: "500",
+                  fontSize: 14,
+                  textAlign: "center",
+                  marginTop: -2,
+                }}
               >
                 {schoolPressedData.rank}
               </Text>
@@ -108,36 +124,38 @@ export default function SchoolPage({ navigation, route }) {
           </Text>
         </View>
 
-
         <View style={styles.ContestAndLocation}>
-          <BlueContainer text={schoolPressedData.concours} name="newspaper-sharp" />
+          <BlueContainer
+            text={schoolPressedData.concours}
+            name="newspaper-sharp"
+          />
           <BlueContainer text={schoolPressedData.ville} name="location-sharp" />
         </View>
 
         <SCEIComponent
-          parcoursChoix = {schoolPressedData.parcoursChoix}
-          nombrePlace = {schoolPressedData.nombrePlace}
-          rangMedian = {schoolPressedData.rangMedian}
-          filiereList = {schoolPressedData.filiereList}
+          parcoursChoix={schoolPressedData.parcoursChoix}
+          nombrePlace={schoolPressedData.nombrePlace}
+          rangMedian={schoolPressedData.rangMedian}
+          filiereList={schoolPressedData.filiereList}
         />
-        
-        
-        <MainNumberComponent 
-          moyenneBac={schoolPressedData.moyenneBac} 
-          salaireMoyen={schoolPressedData.salaireMoyen} 
+
+        <MainNumberComponent
+          moyenneBac={schoolPressedData.moyenneBac}
+          salaireMoyen={schoolPressedData.salaireMoyen}
           fraisScolarite={schoolPressedData.fraisScolarite}
         />
 
-
         <SecondaryHeader>Les options de formation</SecondaryHeader>
-        <OptionComponent 
+        <OptionComponent
           schoolPressedData={schoolPressedData}
           optionSynthese={schoolPressedData.optionSynthese}
           optionDetail={schoolPressedData.optionDetail}
         />
 
         <SecondaryHeader>Les débouchés</SecondaryHeader>
-        <ProfessionalOpportunities secteurDebouche={schoolPressedData.secteurDebouche}/>
+        <ProfessionalOpportunities
+          secteurDebouche={schoolPressedData.secteurDebouche}
+        />
 
         {/* <SecondaryHeader>Score global</SecondaryHeader>
         <ScoreBar
@@ -187,7 +205,6 @@ export default function SchoolPage({ navigation, route }) {
   );
 }
 
-
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
@@ -201,7 +218,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: "6%",
     // borderWidth: 1,
   },
- 
+
   bodyContainer: {
     // flex: 1,
   },
@@ -233,8 +250,6 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
 
-  
-  
   mainNumbersContainer: {
     flexDirection: "row",
     alignSelf: "center",
@@ -245,4 +260,3 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
 });
-
