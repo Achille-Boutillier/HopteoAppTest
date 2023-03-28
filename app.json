@@ -4,7 +4,7 @@
     "slug": "Hopteo",
     "version": "1.0.1",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/icon.png", // svg ne fonctionne pas ici
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/images/splashHopteo.png",

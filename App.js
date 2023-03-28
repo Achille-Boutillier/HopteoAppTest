@@ -36,7 +36,7 @@ function ScreensWithBottomTab() {
     <BottomTab.Navigator
       screenOptions={{
         headerShown: true,
-        headerTitleAlign: "left", // vérif si fonctionne sur IOS
+        headerTitleAlign: "left", // ? vérif si fonctionne sur IOS
         // headerTransparent: true,
         headerStyle: { backgroundColor: Colors.backgroundColor },
         tabBarStyle: { backgroundColor: Colors.navBarColor },
@@ -71,7 +71,7 @@ function ScreensWithBottomTab() {
           ),
         }}
       />
-      <BottomTab.Screen
+      {/* <BottomTab.Screen
         name="Explore"
         component={Explore}
         options={{
@@ -82,7 +82,7 @@ function ScreensWithBottomTab() {
             <Ionicons name="search" size={size} color={color} />
           ),
         }}
-      />
+      /> */}
     </BottomTab.Navigator>
   );
 }
