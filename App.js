@@ -71,7 +71,7 @@ function ScreensWithBottomTab() {
           ),
         }}
       />
-      {/* <BottomTab.Screen
+      <BottomTab.Screen
         name="Explore"
         component={Explore}
         options={{
@@ -82,7 +82,7 @@ function ScreensWithBottomTab() {
             <Ionicons name="search" size={size} color={color} />
           ),
         }}
-      /> */}
+      />
     </BottomTab.Navigator>
   );
 }
