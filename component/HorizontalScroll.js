@@ -11,19 +11,13 @@ import {
 
 import { Colors } from "../constant/Colors";
 
-const width = Dimensions.get("window").width;
-// const scrollViewSize = { width: 0.3 * width, height: 150 };
+// const width = Dimensions.get("window").width;
 
-export default function HorizontalScroll({ percentWidth, height, children }) {
-  const scrollViewSize = { width: percentWidth * width, height: height };
+export default function HorizontalScroll({ children, scrollViewSize }) {
+  // const scrollViewSize = { width: percentWidth * width, height: height };
 
   return (
-    <View
-      style={[
-        scrollViewSize,
-        { alignSelf: "center", borderRadius: 10, overflow: "hidden" },
-      ]}
-    >
+    <View style={[scrollViewSize, styles.mainContainer]}>
       <ScrollView
         // onScroll={({ nativeEvent }) => onScrollParcours(nativeEvent)}
         showsHorizontalScrollIndicator={false}
@@ -39,34 +33,8 @@ export default function HorizontalScroll({ percentWidth, height, children }) {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    flex: 1,
-    mainContainerColor: Colors.backgroundColor,
-    alignItems: "center",
-    // justifyContent: "center",
-    // height: "20%",
-    // width: "80%",
-    // borderWidth: 1,
-    // alignSelf: "center",
-  },
-
-  innerScrollViewContainer: {
-    backgroundColor: Colors.white,
-    // paddingHorizontal: 20,
-    // paddingVertical: 5,
-    alignItems: "center",
-    justifyContent: "center",
+    alignSelf: "center",
     borderRadius: 10,
-  },
-
-  row: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    borderWidth: 1,
-  },
-
-  rowItem: {
-    width: "50%",
-    paddingHorizontal: 10,
-    marginBottom: 20,
+    overflow: "hidden",
   },
 });

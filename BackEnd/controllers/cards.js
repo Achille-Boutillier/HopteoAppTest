@@ -27,7 +27,7 @@ export async function getProposition() {
   } catch (error) {
     console.log("echec du bloc try :");
     console.log(error);
-    return { error: error };
+    return { error };
   }
 }
 

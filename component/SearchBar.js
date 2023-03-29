@@ -1,16 +1,25 @@
 import { View, StyleSheet, TextInput } from "react-native";
 import { useState } from "react";
 import { Colors } from "../constant/Colors";
+import PrimaryButton from "./PrimaryButton";
 
-export default function SearchBar({}) {
+export default function SearchBar({ onPressSearch }) {
   const [userInput, setUserInput] = useState("");
 
   return (
     <View style={styles.mainContainer}>
+      <PrimaryButton
+        onPress={onPressSearch.bind(this, userInput)}
+        name="search"
+        size={20}
+        color={Colors.orange500}
+        style={{ marginLeft: 5 }}
+      />
       <TextInput
         style={styles.inputContainer}
         placeholder="Rechercher"
         onChangeText={setUserInput} // .trim() to remove whitespace at the end and begining
+        onSubmitEditing={onPressSearch.bind(this, userInput)}
         value={userInput}
         // type="email"
         autoCapitalize="none"
@@ -25,22 +34,28 @@ export default function SearchBar({}) {
 const styles = StyleSheet.create({
   mainContainer: {
     // flex: 1,
-    width: "100%",
-    height: 50,
-    mainContainerColor: Colors.white,
+    width: "70%",
+    height: 40,
+    // mainContainerColor: Colors.white,
     alignItems: "center",
     alignSelf: "center",
-    justifyContent: "center",
+    // justifyContent: "space-evenly",
+    flexDirection: "row",
     borderRadius: 15,
+    // borderWidth: 1,
+    backgroundColor: Colors.white,
+    marginBottom: "5%",
   },
 
   inputContainer: {
-    height: 40,
-    width: "70%",
+    flex: 1,
+    height: "100%",
+    // width: "70%",
     //  borderWidth: 1,
-    marginBottom: "3%",
-    borderRadius: 10,
-    paddingLeft: 15,
-    backgroundColor: Colors.white,
+    // marginBottom: "3%",
+    // borderRadius: 10,
+    paddingLeft: 10,
+    // borderWidth: 1,
+    // fontSize: "80%",
   },
 });

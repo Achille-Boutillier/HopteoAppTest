@@ -48,6 +48,7 @@ function ScreensWithBottomTab() {
         component={Home}
         options={{
           // headerStyle: {borderWidth: 5, borderColor: Colors.fullBlack, },  // s'applique à la view contenant le header
+
           headerTitle: () => <BrandComponent />,
           // header
           title: "Swipe",
