@@ -20,10 +20,9 @@ const width = Dimensions.get("window").width;
 // const scrollViewSize = { width: 0.3 * width, height: 150 };
 
 export default function Explore({ navigation, route }) {
-  const scrollViewSize = { width: 0.9 * width, height: 150 };
+  const scrollViewSize = { width: 0.9 * width, height: 80 };
 
   const [exploreContent, setExploreContent] = useState();
-  const [isContentCharged, setIsContentCharged] = useState(false);
 
   function loginScreenNavigation() {
     navigation.navigate("Login Screen");
@@ -44,7 +43,6 @@ export default function Explore({ navigation, route }) {
 
   useEffect(() => {
     if (exploreContent) {
-      setIsContentCharged(true);
       console.log(exploreContent.schoolPack["Informatique"]);
     }
   }, [exploreContent]);
@@ -81,13 +79,6 @@ export default function Explore({ navigation, route }) {
           renderItem={(section) => {
             console.log(section.item);
             return (
-              // <View
-              //   style={{
-              //     height: 20,
-              //     width: 200,
-              //     backgroundColor: Colors.white,
-              //   }}
-              // ></View>
               <View style={{ marginBottom: 10 }}>
                 <View style={{ marginBottom: 5 }}>
                   <Text> {section.item} </Text>
@@ -100,10 +91,12 @@ export default function Explore({ navigation, route }) {
                         style={[
                           styles.innerScrollViewContainer,
                           // scrollViewSize,
-                          { width: 0.45 * width, height: 150 },
+                          { width: (0.9 / 3) * width, height: 80 },
                         ]}
                       >
-                        <Text style={styles.subTitle}>{school.nomEcole}</Text>
+                        <View style={styles.schoolContainer}>
+                          <Text style={styles.subTitle}>{school.nomEcole}</Text>
+                        </View>
                       </View>
                     )
                   )}
@@ -136,12 +129,26 @@ const styles = StyleSheet.create({
   },
 
   innerScrollViewContainer: {
-    backgroundColor: Colors.white,
-    // paddingHorizontal: 20,
-    // paddingVertical: 5,
     alignItems: "center",
     justifyContent: "center",
-    // borderRadius: 10,
+    flexDirection: "row",
+    // borderWidth: 1,
+    flexWrap: "wrap",
+    padding: 4,
+  },
+
+  schoolContainer: {
+    backgroundColor: Colors.white,
+    width: "100%",
+    flex: 1,
+    // borderWidth: 1,
+    height: "100%",
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 3,
+    // paddingHorizontal: 16,
+    // paddingVertical: 8,
   },
 
   row: {
