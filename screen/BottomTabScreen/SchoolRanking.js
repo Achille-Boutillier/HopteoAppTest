@@ -116,7 +116,7 @@ function SchoolRanking({ navigation, route }) {
   useEffect(() => {
     // 'focus' quand on atteri sur le screen; 'blur' quand on quitte
     const unsubscribe = navigation.addListener("focus", () => {
-      loadSchoolRank(); // TODO : Trouver un moyen d'avoir un charging screen le temps du chargement
+      loadSchoolRank(); // TODO : set un charging screen le temps du chargement
     });
     return unsubscribe;
   }, [navigation]);
@@ -131,15 +131,6 @@ function SchoolRanking({ navigation, route }) {
       headerRight: () => <HeaderButton onSettingsPress={onSettingsPress} />,
     });
   }, [navigation]);
-
-  // ---------- autre méthode (erronée) ----------------
-  // <ScrollView>
-  //   <View style={styles.podiumContainer}></View>
-  //   {SchoolRankTest.map((item) => (
-  //     <SchoolBanner school={item} schoolKey={item.id} /> //key={item.id}
-  //   ))}
-  // </ScrollView>;
-  // ---------------------------------------------------
 
   return (
     <View style={styles.mainContainer}>
@@ -172,12 +163,6 @@ const styles = StyleSheet.create({
     width: "90%",
     // padding: 5,
   },
-  // podiumContainer: {
-  //   borderRadius: 15,
-  //   height: "30%",    //à enlever, doit prendre la taille des 3 éléments
-  //   width: "90%",
-  //   padding: 20,
-  //   marginBottom: 20,
-  //   backgroundColor: Colors.podiumColor,
+
   // },
 });

@@ -1,7 +1,17 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { Colors } from "../constant/Colors";
 
-function PrimaryButton({ onPress, name, size, color, bigButton, style }) {
+const orange500 = Colors.orange500;
+
+function PrimaryButton({
+  onPress,
+  name,
+  size,
+  color = { orange500 },
+  bigButton,
+  style,
+}) {
   const buttonHeight = bigButton ? size + 25 : size + 15; // size + 20 pour une meilleure cliquabilité
 
   return (

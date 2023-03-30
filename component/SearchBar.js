@@ -8,13 +8,6 @@ export default function SearchBar({ onPressSearch }) {
 
   return (
     <View style={styles.mainContainer}>
-      <PrimaryButton
-        onPress={onPressSearch.bind(this, userInput)}
-        name="search"
-        size={20}
-        color={Colors.orange500}
-        style={{ marginLeft: 5 }}
-      />
       <TextInput
         style={styles.inputContainer}
         placeholder="Rechercher"
@@ -26,6 +19,13 @@ export default function SearchBar({ onPressSearch }) {
         selectionColor={Colors.orange500}
         // autoComplete="email"
         // keyboardType="email-address"
+      />
+      <PrimaryButton
+        onPress={onPressSearch.bind(this, userInput)}
+        name="search"
+        size={20}
+        color={Colors.orange500}
+        style={{ marginLeft: 5 }}
       />
     </View>
   );
@@ -42,6 +42,7 @@ const styles = StyleSheet.create({
     // justifyContent: "space-evenly",
     flexDirection: "row",
     borderRadius: 15,
+    paddingHorizontal: "5%",
     // borderWidth: 1,
     backgroundColor: Colors.white,
     marginBottom: "5%",

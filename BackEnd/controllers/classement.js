@@ -108,7 +108,7 @@ export async function getSchool(ecoleId) {
   } catch (error) {
     console.log("echec du bloc try :");
     console.log(error);
-    return { error };
+    return false;
   }
 }
 
@@ -141,15 +141,20 @@ export async function onSchoolLike(ecoleId, bool) {
     return error;
   }
 }
-const setLike = (schoolList, id) => {
+
+function setLike(schoolList, id) {
+  // console.log(["TEEEESST"], store.getState());
+  console.log("[SCHOOLLIST]", schoolList);
   const index = schoolList.findIndex((school) => school.id === id);
+  console.log("[INDEX]", index);
+  console.log("[ID]", id);
   if (index === -1) {
     console.error("Ecole non trouvée");
-    return;
+    return; // ! Attention si error, la schoolList sera ecrasée
   }
-  schoolList[index].like = !schoolList[index].like;
-  return;
-};
+  schoolList[index].like = !schoolList[index].like; // ! pbm : en mettant à jour l'état du redux, schoolList devient vide
+  return schoolList;
+}
 
 export async function onSchoolLike2(dispatch, ecoleId, bool) {
   const userToken = await getUserToken();
@@ -169,12 +174,13 @@ export async function onSchoolLike2(dispatch, ecoleId, bool) {
     console.log("[LIKE] initial", store.getState());
     try {
       dispatch(setSchoolLike());
-      const response = fetch(route + `/onSchoolLike/${ecoleId}`, requestOptions)
+      fetch(route + `/onSchoolLike/${ecoleId}`, requestOptions)
         .then(async (response) => {
           const data = await response.json();
-          const newList = setLike(store.getState("schoolList"), ecoleId);
+          const newList = setLike(store.getState().schoolList, ecoleId);
+          console.log("[NEWLIST]", newList);
           dispatch(setSchoolLikeSuccess(newList));
-          console.log("[LIKE] success", store.getState()); //getState("schoolLits") pour choper la clé schoolList
+          console.log("[LIKE] success", store.getState()); //store.getState().schoolList pour choper la clé schoolList
         })
         .catch((error) => {
           dispatch(setSchoolLikeFailure(error));

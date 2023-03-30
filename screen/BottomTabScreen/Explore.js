@@ -15,20 +15,26 @@ import HorizontalScroll from "../../component/HorizontalScroll";
 import { getAllSchool, searchSchool } from "../../BackEnd/controllers/explore";
 import { alertProvider } from "../../BackEnd/errorHandler";
 import { HeaderButton } from "../../component/TopBar";
+import SchoolComponent from "../../component/SchoolComponent";
+import PrimaryButton from "../../component/PrimaryButton";
 
 const width = Dimensions.get("window").width;
-// const scrollViewSize = { width: 0.3 * width, height: 150 };
 
 export default function Explore({ navigation, route }) {
-  const scrollViewSize = { width: 0.9 * width, height: 80 };
+  const scrollWidth = 0.95 * width;
+  const scrollHeight = 90;
 
   const [exploreContent, setExploreContent] = useState();
+  const [searchedData, setSearchedData] = useState();
+  const [dataToDisplay, setDataToDisplay] = useState();
+  const [isResearchDisplayed, setIsResearchDisplayed] = useState(false);
 
   function loginScreenNavigation() {
     navigation.navigate("Login Screen");
   }
 
-  async function initAllSchool() {
+  // ----------- getAllSchool --------------------------------------------------------
+  async function allSchoolRequest() {
     const data = await getAllSchool();
     if (data?.listFormation) {
       setExploreContent(data);
@@ -37,9 +43,17 @@ export default function Explore({ navigation, route }) {
     }
   }
 
+  // useEffect(() => {
+  //   allSchoolRequest();
+  // }, []);
+
   useEffect(() => {
-    initAllSchool();
-  }, []);
+    // 'focus' quand on atteri sur le screen; 'blur' quand on quitte
+    const unsubscribe = navigation.addListener("focus", () => {
+      allSchoolRequest(); // TODO : set un charging screen le temps du chargement
+    });
+    return unsubscribe;
+  }, [navigation]);
 
   useEffect(() => {
     if (exploreContent) {
@@ -47,10 +61,82 @@ export default function Explore({ navigation, route }) {
     }
   }, [exploreContent]);
 
+  // ---- fin getAllSchool ---------------------------------------------------------
+
   // ------ recherche -----------------------------
-  function onPressSearch(userInput) {
-    searchSchool(userInput);
+  async function onPressSearch(userInput) {
+    const data = await searchSchool(userInput);
+    // console.log("searchResponse", searchResponse);
+    setSearchedData(data);
   }
+
+  useEffect(() => {
+    if (searchedData) {
+      setIsResearchDisplayed(true);
+      // console.log(searchedData);
+      setDataToDisplay(
+        <FlatList
+          data={searchedData.schoolMatch}
+          extraData={searchedData}
+          keyExtractor={(item) => item.id}
+          showsVerticalScrollIndicator={false}
+          numColumns={3}
+          key={3} // obligatoire avec numColumns
+          renderItem={({ item }) => {
+            return (
+              <View
+                style={[
+                  styles.innerScrollViewContainer,
+                  // scrollViewSize,
+                  { width: scrollWidth / 3, height: scrollHeight },
+                ]}
+              >
+                <SchoolComponent school={item} />
+              </View>
+            );
+          }}
+        />
+      );
+    } else if (exploreContent) {
+      setDataToDisplay(
+        <FlatList
+          data={exploreContent.listFormation}
+          extraData={exploreContent}
+          keyExtractor={(item) => item}
+          showsVerticalScrollIndicator={false}
+          renderItem={(section) => {
+            return (
+              <View style={{ marginBottom: 20 }}>
+                <View style={{ marginBottom: 5 }}>
+                  <Text> {section.item} </Text>
+                </View>
+                <HorizontalScroll
+                  scrollViewSize={{ width: scrollWidth, height: scrollHeight }}
+                >
+                  {exploreContent.schoolPack[section.item].map(
+                    (school, index) => (
+                      <View
+                        key={school.id}
+                        style={[
+                          styles.innerScrollViewContainer,
+                          // scrollViewSize,
+                          { width: scrollWidth / 3, height: scrollHeight },
+                        ]}
+                      >
+                        <SchoolComponent school={school} />
+                      </View>
+                    )
+                  )}
+                </HorizontalScroll>
+              </View>
+            );
+          }}
+        />
+      );
+    } else {
+      setDataToDisplay(<ActivityIndicator color={Colors.orange500} />);
+    }
+  }, [searchedData, exploreContent]);
 
   // -----------------------------------------------
 
@@ -67,53 +153,30 @@ export default function Explore({ navigation, route }) {
   }, [navigation]);
 
   //---------------------------------
-  if (exploreContent) {
-    return (
-      <View style={styles.mainContainer}>
-        <SearchBar onPressSearch={onPressSearch} />
 
-        <FlatList
-          data={exploreContent.listFormation}
-          keyExtractor={(item) => item}
-          showsVerticalScrollIndicator={false}
-          renderItem={(section) => {
-            console.log(section.item);
-            return (
-              <View style={{ marginBottom: 10 }}>
-                <View style={{ marginBottom: 5 }}>
-                  <Text> {section.item} </Text>
-                </View>
-                <HorizontalScroll scrollViewSize={scrollViewSize}>
-                  {exploreContent.schoolPack[section.item].map(
-                    (school, index) => (
-                      <View
-                        key={school.id}
-                        style={[
-                          styles.innerScrollViewContainer,
-                          // scrollViewSize,
-                          { width: (0.9 / 3) * width, height: 80 },
-                        ]}
-                      >
-                        <View style={styles.schoolContainer}>
-                          <Text style={styles.subTitle}>{school.nomEcole}</Text>
-                        </View>
-                      </View>
-                    )
-                  )}
-                </HorizontalScroll>
-              </View>
-            );
-          }}
-        />
+  return (
+    <View style={styles.mainContainer}>
+      <View style={{ width: "100%" }}>
+        <SearchBar onPressSearch={onPressSearch} />
+        {isResearchDisplayed ? (
+          <View
+            style={{ flexDirection: "row", position: "absolute", right: 10 }}
+          >
+            <PrimaryButton
+              onPress={() => {
+                setIsResearchDisplayed(null);
+                setSearchedData(false);
+              }}
+              name={"close"}
+              size={25}
+              color={Colors.orange500}
+            />
+          </View>
+        ) : null}
       </View>
-    );
-  } else {
-    return (
-      <View style={styles.mainContainer}>
-        <ActivityIndicator />
-      </View>
-    );
-  }
+      {dataToDisplay}
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -135,31 +198,5 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     flexWrap: "wrap",
     padding: 4,
-  },
-
-  schoolContainer: {
-    backgroundColor: Colors.white,
-    width: "100%",
-    flex: 1,
-    // borderWidth: 1,
-    height: "100%",
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 3,
-    // paddingHorizontal: 16,
-    // paddingVertical: 8,
-  },
-
-  row: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    borderWidth: 1,
-  },
-
-  rowItem: {
-    width: "50%",
-    paddingHorizontal: 10,
-    marginBottom: 20,
   },
 });

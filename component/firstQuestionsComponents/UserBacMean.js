@@ -1,11 +1,21 @@
 import { useState } from "react";
-import {StyleSheet, Button, TouchableOpacity, TextInput, View, Text } from "react-native";
+import {
+  StyleSheet,
+  Button,
+  TouchableOpacity,
+  TextInput,
+  View,
+  Text,
+} from "react-native";
 
 import { Colors } from "../../constant/Colors";
 import SecondaryButton from "../SecondaryButton";
 
-export default function UserBacMean({bacMeanInputHandler, bacMean, nextPressed}) {
-
+export default function UserBacMean({
+  bacMeanInputHandler,
+  bacMean,
+  nextPressed,
+}) {
   return (
     <View style={styles.mainContainer}>
       <View style={styles.questionContainer}>
@@ -21,6 +31,7 @@ export default function UserBacMean({bacMeanInputHandler, bacMean, nextPressed})
           // autoCapitalize="none" //empêcher l'autocapitalisation ou autocorrection du phone
           // autoCorrect={false}
           onChangeText={bacMeanInputHandler}
+          onSubmitEditing={nextPressed}
           value={bacMean}
           placeholder="exemple : 15"
         />
@@ -29,10 +40,8 @@ export default function UserBacMean({bacMeanInputHandler, bacMean, nextPressed})
         </TouchableOpacity>
       </View>
     </View>
-
   );
 }
-
 
 const styles = StyleSheet.create({
   mainContainer: {
@@ -82,11 +91,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 10,
     backgroundColor: Colors.orange100,
-    height:35,
+    height: 35,
     width: "70%",
-  }
-
-
+  },
 
   // // todo : a tej :
   // questionContainer: {
@@ -114,5 +121,4 @@ const styles = StyleSheet.create({
   //   alignItems: "center",
   //   backgroundColor: Colors.blue400,
   // },
-  
 });

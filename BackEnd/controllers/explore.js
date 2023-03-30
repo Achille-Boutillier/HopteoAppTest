@@ -48,7 +48,7 @@ export async function searchSchool(enteredText) {
     );
     console.log(response.status);
     const data = await response.json();
-    console.log(data);
+    // console.log(data);
     return data;
   } catch (error) {
     console.log("echec du bloc try :");

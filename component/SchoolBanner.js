@@ -1,102 +1,119 @@
-import { StyleSheet, View, Text, TouchableOpacity, Dimensions } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 
 import PrimaryButton from "./PrimaryButton";
 import { Colors } from "../constant/Colors";
 import { useEffect, useState } from "react";
-import {getSchool, onSchoolLike, getLikeValue } from "../BackEnd/controllers/classement";
+import {
+  getSchool,
+  onSchoolLike,
+  getLikeValue,
+} from "../BackEnd/controllers/classement";
+import { alertProvider } from "../BackEnd/errorHandler";
 
-
-export default function SchoolBanner({id, rank, nomEcole, typeFormation, globalSchoolGrade, like, rankList, setRankList }) {
-
+export default function SchoolBanner({
+  id,
+  rank,
+  nomEcole,
+  typeFormation,
+  globalSchoolGrade,
+  like,
+  rankList,
+  setRankList,
+}) {
   const navigation = useNavigation();
-                                                              
 
-const [schoolData, setSchoolData] = useState({});
-const [isSchoolPressed, setIsSchoolPressed] = useState(false);
-// const [isSchoolLiked, setIsSchoolLiked] = useState(like);
+  const [schoolData, setSchoolData] = useState({});
+  const [isSchoolPressed, setIsSchoolPressed] = useState(false);
+  // const [isSchoolLiked, setIsSchoolLiked] = useState(like);
 
-
-// --------------- like ecole -------------------------------------
-// ? like disabled car pas le time
-
-
-// async function handleLikePress() {
-//   console.log("like press");
-//   // const bool = !isSchoolLiked;
-//   // setIsSchoolLiked(!isSchoolLiked);
-//   const likeSuccess = await onSchoolLike(id, !like);
-//   if(likeSuccess){
-//     updateSchool(id, like)
-//   }
-//   return;
-//   // console.log(likeSuccess);
-// };
-
-// function updateSchool(currentid,  currentLike){
-//   const index = rankList.findIndex((uni)=> uni.id === currentid);
-//   if(index !== -1){
-//     rankList[index].like = !currentLike;
-//     return setRankList(rankList);
-//   }
-//   return console.error("index pas trouvé");
-// }
-// --------------- fin like ecole -------------------------------------
-
-
-// -------------- école pressed ----------------------------------
-
-async function getSchoolData() {
-  const data = await getSchool(id);
-  // console.table(data);
-  setSchoolData(data);
-  return data;
-}
-
-function onPressSchool() {
-  setIsSchoolPressed(true);
-}
-
-useEffect(() => {
-  if (isSchoolPressed) {    // empêcher l'execution inutile
-    getSchoolData();
+  function loginScreenNavigation() {
+    navigation.navigate("Login Screen");
   }
-}, [isSchoolPressed])
 
-useEffect(() => {
-  if (isSchoolPressed) {
-    setIsSchoolPressed(false);
-    navigation.navigate(
-      "School Page", 
-      {schoolPressedData : schoolData}
-    )
+  // --------------- like ecole -------------------------------------
+  // ? like disabled car pas le time
+
+  // async function handleLikePress() {
+  //   console.log("like press");
+  //   // const bool = !isSchoolLiked;
+  //   // setIsSchoolLiked(!isSchoolLiked);
+  //   const likeSuccess = await onSchoolLike(id, !like);
+  //   if(likeSuccess){
+  //     updateSchool(id, like)
+  //   }
+  //   return;
+  //   // console.log(likeSuccess);
+  // };
+
+  // function updateSchool(currentid,  currentLike){
+  //   const index = rankList.findIndex((uni)=> uni.id === currentid);
+  //   if(index !== -1){
+  //     rankList[index].like = !currentLike;
+  //     return setRankList(rankList);
+  //   }
+  //   return console.error("index pas trouvé");
+  // }
+  // --------------- fin like ecole -------------------------------------
+
+  // -------------- école pressed ----------------------------------
+
+  async function getSchoolData() {
+    const data = await getSchool(id);
+    if (data) {
+      setSchoolData(data);
+    } else {
+      setIsSchoolPressed(false);
+      alertProvider(loginScreenNavigation);
+    }
   }
-}, [schoolData])
 
-// ------------- fin ecole pressed -----------------------------------
+  function onPressSchool() {
+    setIsSchoolPressed(true);
+  }
 
+  useEffect(() => {
+    if (isSchoolPressed) {
+      // empêcher l'execution inutile
+      getSchoolData();
+    }
+  }, [isSchoolPressed]);
 
+  useEffect(() => {
+    if (isSchoolPressed) {
+      setIsSchoolPressed(false);
+      navigation.navigate("School Page", {
+        schoolPressedData: schoolData,
+        previousScreen: "SchoolRanking",
+      });
+    }
+  }, [schoolData]);
 
-// // ============= Pour la comparaison école sur profil =======================================================================================================
+  // ------------- fin ecole pressed -----------------------------------
 
-////const [isSchoolSelectedForComparison, setIsSchoolSelectedForComparison] = useState(false);
+  // // ============= Pour la comparaison école sur profil =======================================================================================================
 
+  ////const [isSchoolSelectedForComparison, setIsSchoolSelectedForComparison] = useState(false);
 
-////function onSchoolLongPress() {
-////  if (profilSchoolBanner) {
-////    setIsSchoolSelectedForComparison((bool) => !bool);
-////  }
-////}
+  ////function onSchoolLongPress() {
+  ////  if (profilSchoolBanner) {
+  ////    setIsSchoolSelectedForComparison((bool) => !bool);
+  ////  }
+  ////}
 
-////useEffect(() => {
-////  if (profilSchoolBanner) {     // profilSchoolBanner = boolean venant de profil user
-////    handleSchoolLongPress(id, isSchoolSelectedForComparison); // fonction handleSchoolLongPress provenant de la page profil user
-////  }
-//// }, [isSchoolSelectedForComparison])
+  ////useEffect(() => {
+  ////  if (profilSchoolBanner) {     // profilSchoolBanner = boolean venant de profil user
+  ////    handleSchoolLongPress(id, isSchoolSelectedForComparison); // fonction handleSchoolLongPress provenant de la page profil user
+  ////  }
+  //// }, [isSchoolSelectedForComparison])
 
-
-// // ============= fin comparaison =======================================================================================================
-
+  // // ============= fin comparaison =======================================================================================================
 
   return (
     <TouchableOpacity
@@ -149,10 +166,10 @@ const styles = StyleSheet.create({
   bannerContainer: {
     flex: 1,
     backgroundColor: Colors.white,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     alignSelf: "center",
-    width: 0.9*Dimensions.get('window').width,
+    width: 0.9 * Dimensions.get("window").width,
     height: 80,
     borderRadius: 15,
     paddingLeft: "6%",
@@ -181,13 +198,13 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     width: 20,
     height: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     // left: 5,
     // flex: 1,
   },
   writtenInfo: {
-    flexDirection: 'column',
+    flexDirection: "column",
     width: "70%",
   },
   rightContainer: {
@@ -203,6 +220,5 @@ const styles = StyleSheet.create({
   },
   rightItems: {
     paddingHorizontal: "10%",
-  }
-
+  },
 });

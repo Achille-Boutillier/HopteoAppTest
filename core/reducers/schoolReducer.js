@@ -28,6 +28,7 @@ export const schoolSlice = createSlice({
       state.schoolList = action.payload;
     },
     setSchoolLikeFailure: (state, action) => {
+      // console.log("Payload:", action.payload);
       state.loading = false;
       state.error = action.payload;
     },
@@ -41,5 +42,5 @@ export const {
   setSchoolLike,
   setSchoolLikeFailure,
   setSchoolLikeSuccess,
-} = schoolSlice.actions; // ? pk actions au pluriel ????
+} = schoolSlice.actions;
 export default schoolSlice.reducer;

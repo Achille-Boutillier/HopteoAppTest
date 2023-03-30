@@ -21,7 +21,7 @@ export default function HorizontalScroll({ children, scrollViewSize }) {
       <ScrollView
         // onScroll={({ nativeEvent }) => onScrollParcours(nativeEvent)}
         showsHorizontalScrollIndicator={false}
-        pagingEnabled // scroll de page en page au lieu de continuellement
+        // pagingEnabled // scroll de page en page au lieu de continuellement
         horizontal
         style={scrollViewSize}
       >

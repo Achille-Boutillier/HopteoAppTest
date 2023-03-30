@@ -103,6 +103,7 @@ export default function Login({ navigation }) {
           style={styles.inputContainer}
           placeholder="Mot de passe"
           onChangeText={(text) => setPassword(text.trim())}
+          onSubmitEditing={onLoginPress}
           value={password}
           secureTextEntry
           autoCapitalize="none"

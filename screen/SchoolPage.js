@@ -24,6 +24,8 @@ export default function SchoolPage({ navigation, route }) {
   const schoolPressedData = route.params.schoolPressedData;
   // console.log(schoolPressedData);
   const id = schoolPressedData.id;
+  const previousScreen = route.params.previousScreen;
+  console.log(previousScreen);
   const dispatch = useDispatch();
   // --------------------------------------------------------------------------
 
@@ -69,8 +71,8 @@ export default function SchoolPage({ navigation, route }) {
               "je quitte schoolPage -----------------------------------"
             );
             if (initialLike === schoolPressedData.like)
-              return navigation.navigate("SchoolRanking");
-            navigation.navigate("SchoolRanking", { school: schoolPressedData });
+              return navigation.navigate(previousScreen);
+            navigation.navigate(previousScreen, { school: schoolPressedData });
           }}
           name="arrow-back"
           size={28}
