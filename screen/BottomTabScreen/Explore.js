@@ -28,6 +28,7 @@ export default function Explore({ navigation, route }) {
   const [searchedData, setSearchedData] = useState();
   const [dataToDisplay, setDataToDisplay] = useState();
   const [isResearchDisplayed, setIsResearchDisplayed] = useState(false);
+  const [blurValue, setBlurValue] = useState(1);
 
   function loginScreenNavigation() {
     navigation.navigate("Login Screen");
@@ -64,7 +65,19 @@ export default function Explore({ navigation, route }) {
   // ---- fin getAllSchool ---------------------------------------------------------
 
   // ------ recherche -----------------------------
-  async function onPressSearch(userInput) {
+  function onBeginInput() {
+    setBlurValue(0.2);
+  }
+  function onEndInput() {
+    setBlurValue(1);
+  }
+
+  function handleStopResearch() {
+    setIsResearchDisplayed(null);
+    setSearchedData(false);
+  }
+
+  async function handlePressSearch(userInput) {
     const data = await searchSchool(userInput);
     // console.log("searchResponse", searchResponse);
     setSearchedData(data);
@@ -157,8 +170,14 @@ export default function Explore({ navigation, route }) {
   return (
     <View style={styles.mainContainer}>
       <View style={{ width: "100%" }}>
-        <SearchBar onPressSearch={onPressSearch} />
-        {isResearchDisplayed ? (
+        <SearchBar
+          handlePressSearch={handlePressSearch}
+          handleStopResearch={handleStopResearch}
+          isResearchDisplayed={isResearchDisplayed}
+          onBeginInput={onBeginInput}
+          onEndInput={onEndInput}
+        />
+        {/* {isResearchDisplayed ? (
           <View
             style={{ flexDirection: "row", position: "absolute", right: 10 }}
           >
@@ -166,15 +185,17 @@ export default function Explore({ navigation, route }) {
               onPress={() => {
                 setIsResearchDisplayed(null);
                 setSearchedData(false);
+                
               }}
               name={"close"}
               size={25}
               color={Colors.orange500}
             />
           </View>
-        ) : null}
+        ) : null} */}
       </View>
-      {dataToDisplay}
+
+      <View style={{ opacity: blurValue }}>{dataToDisplay}</View>
     </View>
   );
 }

@@ -1,18 +1,46 @@
 import { View, StyleSheet, TextInput } from "react-native";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Colors } from "../constant/Colors";
 import PrimaryButton from "./PrimaryButton";
 
-export default function SearchBar({ onPressSearch }) {
+export default function SearchBar({
+  handlePressSearch,
+  handleStopResearch,
+  isResearchDisplayed,
+  onBeginInput,
+  onEndInput,
+}) {
   const [userInput, setUserInput] = useState("");
+  const textInputRef = useRef(null);
+
+  function onPessStopResearch() {
+    setUserInput("");
+    handleStopResearch();
+  }
+
+  function onPressSearch() {
+    handlePressSearch(userInput);
+    textInputRef.current.blur();
+  }
 
   return (
     <View style={styles.mainContainer}>
+      <PrimaryButton
+        onPress={onPressSearch}
+        name="search"
+        size={20}
+        color={Colors.orange500}
+        style={{ marginLeft: 5 }}
+      />
       <TextInput
+        ref={textInputRef}
         style={styles.inputContainer}
         placeholder="Rechercher"
         onChangeText={setUserInput} // .trim() to remove whitespace at the end and begining
-        onSubmitEditing={onPressSearch.bind(this, userInput)}
+        onPressIn={onBeginInput}
+        onEndEditing={onEndInput}
+        clearButtonMode="while-editing"
+        onSubmitEditing={onPressSearch}
         value={userInput}
         // type="email"
         autoCapitalize="none"
@@ -20,13 +48,14 @@ export default function SearchBar({ onPressSearch }) {
         // autoComplete="email"
         // keyboardType="email-address"
       />
-      <PrimaryButton
-        onPress={onPressSearch.bind(this, userInput)}
-        name="search"
-        size={20}
-        color={Colors.orange500}
-        style={{ marginLeft: 5 }}
-      />
+      {isResearchDisplayed ? (
+        <PrimaryButton
+          onPress={onPessStopResearch}
+          name={"close"}
+          size={25}
+          color={Colors.orange500}
+        />
+      ) : null}
     </View>
   );
 }
@@ -42,7 +71,8 @@ const styles = StyleSheet.create({
     // justifyContent: "space-evenly",
     flexDirection: "row",
     borderRadius: 15,
-    paddingHorizontal: "5%",
+    paddingRight: "5%",
+    paddingLeft: "1%",
     // borderWidth: 1,
     backgroundColor: Colors.white,
     marginBottom: "5%",
