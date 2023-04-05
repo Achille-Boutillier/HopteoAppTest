@@ -84,7 +84,7 @@ export default function SchoolComponent({ school }) {
         <Text
           numberOfLines={3}
           adjustsFontSizeToFit={true} // IOS & Android
-          minimumFontSize={9.5} // IOS only
+          // minimumFontSize={9.5} // IOS only
           // onLayout={handleTextLayout} // IOS & Android   //! manage minimal fontSize (Android)
           style={[
             styles.schoolName,
@@ -98,7 +98,7 @@ export default function SchoolComponent({ school }) {
       <View style={styles.typeFormationContainer}>
         <Text
           numberOfLines={2}
-          minimumFontScale={0.8}
+          // minimumFontScale={0.8} // ! android only
           style={styles.typeFormation}
         >
           {school.typeFormation}

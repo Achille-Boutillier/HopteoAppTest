@@ -1,42 +1,74 @@
 import { useEffect, useState } from "react";
-import { View, StyleSheet, Text, Image, Button} from "react-native";
+import { View, StyleSheet, Text, Image, Button } from "react-native";
 import Modal from "react-native-modal";
 
-
-import {Colors} from "../constant/Colors";
+import { Colors } from "../constant/Colors";
 import PrimaryButton from "./PrimaryButton";
 
-
-function PropositionCard({ cardValue}) {
-
+function PropositionCard({ cardValue }) {
   const [isCardDetailVisible, setIsCardDetailVisible] = useState(false);
 
   function handleCardDetail() {
-    setIsCardDetailVisible( (bool) => !bool)
-  };
+    setIsCardDetailVisible((bool) => !bool);
+  }
 
   // ------------------ à tej quand le back renverra les detailColor -----------------
   // const allLightColor = {theme1: "#c9ebf5", theme2: "#cdf1d7", theme3: "#eeb6b5", theme4: null, theme5: "#efeab2", theme6: null};
-  const allDetailContainerColor = {theme1: "#6cd4f4", theme2: "#78e295", theme3: "#d53232", theme4: null, theme5: null, theme6: null};
+  const allDetailContainerColor = {
+    theme1: "#6cd4f4",
+    theme2: "#78e295",
+    theme3: "#d53232",
+    theme4: null,
+    theme5: null,
+    theme6: null,
+  };
   // "#70ddfe" ; "#7eef9d"
   // const themeLightColor = allLightColor[cardValue.idTheme]
-  const detailContainerColor = allDetailContainerColor[cardValue.idTheme]
+  const detailContainerColor = allDetailContainerColor[cardValue.idTheme];
   //-------------------------------------------------------------------------------------------
-  const themeColor = cardValue.themeColor
+  const themeColor = cardValue.themeColor;
   // console.log(themeColor);
-  
 
   const propositionDetail = (
-    <View style={[styles.infoContainer, {backgroundColor: detailContainerColor}]}>
-      <Text style={{ textAlign: "left", alignSelf: "flex-start", fontWeight: "500" }}>Explications :</Text>
-      <Text style={{ textAlign: "left", alignSelf: "flex-start" }}>{cardValue.detail}</Text>
+    <View
+      style={[styles.infoContainer, { backgroundColor: detailContainerColor }]}
+    >
+      <Text
+        style={{
+          textAlign: "left",
+          alignSelf: "flex-start",
+          fontWeight: "500",
+          marginTop: 5,
+          marginHorizontal: 10,
+        }}
+      >
+        Explications :
+      </Text>
+      <Text
+        style={{
+          textAlign: "left",
+          alignSelf: "flex-start",
+          marginHorizontal: 10,
+        }}
+        adjustsFontSizeToFit={true}
+      >
+        {cardValue.detail}
+      </Text>
     </View>
   );
 
   return (
-    <View style={[styles.card, { 
-      backgroundColor: themeColor, height: isCardDetailVisible? "73%" : "59%", marginTop: isCardDetailVisible? "-44%" : "-17%", borderColor: themeColor 
-    }]} >
+    <View
+      style={[
+        styles.card,
+        {
+          backgroundColor: themeColor,
+          height: isCardDetailVisible ? "73%" : "59%",
+          marginTop: isCardDetailVisible ? "-44%" : "-17%",
+          borderColor: themeColor,
+        },
+      ]}
+    >
       <View style={styles.themeContainer}>
         <Text style={[styles.themeText, { color: themeColor }]}>
           {cardValue.themeTitre}
@@ -44,9 +76,15 @@ function PropositionCard({ cardValue}) {
       </View>
 
       <View style={[styles.cardTextContainer]}>
-        <Text style={[styles.propositionText, {fontSize: isCardDetailVisible ? 20 : 24,}]}>{cardValue.titre}</Text>
+        <Text
+          style={[
+            styles.propositionText,
+            { fontSize: isCardDetailVisible ? 20 : 24 },
+          ]}
+        >
+          {cardValue.titre}
+        </Text>
         {isCardDetailVisible ? propositionDetail : null}
-
       </View>
 
       <View style={styles.infoButtonContainer}>
@@ -61,7 +99,6 @@ function PropositionCard({ cardValue}) {
           />
         </View>
       </View>
-
 
       {/* <Modal isVisible={isCardDetailVisible}>
         <View
@@ -144,7 +181,7 @@ const styles = StyleSheet.create({
   infoButton: {
     alignSelf: "center",
   },
-  
+
   // infoModalContainer: {
   //   // height: "30%",
   //   width: "97%",
@@ -159,12 +196,12 @@ const styles = StyleSheet.create({
 
   infoContainer: {
     alignItems: "center",
-    marginHorizontal: "8%",
+    marginHorizontal: "5%",
     marginTop: "5%",
     borderRadius: 10,
-    paddingVertical: "2%",
-    paddingHorizontal: "4%",
+    // paddingVertical: "2%",
+    // paddingHorizontal: "4%",
+    height: "70%",
     // width: "100%"
   },
-
 });

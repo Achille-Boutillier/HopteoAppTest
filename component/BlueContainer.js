@@ -3,34 +3,35 @@ import { View, StyleSheet, Text } from "react-native";
 import { Colors } from "../constant/Colors";
 // import EStyleSheet from "react-native-extended-stylesheet";
 
-function BlueContainer({name, text}) {
-    return (
-      <View style={styles.mainContainer}>
-
-        <View style={styles.iconContainer}>
-          <Ionicons name={name} size={20} color={Colors.grey} />
-        </View>
-
-        <View style={styles.textContainer}>
-          <Text style={styles.text} numberOfLines={2} >{text}</Text>
-        </View>
-
+function BlueContainer({ name, text }) {
+  return (
+    <View style={styles.mainContainer}>
+      <View style={styles.iconContainer}>
+        <Ionicons name={name} size={20} color={Colors.grey} />
       </View>
-    );
+
+      <View style={styles.textContainer}>
+        <Text style={styles.text} adjustsFontSizeToFit={true}>
+          {text}
+        </Text>
+      </View>
+    </View>
+  );
 }
 
 export default BlueContainer;
 
 const styles = StyleSheet.create({
   mainContainer: {
-    flexDirection:"row" ,
+    flexDirection: "row",
     alignItems: "center",
     backgroundColor: Colors.blue400,
     width: "42%",
     height: "100%",
     borderRadius: 10,
-    paddingHorizontal: "2.5%",
-
+    paddingHorizontal: 6,
+    // paddingHorizontal: "2.5%",
+    paddingVertical: 1,
   },
   iconContainer: {
     alignItems: "center",
@@ -43,14 +44,17 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     flex: 1,
-    alignItems: "center",
+    // alignSelf: "center",
+    // width: "90%",
+    // height: "100%",
+    // alignItems: "center",
     // borderWidth:1,
   },
   text: {
-    fontWeight: "600", 
-    fontSize: 14, 
+    fontWeight: "600",
+    fontSize: 14,
     color: Colors.grey,
-    textAlign: 'center',
+    textAlign: "center",
+    // borderWidth: 1,
   },
 });
-

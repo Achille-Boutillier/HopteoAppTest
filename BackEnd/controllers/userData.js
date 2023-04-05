@@ -3,7 +3,7 @@ import * as SecureStore from "expo-secure-store"; // voir doc expo pour ios (peu
 // import * as Keychain from "react-native-keychain";           // marche pas sur expo
 // "email": "omer972@hotmail.fr",
 // "password": "orientis"
-export const mainUrl = "https://app.hopteo.com/api";
+export const mainUrl = "https://app.hopteo.com/apilorient";
 const route = mainUrl + "/user";
 
 export async function getUserToken() {

@@ -6,27 +6,54 @@ import PrimaryButton from "./PrimaryButton";
 export default function SearchBar({
   handlePressSearch,
   handleStopResearch,
-  isResearchDisplayed,
-  onBeginInput,
-  onEndInput,
+  blurContent,
 }) {
+  const [isResearching, setIsResearching] = useState(false);
   const [userInput, setUserInput] = useState("");
   const textInputRef = useRef(null);
 
-  function onPessStopResearch() {
+  function onPressStopResearch() {
+    textInputRef.current.blur();
+    textInputRef.current.clear();
     setUserInput("");
+    setIsResearching(false);
     handleStopResearch();
   }
 
-  function onPressSearch() {
-    handlePressSearch(userInput);
-    textInputRef.current.blur();
+  function onSubmit() {
+    if (textInputRef.current.isFocused()) {
+      // si userInput était en pleine édition
+      textInputRef.current.blur();
+      if (userInput) {
+        handlePressSearch(userInput);
+      } else {
+        handleStopResearch();
+      }
+      blurContent(1);
+    } else {
+      // si userInput n'était pas en édition
+      textInputRef.current.focus();
+      setIsResearching(true);
+      blurContent(0.2);
+    }
+  }
+
+  function onPressIn() {
+    blurContent(0.2);
+    setIsResearching(true);
+  }
+
+  function onEndEditing() {
+    blurContent(1);
+    if (!userInput) {
+      setIsResearching(false);
+    }
   }
 
   return (
     <View style={styles.mainContainer}>
       <PrimaryButton
-        onPress={onPressSearch}
+        onPress={onSubmit}
         name="search"
         size={20}
         color={Colors.orange500}
@@ -37,10 +64,10 @@ export default function SearchBar({
         style={styles.inputContainer}
         placeholder="Rechercher"
         onChangeText={setUserInput} // .trim() to remove whitespace at the end and begining
-        onPressIn={onBeginInput}
-        onEndEditing={onEndInput}
+        onPressIn={onPressIn}
+        onEndEditing={onEndEditing}
         clearButtonMode="while-editing"
-        onSubmitEditing={onPressSearch}
+        onSubmitEditing={onSubmit}
         value={userInput}
         // type="email"
         autoCapitalize="none"
@@ -48,9 +75,9 @@ export default function SearchBar({
         // autoComplete="email"
         // keyboardType="email-address"
       />
-      {isResearchDisplayed ? (
+      {isResearching ? (
         <PrimaryButton
-          onPress={onPessStopResearch}
+          onPress={onPressStopResearch}
           name={"close"}
           size={25}
           color={Colors.orange500}

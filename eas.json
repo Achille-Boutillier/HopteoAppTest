@@ -26,6 +26,12 @@
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "appleId": "antoine.landraing2@gmail.com",
+        "ascAppId": "6447057343",
+        "appleTeamId": "2KH53SSGXT"
+      }
+    }
   }
 }

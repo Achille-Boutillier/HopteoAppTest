@@ -17,6 +17,7 @@ import { alertProvider } from "../../BackEnd/errorHandler";
 import { HeaderButton } from "../../component/TopBar";
 import SchoolComponent from "../../component/SchoolComponent";
 import PrimaryButton from "../../component/PrimaryButton";
+import MessageContainer from "../../component/MessageContainer";
 
 const width = Dimensions.get("window").width;
 
@@ -27,7 +28,6 @@ export default function Explore({ navigation, route }) {
   const [exploreContent, setExploreContent] = useState();
   const [searchedData, setSearchedData] = useState();
   const [dataToDisplay, setDataToDisplay] = useState();
-  const [isResearchDisplayed, setIsResearchDisplayed] = useState(false);
   const [blurValue, setBlurValue] = useState(1);
 
   function loginScreenNavigation() {
@@ -65,51 +65,52 @@ export default function Explore({ navigation, route }) {
   // ---- fin getAllSchool ---------------------------------------------------------
 
   // ------ recherche -----------------------------
-  function onBeginInput() {
-    setBlurValue(0.2);
-  }
-  function onEndInput() {
-    setBlurValue(1);
+  function blurContent(value) {
+    setBlurValue(value);
   }
 
   function handleStopResearch() {
-    setIsResearchDisplayed(null);
-    setSearchedData(false);
+    setSearchedData(null);
   }
 
   async function handlePressSearch(userInput) {
     const data = await searchSchool(userInput);
-    // console.log("searchResponse", searchResponse);
     setSearchedData(data);
   }
 
   useEffect(() => {
     if (searchedData) {
-      setIsResearchDisplayed(true);
-      // console.log(searchedData);
-      setDataToDisplay(
-        <FlatList
-          data={searchedData.schoolMatch}
-          extraData={searchedData}
-          keyExtractor={(item) => item.id}
-          showsVerticalScrollIndicator={false}
-          numColumns={3}
-          key={3} // obligatoire avec numColumns
-          renderItem={({ item }) => {
-            return (
-              <View
-                style={[
-                  styles.innerScrollViewContainer,
-                  // scrollViewSize,
-                  { width: scrollWidth / 3, height: scrollHeight },
-                ]}
-              >
-                <SchoolComponent school={item} />
-              </View>
-            );
-          }}
-        />
-      );
+      if (!!searchedData?.schoolMatch[0]) {
+        setDataToDisplay(
+          <FlatList
+            data={searchedData.schoolMatch}
+            extraData={searchedData}
+            keyExtractor={(item) => item.id}
+            showsVerticalScrollIndicator={false}
+            numColumns={3}
+            key={3} // obligatoire avec numColumns
+            renderItem={({ item }) => {
+              return (
+                <View
+                  style={[
+                    styles.innerScrollViewContainer,
+                    // scrollViewSize,
+                    { width: scrollWidth / 3, height: scrollHeight },
+                  ]}
+                >
+                  <SchoolComponent school={item} />
+                </View>
+              );
+            }}
+          />
+        );
+      } else {
+        setDataToDisplay(
+          <MessageContainer>
+            Aucune école ne correspond à cette recherche
+          </MessageContainer>
+        );
+      }
     } else if (exploreContent) {
       setDataToDisplay(
         <FlatList
@@ -118,31 +119,59 @@ export default function Explore({ navigation, route }) {
           keyExtractor={(item) => item}
           showsVerticalScrollIndicator={false}
           renderItem={(section) => {
-            return (
-              <View style={{ marginBottom: 20 }}>
-                <View style={{ marginBottom: 5 }}>
-                  <Text> {section.item} </Text>
+            if (exploreContent.schoolPack[section.item].length !== 0) {
+              return (
+                <View style={{ marginBottom: 20 }}>
+                  <View style={{ marginBottom: 5 }}>
+                    <Text> {section.item} </Text>
+                  </View>
+                  <HorizontalScroll
+                    scrollViewSize={{
+                      width: scrollWidth,
+                      height: scrollHeight,
+                    }}
+                  >
+                    {exploreContent.schoolPack[section.item].map(
+                      (school, index) => (
+                        <View
+                          key={school.id}
+                          style={[
+                            styles.innerScrollViewContainer,
+                            // scrollViewSize,
+                            { width: scrollWidth / 3, height: scrollHeight },
+                          ]}
+                        >
+                          <SchoolComponent school={school} />
+                        </View>
+                      )
+                    )}
+                  </HorizontalScroll>
                 </View>
-                <HorizontalScroll
-                  scrollViewSize={{ width: scrollWidth, height: scrollHeight }}
-                >
-                  {exploreContent.schoolPack[section.item].map(
-                    (school, index) => (
-                      <View
-                        key={school.id}
-                        style={[
-                          styles.innerScrollViewContainer,
-                          // scrollViewSize,
-                          { width: scrollWidth / 3, height: scrollHeight },
-                        ]}
-                      >
-                        <SchoolComponent school={school} />
-                      </View>
-                    )
-                  )}
-                </HorizontalScroll>
-              </View>
-            );
+              );
+            } else {
+              return (
+                <View style={{ marginBottom: 20 }}>
+                  <View style={{ marginBottom: 5 }}>
+                    <Text> {section.item} </Text>
+                  </View>
+                  <View
+                    style={{
+                      alignItems: "center",
+                      justifyContent: "center",
+                      alignSelf: "center",
+                      backgroundColor: Colors.white,
+                      width: 120,
+                      borderRadius: 5,
+                      marginTop: 10,
+                      // paddingHorizontal: 5,
+                      paddingVertical: 5,
+                    }}
+                  >
+                    <Text>Aucun favori</Text>
+                  </View>
+                </View>
+              );
+            }
           }}
         />
       );
@@ -169,33 +198,15 @@ export default function Explore({ navigation, route }) {
 
   return (
     <View style={styles.mainContainer}>
-      <View style={{ width: "100%" }}>
+      <View style={{ width: "100%", marginTop: "2%" }}>
         <SearchBar
           handlePressSearch={handlePressSearch}
           handleStopResearch={handleStopResearch}
-          isResearchDisplayed={isResearchDisplayed}
-          onBeginInput={onBeginInput}
-          onEndInput={onEndInput}
+          blurContent={blurContent}
         />
-        {/* {isResearchDisplayed ? (
-          <View
-            style={{ flexDirection: "row", position: "absolute", right: 10 }}
-          >
-            <PrimaryButton
-              onPress={() => {
-                setIsResearchDisplayed(null);
-                setSearchedData(false);
-                
-              }}
-              name={"close"}
-              size={25}
-              color={Colors.orange500}
-            />
-          </View>
-        ) : null} */}
       </View>
 
-      <View style={{ opacity: blurValue }}>{dataToDisplay}</View>
+      <View style={{ opacity: blurValue, flex: 1 }}>{dataToDisplay}</View>
     </View>
   );
 }
