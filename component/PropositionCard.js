@@ -1,12 +1,24 @@
 import { useEffect, useState } from "react";
-import { View, StyleSheet, Text, Image, Button } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  Image,
+  Button,
+  ActivityIndicator,
+} from "react-native";
 import Modal from "react-native-modal";
 
 import { Colors } from "../constant/Colors";
 import PrimaryButton from "./PrimaryButton";
+import { getDetails } from "../BackEnd/controllers/cards";
 
-function PropositionCard({ cardValue }) {
+function PropositionCard({ cardValue, theme }) {
   const [isCardDetailVisible, setIsCardDetailVisible] = useState(false);
+  const [propositionDetail, setPropositionDetail] = useState(
+    <ActivityIndicator size={"large"} color={Colors.smoothBlack} />
+  );
+  const [isDetailLoaded, setIsDetailLoaded] = useState(false);
 
   function handleCardDetail() {
     setIsCardDetailVisible((bool) => !bool);
@@ -26,36 +38,29 @@ function PropositionCard({ cardValue }) {
   // const themeLightColor = allLightColor[cardValue.idTheme]
   const detailContainerColor = allDetailContainerColor[cardValue.idTheme];
   //-------------------------------------------------------------------------------------------
-  const themeColor = cardValue.themeColor;
+  const themeColor = theme[cardValue.idTheme];
+  // const themeColor = cardValue.themeColor;
   // console.log(themeColor);
 
-  const propositionDetail = (
-    <View
-      style={[styles.infoContainer, { backgroundColor: detailContainerColor }]}
-    >
-      <Text
-        style={{
-          textAlign: "left",
-          alignSelf: "flex-start",
-          fontWeight: "500",
-          marginTop: 5,
-          marginHorizontal: 10,
-        }}
-      >
-        Explications :
+  async function getCardDetail() {
+    console.log("cardvalue -->", cardValue);
+    const detail = await getDetails(cardValue.id);
+    console.log(detail);
+    setPropositionDetail(
+      <Text style={styles.infoText} adjustsFontSizeToFit={true}>
+        {detail}
       </Text>
-      <Text
-        style={{
-          textAlign: "left",
-          alignSelf: "flex-start",
-          marginHorizontal: 10,
-        }}
-        adjustsFontSizeToFit={true}
-      >
-        {cardValue.detail}
-      </Text>
-    </View>
-  );
+    );
+    setIsDetailLoaded(true);
+  }
+
+  useEffect(() => {
+    console.log("typeof", typeof propositionDetail);
+    if (isCardDetailVisible && !isDetailLoaded) {
+      getCardDetail();
+    }
+    console.log("theme", theme);
+  }, [isCardDetailVisible]);
 
   return (
     <View
@@ -84,7 +89,18 @@ function PropositionCard({ cardValue }) {
         >
           {cardValue.titre}
         </Text>
-        {isCardDetailVisible ? propositionDetail : null}
+
+        {isCardDetailVisible ? (
+          <View
+            style={[
+              styles.infoContainer,
+              { backgroundColor: detailContainerColor },
+            ]}
+          >
+            <Text style={styles.infoTextTitle}>Explications :</Text>
+            {propositionDetail}
+          </View>
+        ) : null}
       </View>
 
       <View style={styles.infoButtonContainer}>
@@ -92,34 +108,12 @@ function PropositionCard({ cardValue }) {
           <PrimaryButton
             onPress={handleCardDetail}
             // name= {isCardDetailVisible ? "chevron-down" : "chevron-up" }
-            // size={40}
-            name="help-outline"
+            name={isCardDetailVisible ? "chevron-down" : "help-outline"}
             size={36}
             color={Colors.orange500}
           />
         </View>
       </View>
-
-      {/* <Modal isVisible={isCardDetailVisible}>
-        <View
-          style={[
-            styles.infoModalContainer,
-            { backgroundColor: cardValue.themeColor },
-          ]}
-        >
-          <View style={{ alignItems: "flex-end" }}>
-            <PrimaryButton
-              onPress={handleCardDetail}
-              name="close-outline"
-              size={38}
-              color={Colors.orange500}
-            />
-          </View>
-          <View style={styles.infoModalText}>
-            <Text style={{ textAlign: "justify" }}>{cardValue.detail}</Text>
-          </View>
-        </View>
-      </Modal> */}
     </View>
   );
 }
@@ -168,6 +162,31 @@ const styles = StyleSheet.create({
     fontWeight: "400",
   },
 
+  infoTextTitle: {
+    textAlign: "left",
+    alignSelf: "flex-start",
+    fontWeight: "500",
+    marginTop: 5,
+    marginHorizontal: 10,
+  },
+
+  infoText: {
+    textAlign: "left",
+    alignSelf: "flex-start",
+    marginHorizontal: 10,
+  },
+
+  infoContainer: {
+    alignItems: "center",
+    marginHorizontal: "5%",
+    marginTop: "5%",
+    borderRadius: 10,
+    // paddingVertical: "2%",
+    // paddingHorizontal: "4%",
+    height: "70%",
+    // width: "100%"
+  },
+
   infoButtonContainer: {
     position: "absolute",
     bottom: -200,
@@ -180,28 +199,5 @@ const styles = StyleSheet.create({
   },
   infoButton: {
     alignSelf: "center",
-  },
-
-  // infoModalContainer: {
-  //   // height: "30%",
-  //   width: "97%",
-  //   padding: "3%",
-  //   borderBottomLeftRadius: 40,
-  //   borderBottomRightRadius: 40,
-  //   borderTopLeftRadius: 3,
-  //   borderTopRightRadius: 3,
-  //   alignSelf: "center",
-  //   marginTop: "40%",
-  // },
-
-  infoContainer: {
-    alignItems: "center",
-    marginHorizontal: "5%",
-    marginTop: "5%",
-    borderRadius: 10,
-    // paddingVertical: "2%",
-    // paddingHorizontal: "4%",
-    height: "70%",
-    // width: "100%"
   },
 });

@@ -1,6 +1,6 @@
 // Controller de la page classement
 
-import { getUserToken } from "./userData";
+import { getAuthData } from "./userData";
 import {
   actions,
   getSchoolFailure,
@@ -16,12 +16,12 @@ import store from "../../core";
 const route = mainUrl + "/classement";
 
 export async function getSchool2(dispatch) {
-  const userToken = await getUserToken();
+  const authData = await getAuthData();
   const requestOptions = {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      authorization: "Bearer " + userToken.token,
+      authorization: "Bearer " + authData.token,
     },
     // body: {}
   };
@@ -55,12 +55,12 @@ export async function getSchool2(dispatch) {
 
 // Fournir le classement des écoles
 export async function getSchoolRanking() {
-  const userToken = await getUserToken();
+  const authData = await getAuthData();
   const requestOptions = {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      authorization: "Bearer " + userToken.token,
+      authorization: "Bearer " + authData.token,
     },
     // body: {}
   };
@@ -85,20 +85,20 @@ export async function getSchoolRanking() {
 }
 
 // Afficher une école depuis la page du classement
-export async function getSchool(ecoleId) {
-  const userToken = await getUserToken();
+export async function getSchool(schoolId) {
+  const authData = await getAuthData();
 
   const requestOptions = {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      authorization: "Bearer " + userToken.token,
+      authorization: "Bearer " + authData.token,
     },
   };
 
   try {
     const response = await fetch(
-      route + `/schoolRanking/${ecoleId}`,
+      route + `/schoolRanking/${schoolId}`,
       requestOptions
     );
     // console.log(response.status);
@@ -112,14 +112,14 @@ export async function getSchool(ecoleId) {
   }
 }
 
-export async function onSchoolLike(ecoleId, bool) {
-  const userToken = await getUserToken();
+export async function onSchoolLike(schoolId, bool) {
+  const authData = await getAuthData();
 
   const requestOptions = {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      authorization: "Bearer " + userToken.token,
+      authorization: "Bearer " + authData.token,
     },
     body: JSON.stringify({
       bool: bool,
@@ -128,7 +128,7 @@ export async function onSchoolLike(ecoleId, bool) {
 
   try {
     const response = await fetch(
-      route + `/onSchoolLike/${ecoleId}`,
+      route + `/onSchoolLike/${schoolId}`,
       requestOptions
     );
     // console.log(response.status);
@@ -156,14 +156,14 @@ function setLike(schoolList, id) {
   return schoolList;
 }
 
-export async function onSchoolLike2(dispatch, ecoleId, bool) {
-  const userToken = await getUserToken();
+export async function onSchoolLike2(dispatch, schoolId, bool) {
+  const authData = await getAuthData();
 
   const requestOptions = {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      authorization: "Bearer " + userToken.token,
+      authorization: "Bearer " + authData.token,
     },
     body: JSON.stringify({
       bool: !bool,
@@ -174,10 +174,10 @@ export async function onSchoolLike2(dispatch, ecoleId, bool) {
     console.log("[LIKE] initial", store.getState());
     try {
       dispatch(setSchoolLike());
-      fetch(route + `/onSchoolLike/${ecoleId}`, requestOptions)
+      fetch(route + `/onSchoolLike/${schoolId}`, requestOptions)
         .then(async (response) => {
           const data = await response.json();
-          const newList = setLike(store.getState().schoolList, ecoleId);
+          const newList = setLike(store.getState().schoolList, schoolId);
           console.log("[NEWLIST]", newList);
           dispatch(setSchoolLikeSuccess(newList));
           console.log("[LIKE] success", store.getState()); //store.getState().schoolList pour choper la clé schoolList
@@ -196,21 +196,21 @@ export async function onSchoolLike2(dispatch, ecoleId, bool) {
   };
 }
 
-export async function getLikeValue(ecoleId) {
-  const userToken = await getUserToken();
+export async function getLikeValue(schoolId) {
+  const authData = await getAuthData();
   console.log("yayyayayayayayayayayayayayayaya");
 
   const requestOptions = {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      authorization: "Bearer " + userToken.token,
+      authorization: "Bearer " + authData.token,
     },
   };
 
   try {
     const response = await fetch(
-      route + `/isSchoolLiked/${ecoleId}`,
+      route + `/isSchoolLiked/${schoolId}`,
       requestOptions
     );
     console.log(

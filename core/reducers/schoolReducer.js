@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { initialState } from "../store/schoolState";
+import { initialSchoolState } from "../store/schoolState";
 
 export const schoolSlice = createSlice({
   name: "school",
-  initialState,
+  initialState: initialSchoolState,
   reducers: {
     getSchoolRequest: (state) => {
       state.loading = true;

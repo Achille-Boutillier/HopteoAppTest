@@ -74,6 +74,7 @@ export default function Home({ navigation, route }) {
 
   const [isPropositionLoaded, setIsPropositionLoaded] = useState(false);
   const [proposition, setProposition] = useState([]);
+  const [theme, setTheme] = useState();
   const [isSwipeButtonActivated, setIsSwipeButtonActivated] = useState(true);
   const [swipeButtonValue, setSwipeButtonValue] = useState(null);
 
@@ -106,11 +107,14 @@ export default function Home({ navigation, route }) {
     console.log("Je passe dans getCards");
     console.log(propositionObject);
     if (propositionObject?.propositionPile) {
+      console.log(propositionObject.themeColor);
+      setTheme(propositionObject.themeColor);
       setListIndex(0);
       setInitialLength(propositionObject.propSwipedLength);
       setMinSwipeForRanking(propositionObject.minSwipeForRanking);
       setProposition(propositionObject.propositionPile);
       setIsPropositionLoaded(true);
+
       // if (isPropositionLoaded) {
       //   swiperRef.current.jumpToCardIndex(0);   // reset l'index de la carte
       // }
@@ -157,8 +161,6 @@ export default function Home({ navigation, route }) {
   }
 
   async function handleUndoPress() {
-    const listTest = {};
-
     console.log("je passe dans handleUndoPress");
     if (absoluteIndex === 0) {
       Alert.alert("Impossible !", "Tu te trouves déjà sur la première carte", [
@@ -207,12 +209,12 @@ export default function Home({ navigation, route }) {
 
   //=======================================================================================
 
-  async function onSwiped(index, routeEnd) {
+  async function onSwiped(index, swipeType) {
     console.log(`swiper index : ${index}`);
     const id = proposition[index].id;
     console.log(id);
     setListIndex(index + 1);
-    const response = await swipeHandler(id, routeEnd);
+    const response = await swipeHandler(id, swipeType);
     console.log(response);
   }
 
@@ -272,16 +274,16 @@ export default function Home({ navigation, route }) {
             cardIndex={0} // 0 si premier elem tt le temps
             keyExtractor={(item) => item.id}
             renderCard={(currentCard) => (
-              <PropositionCard cardValue={currentCard} />
+              <PropositionCard cardValue={currentCard} theme={theme} />
             )}
             stackSize={2} // Nombre de cartes supperpopsées visibles
             stackScale={10} // largeur des cartes en dessous (0 => même taille que la 1ere ; 10 => de plus en plus petit en dessous)
             stackSeparation={-5} // éloignement des cartes les unes en dessous
             // onSwiped={onSwiped}
-            onSwipedRight={(index) => onSwiped(index, "/onLike")}
-            onSwipedLeft={(index) => onSwiped(index, "/onDislike")}
-            onSwipedTop={(index) => onSwiped(index, "/onSuperLike")}
-            onSwipedBottom={(index) => onSwiped(index, "/onDontKnow")}
+            onSwipedRight={(index) => onSwiped(index, "like")}
+            onSwipedLeft={(index) => onSwiped(index, "dislike")}
+            onSwipedTop={(index) => onSwiped(index, "superLike")}
+            onSwipedBottom={(index) => onSwiped(index, "dontKnow")}
             // infinite // repars sur les premières cartes quand c'est fini => à changer
             // onSwipedAll={() => {}}  // function à appeler quand toutes les cartes ont été swipées
             onSwipedAll={() => getCards()}

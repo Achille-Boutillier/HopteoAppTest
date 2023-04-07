@@ -3,18 +3,18 @@
 import { mainUrl } from "./userData";
 const route = mainUrl + "/cards";
 
-import { getUserToken } from "./userData";
+import { getAuthData } from "./userData";
 
 // Obtenir 2 propositions pour initialiser la pile tinde
 
 export async function getProposition() {
-  const userToken = await getUserToken();
+  const authData = await getAuthData();
 
   const requestOptions = {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      authorization: "Bearer " + userToken.token,
+      authorization: "Bearer " + authData.token,
     },
   };
 
@@ -31,22 +31,23 @@ export async function getProposition() {
   }
 }
 
-export async function swipeHandler(propId, routeEnd) {
-  const userToken = await getUserToken();
+export async function swipeHandler(propId, swipeType) {
+  const authData = await getAuthData();
 
   const requestOptions = {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      authorization: "Bearer " + userToken.token,
+      authorization: "Bearer " + authData.token,
     },
     body: JSON.stringify({
       propId: propId,
+      swipeType: swipeType,
     }),
   };
 
   try {
-    const response = await fetch(route + routeEnd, requestOptions);
+    const response = await fetch(route + "/onSwipe", requestOptions);
     // console.log(response.status);
     const data = await response.json();
     // console.log(data);
@@ -58,15 +59,39 @@ export async function swipeHandler(propId, routeEnd) {
   }
 }
 
+export async function getDetails(propId) {
+  const authData = await getAuthData();
+
+  const requestOptions = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: "Bearer " + authData.token,
+    },
+  };
+
+  try {
+    const response = await fetch(route + `/detail/${propId}`, requestOptions);
+    console.log(response.status);
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.log("bloc try failed :");
+    console.log(error);
+    return false;
+  }
+}
+
 // Revenir en arrière pour annuler un swipe
 export async function unDoSwipe() {
-  const userToken = await getUserToken();
+  const authData = await getAuthData();
 
   const requestOptions = {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      authorization: "Bearer " + userToken.token,
+      authorization: "Bearer " + authData.token,
     },
   };
 

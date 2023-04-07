@@ -10,7 +10,11 @@ const buttonSize = 30;
 export function BrandComponent() {
   return (
     <View style={styles.brandContainer}>
-      <Logo width={52} height={52} />
+      <Logo
+        width={52}
+        height={52}
+        // style={{ borderWidth: 1 }}
+      />
       {/* <Image
       source={require("../assets/images/newLogo.png")}
       style={{ height: 100, width: 100, borderWidth: 1 }}

@@ -3,16 +3,16 @@
 import { mainUrl } from "./userData";
 const route = mainUrl + "/explore";
 
-import { getUserToken } from "./userData";
+import { getAuthData } from "./userData";
 
 export async function getAllSchool() {
-  const userToken = await getUserToken();
+  const authData = await getAuthData();
 
   const requestOptions = {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      authorization: "Bearer " + userToken.token,
+      authorization: "Bearer " + authData.token,
     },
   };
 
@@ -30,13 +30,13 @@ export async function getAllSchool() {
 }
 
 export async function searchSchool(enteredText) {
-  const userToken = await getUserToken();
+  const authData = await getAuthData();
 
   const requestOptions = {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      authorization: "Bearer " + userToken.token,
+      authorization: "Bearer " + authData.token,
     },
   };
 
