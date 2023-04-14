@@ -1,5 +1,5 @@
 export const initialCardState = {
-  card: {},
+  allCard: {},
   loading: null,
   error: null,
 };

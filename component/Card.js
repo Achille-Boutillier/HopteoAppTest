@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { View, StyleSheet, Text } from "react-native";
 import Modal from "react-native-modal";
 import CardDetail from "./CardDetail";
+import { useSelector } from "react-redux";
 
 import { Colors } from "../constant/Colors";
 import PrimaryButton from "./PrimaryButton";
