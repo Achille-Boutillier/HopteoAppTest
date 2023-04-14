@@ -30,12 +30,12 @@ export async function splashRequest(token) {
     } else {
       return { success: false };
     }
+    // return data;
   } catch (error) {
     console.error(error);
     return {
       message:
         "Serveur inaccessible !\n Nos équipes mettent tout en oeuvre pour résoudre le problème",
-      success: false,
     };
   }
 }
@@ -45,16 +45,16 @@ export async function refreshAuth(refreshToken) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      authorization: "Bearer" + refreshToken,
+      authorization: "Bearer " + refreshToken,
     },
   };
 
   try {
     const response = await fetch(route + "/refreshToken", requestOptions);
     console.log("[refreshAuth]", response.status);
+    const data = await response.json();
+    console.log("[refreshAuth]", data);
     if (response.status === 200) {
-      const data = await response.json();
-      console.log("[refreshAuth]", data);
       return { ...data, success: true };
     } else {
       return { success: false };
@@ -69,34 +69,28 @@ export async function refreshAuth(refreshToken) {
 }
 
 // se connecter à son compte
-export async function login(email, password) {
+export async function login(userId, password) {
   const requestOptions = {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      email: email,
+      userId: userId,
       password: password,
     }),
   };
 
   try {
     const response = await fetch(route + "/login", requestOptions);
+    console.log("[login]", response.status);
     const data = await response.json();
     console.log("[login]", data);
-    // AsyncStorage.setItem("authData", JSON.stringify(data));
-    if (data?.token) {
-      // await Keychain.setGenericPassword(data.userId, data.token);
-      await SecureStore.setItemAsync("authData", JSON.stringify(data));
-      return { success: true, userSettingStatus: data.userSettingStatus };
-    } else {
-      return data;
-    }
+    return data;
   } catch (error) {
     console.error(error);
     return {
-      message:
+      error:
         "Serveur inaccessible !\n Nos équipes mettent tout en oeuvre pour résoudre le problème",
     };
   }
@@ -113,15 +107,10 @@ export async function signup() {
 
   try {
     const response = await fetch(route + "/signup", requestOptions);
-    console.log(response.status);
+    console.log("[signup]", response.status);
     const data = await response.json();
     console.log("[signup]", data);
-    if (response.status === 200) {
-      await SecureStore.setItemAsync("authData", JSON.stringify(data));
-      return { token: data.token };
-    } else {
-      return { message: "Une erreur est survenue" };
-    }
+    return data;
   } catch (error) {
     console.error(error);
     return {

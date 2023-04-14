@@ -8,12 +8,13 @@ import {
   Alert,
 } from "react-native";
 // import Modal from "react-native-modal";
+import { useSelector } from "react-redux";
 
 import { useState, useEffect, useLayoutEffect, createRef } from "react";
 
 import Swiper from "react-native-deck-swiper";
 
-import PropositionCard from "../../component/PropositionCard";
+import Card from "../../component/Card";
 import PrimaryButton from "../../component/PrimaryButton";
 import { Colors } from "../../constant/Colors";
 import { HeaderButton } from "../../component/TopBar";
@@ -67,6 +68,7 @@ function SwipeButton() {
 }
 
 export default function Home({ navigation, route }) {
+  const [theme, setTheme] = useState();
   const [listIndex, setListIndex] = useState(); // listIndex = indice relatif à la liste "proposition"
   const [initialLength, setInitialLength] = useState(); // initialLength + index = total number of proposition answered
   const [absoluteIndex, setAbsoluteIndex] = useState(); // index total en comptant toutes les propositions
@@ -74,12 +76,19 @@ export default function Home({ navigation, route }) {
 
   const [isPropositionLoaded, setIsPropositionLoaded] = useState(false);
   const [proposition, setProposition] = useState([]);
-  const [theme, setTheme] = useState();
+  // const [theme, setTheme] = useState();
   const [isSwipeButtonActivated, setIsSwipeButtonActivated] = useState(true);
   const [swipeButtonValue, setSwipeButtonValue] = useState(null);
 
   const [swipeButtonZIndex, setSwipeButtonZIndex] = useState(2);
   const [isUndoPress, setIsUndoPress] = useState(false);
+
+  const themeState = useSelector((state) => state.themeReducer.theme);
+
+  useEffect(() => {
+    setTheme(themeState);
+    console.log("[themeState]", themeState);
+  }, [themeState]);
 
   function loginScreenNavigation() {
     navigation.navigate("Login Screen");
@@ -108,7 +117,7 @@ export default function Home({ navigation, route }) {
     console.log(propositionObject);
     if (propositionObject?.propositionPile) {
       console.log(propositionObject.themeColor);
-      setTheme(propositionObject.themeColor);
+      // setTheme(propositionObject.themeColor);
       setListIndex(0);
       setInitialLength(propositionObject.propSwipedLength);
       setMinSwipeForRanking(propositionObject.minSwipeForRanking);
@@ -274,7 +283,10 @@ export default function Home({ navigation, route }) {
             cardIndex={0} // 0 si premier elem tt le temps
             keyExtractor={(item) => item.id}
             renderCard={(currentCard) => (
-              <PropositionCard cardValue={currentCard} theme={theme} />
+              <Card
+                cardValue={currentCard}
+                currentTheme={theme[currentCard.idTheme]}
+              />
             )}
             stackSize={2} // Nombre de cartes supperpopsées visibles
             stackScale={10} // largeur des cartes en dessous (0 => même taille que la 1ere ; 10 => de plus en plus petit en dessous)

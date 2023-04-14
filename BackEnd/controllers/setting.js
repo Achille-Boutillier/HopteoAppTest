@@ -164,7 +164,7 @@ export async function deleteUser(password) {
 export async function disconnect() {
   try {
     // await AsyncStorage.removeItem("authData");
-    await SecureStore.deleteItemAsync("login");
+    await SecureStore.deleteItemAsync("authData");
     return true;
   } catch (error) {
     return false;

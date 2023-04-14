@@ -2,11 +2,9 @@
 
 import { getAuthData } from "./userData";
 import {
-  actions,
   getSchoolFailure,
   getSchoolRequest,
   getSchoolSuccess,
-  schoolSlice,
   setSchoolLike,
   setSchoolLikeFailure,
   setSchoolLikeSuccess,
@@ -15,6 +13,7 @@ import { mainUrl } from "./userData";
 import store from "../../core";
 const route = mainUrl + "/classement";
 
+// todo :
 export async function getSchool2(dispatch) {
   const authData = await getAuthData();
   const requestOptions = {
