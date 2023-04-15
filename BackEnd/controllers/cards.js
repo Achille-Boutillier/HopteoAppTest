@@ -31,8 +31,11 @@ export async function getProposition() {
   }
 }
 
-export async function swipeHandler(propId, swipeType) {
+export async function swipeHandler(id, swipeType) {
   const authData = await getAuthData();
+  console.log("[authData]", authData);
+  console.log("[id]", id);
+  console.log("[swipeType]", swipeType);
 
   const requestOptions = {
     method: "PUT",
@@ -41,16 +44,19 @@ export async function swipeHandler(propId, swipeType) {
       authorization: "Bearer " + authData.token,
     },
     body: JSON.stringify({
-      propId: propId,
+      // propId: "proposition1",
+      propId: id,
       swipeType: swipeType,
+      // swipeType: "like",
     }),
   };
 
   try {
     const response = await fetch(route + "/onSwipe", requestOptions);
-    // console.log(response.status);
+    console.log(response.status);
     const data = await response.json();
-    // console.log(data);
+    // console.log("[swipeHandler]", data)
+    console.log("[swipeHandler] : ", data);
     return data;
   } catch (error) {
     console.log("bloc try failed :");
@@ -74,7 +80,6 @@ export async function getDetails(propId) {
     const response = await fetch(route + `/detail/${propId}`, requestOptions);
     console.log(response.status);
     const data = await response.json();
-    console.log(data);
     return data;
   } catch (error) {
     console.log("bloc try failed :");

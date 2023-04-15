@@ -60,6 +60,7 @@ function SchoolRanking({ navigation, route }) {
     if (list?.error) {
       alertProvider(loginScreenNavigation);
     } else {
+      console.log("[rankList]", list);
       setRankList(list);
     }
   }

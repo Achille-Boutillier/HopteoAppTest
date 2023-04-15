@@ -65,7 +65,9 @@ export default function SchoolBanner({
   // -------------- école pressed ----------------------------------
 
   async function getSchoolData() {
+    console.log("je passe dans getSchoolData");
     const data = await getSchool(id);
+    // console.log()
     if (data) {
       setSchoolData(data);
     } else {
@@ -80,6 +82,7 @@ export default function SchoolBanner({
 
   useEffect(() => {
     if (isSchoolPressed) {
+      // console.log("[isschoolpressed]", isSchoolPressed);
       // empêcher l'execution inutile
       getSchoolData();
     }
