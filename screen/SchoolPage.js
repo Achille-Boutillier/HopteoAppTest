@@ -128,7 +128,8 @@ export default function SchoolPage({ navigation, route }) {
 
         <View style={styles.ContestAndLocation}>
           <BlueContainer
-            text={schoolPressedData.concours}
+            // text={schoolPressedData.concours}
+            text="--x--"
             name="newspaper-sharp"
           />
           <BlueContainer text={schoolPressedData.ville} name="location-sharp" />
@@ -136,9 +137,7 @@ export default function SchoolPage({ navigation, route }) {
 
         <SCEIComponent
           parcoursChoix={schoolPressedData.parcoursChoix}
-          nombrePlace={schoolPressedData.nombrePlace}
-          rangMedian={schoolPressedData.rangMedian}
-          filiereList={schoolPressedData.filiereList}
+          admission={schoolPressedData.admission}
         />
 
         <MainNumberComponent

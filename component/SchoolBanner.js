@@ -38,7 +38,7 @@ export default function SchoolBanner({
   }
 
   // --------------- like ecole -------------------------------------
-  // ? like disabled car pas le time
+  // ! like disabled car pas le time
 
   // async function handleLikePress() {
   //   console.log("like press");
@@ -92,7 +92,7 @@ export default function SchoolBanner({
     if (isSchoolPressed) {
       setIsSchoolPressed(false);
       navigation.navigate("School Page", {
-        schoolPressedData: schoolData,
+        schoolPressedData: { ...schoolData, id: id },
         previousScreen: "SchoolRanking",
       });
     }
@@ -100,30 +100,10 @@ export default function SchoolBanner({
 
   // ------------- fin ecole pressed -----------------------------------
 
-  // // ============= Pour la comparaison école sur profil =======================================================================================================
-
-  ////const [isSchoolSelectedForComparison, setIsSchoolSelectedForComparison] = useState(false);
-
-  ////function onSchoolLongPress() {
-  ////  if (profilSchoolBanner) {
-  ////    setIsSchoolSelectedForComparison((bool) => !bool);
-  ////  }
-  ////}
-
-  ////useEffect(() => {
-  ////  if (profilSchoolBanner) {     // profilSchoolBanner = boolean venant de profil user
-  ////    handleSchoolLongPress(id, isSchoolSelectedForComparison); // fonction handleSchoolLongPress provenant de la page profil user
-  ////  }
-  //// }, [isSchoolSelectedForComparison])
-
-  // // ============= fin comparaison =======================================================================================================
-
   return (
     <TouchableOpacity
-      ////style={[profilSchoolBanner ? styles.profilSchoolBannerContainer : styles.bannerContainer, {backgroundColor: isSchoolSelectedForComparison ? Colors.blue400 : Colors.white}] }
       style={styles.bannerContainer}
       onPress={onPressSchool.bind(this, id)}
-      // //onLongPress={onSchoolLongPress}   // comparaison
     >
       <View style={styles.rankContainer}>
         <Text
@@ -181,18 +161,7 @@ const styles = StyleSheet.create({
     marginTop: "1%",
     marginBottom: "1%",
   },
-  //// profilSchoolBannerContainer: {
-  ////   flexDirection: 'row',
-  ////   alignItems: 'center',
-  ////   alignSelf: "center",
-  ////   width: "92%",
-  ////   borderRadius: 15,
-  ////   paddingVertical: "4%",
-  ////   paddingRight: "6%",
-  ////   paddingLeft: "4%",
-  ////   marginTop: "2%",
-  ////   marginBottom: "1%",
-  //// },
+
   rankContainer: {
     marginRight: "5%",
     // padding: 1,

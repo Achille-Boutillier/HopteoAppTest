@@ -28,18 +28,17 @@ function DotComponent({ list, currentNumber }) {
   return <View style={styles.dotContainer}>{dotContent}</View>;
 }
 
-export default function SCEIComponent({
-  parcoursChoix,
-  rangMedian,
-  nombrePlace,
-  filiereList,
-}) {
+export default function SCEIComponent({ parcoursChoix, admission }) {
   const parcoursChoixKeys = Object.keys(parcoursChoix);
+  const filiereList = Object.keys(admission).filter(
+    (key) => Object.keys(admission[key]).length !== 0
+  );
+  console.log(filiereList);
 
   const [parcoursSlide, setParcoursSlide] = useState(0);
   const [currentParcours, setCurrentParcours] = useState(
     parcoursChoixKeys[parcoursSlide]
-  ); // == parcoursChoix[0]
+  ); // == parcoursChoixKeys[0]
   const [figureSlide, setFigureSlide] = useState(0);
 
   useEffect(() => {
@@ -81,7 +80,7 @@ export default function SCEIComponent({
           style={parcoursSize}
         >
           {parcoursChoixKeys.map(
-            (item, index) => (
+            (item) => (
               <View key={item} style={styles.parcoursContainer}>
                 <Text style={styles.subTitle} adjustsFontSizeToFit={true}>
                   {parcoursChoix[item]}
@@ -107,7 +106,13 @@ export default function SCEIComponent({
             <View key={item} style={styles.figureContainer}>
               <View style={styles.leftContainer}>
                 <View style={styles.fieldContainer}>
-                  <Text style={styles.figureText}>{item}</Text>
+                  <Text
+                    style={styles.figureText}
+                    adjustsFontSizeToFit={true}
+                    numberOfLines={1}
+                  >
+                    {item}
+                  </Text>
                 </View>
               </View>
 
@@ -117,10 +122,14 @@ export default function SCEIComponent({
               </View>
               <View style={styles.rightContainer}>
                 <Text style={styles.figureText}>
-                  {rangMedian[currentParcours][item]}
+                  {admission[item][currentParcours]
+                    ? admission[item][currentParcours].rangMedian
+                    : "-"}
                 </Text>
                 <Text style={styles.figureText}>
-                  {nombrePlace[currentParcours][item]}
+                  {admission[item][currentParcours]
+                    ? admission[item][currentParcours].nombrePlace
+                    : "-"}
                 </Text>
               </View>
             </View>

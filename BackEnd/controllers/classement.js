@@ -98,9 +98,6 @@ export async function getSchool(schoolId) {
     },
   };
 
-  // !!! c'est comme si le try ne s'effectuait pas (`/schoolRanking/${schoolId}` est-ce vraiment le bon endPoint ?)
-  // !!! omer a réparé normalement
-
   try {
     const response = await fetch(
       route + `/schoolRanking/${schoolId}`,
@@ -109,6 +106,7 @@ export async function getSchool(schoolId) {
     console.log("[getSchool]", response.status);
     const data = await response.json();
     console.log("[getSchool]", data);
+    console.log("[admission]", data.admission);
     return data;
   } catch (error) {
     console.log("echec du bloc try :");
