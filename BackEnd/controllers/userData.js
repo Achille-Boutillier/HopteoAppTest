@@ -3,7 +3,7 @@ import * as SecureStore from "expo-secure-store"; // voir doc expo pour ios (peu
 // import * as Keychain from "react-native-keychain";           // marche pas sur expo
 // "email": "omer972@hotmail.fr",
 // "password": "orientis"
-export const mainUrl = "https://app.hopteo.fr/api";
+export const mainUrl = "https://app.hopteo.fr/api/v0";
 const route = mainUrl + "/user";
 
 export async function getAuthData() {
@@ -12,7 +12,7 @@ export async function getAuthData() {
   return authData;
 }
 
-export async function splashRequest(token) {
+export async function tryAuth(token) {
   const requestOptions = {
     method: "GET",
     headers: {
@@ -22,19 +22,51 @@ export async function splashRequest(token) {
   };
 
   try {
-    const response = await fetch(route + "/splashRequest", requestOptions);
-    console.log("[splashRequest]", response.status);
+    const response = await fetch(route + "/tryAuth", requestOptions);
+    console.log("[TRY_AUTH]", response.status);
+    const data = await response.json();
     if (response.status === 200) {
-      const data = await response.json();
+      console.log("[TRY_AUTH]", data);
       return { ...data, success: true };
     } else {
+      console.log("[TRY_AUTH FAILED]", data);
       return { success: false };
     }
-    // return data;
   } catch (error) {
     console.error(error);
     return {
       message:
+        "Serveur inaccessible !\n Nos équipes mettent tout en oeuvre pour résoudre le problème",
+    };
+  }
+}
+
+export async function splashRequest() {
+  const authData = await getAuthData();
+
+  const requestOptions = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: "Bearer " + authData.token,
+    },
+  };
+
+  try {
+    const response = await fetch(route + "/splashRequest", requestOptions);
+    console.log("[SPLASH_REQUEST]", response.status);
+    const data = await response.json();
+    if (response.status === 200) {
+      console.log("[SPLASH_REQUEST]", data);
+      return data;
+    } else {
+      console.log("[SPLASH_REQUEST FAILED]", data);
+      return { error: "l'initialisation a echoué" };
+    }
+  } catch (error) {
+    console.error(error);
+    return {
+      error:
         "Serveur inaccessible !\n Nos équipes mettent tout en oeuvre pour résoudre le problème",
     };
   }
@@ -51,12 +83,13 @@ export async function refreshAuth(refreshToken) {
 
   try {
     const response = await fetch(route + "/refreshToken", requestOptions);
-    console.log("[refreshAuth]", response.status);
+    console.log("[REFRESH_AUTH]", response.status);
     const data = await response.json();
-    console.log("[refreshAuth]", data);
+    console.log("[REFRESH_AUTH]", data);
     if (response.status === 200) {
       return { ...data, success: true };
     } else {
+      console.log("[REFRESH_AUTH FAILED]", data);
       return { success: false };
     }
   } catch (error) {
@@ -139,18 +172,18 @@ export async function storeUserSetting(cursusType, field, moyBac) {
 
   try {
     let response = await fetch(route + "/storeSetting", requestOptions);
-    console.log(response.status);
+    console.log("[STORE_USER_SETTING]", response.status);
     const data = await response.json();
-    console.log(data);
-    if (!!data.error) {
+    console.log("[STORE_USER_SETTING]", data);
+    if (response.status === 200) {
       // la double négation "!!" est équivalente à la fonction "boolean()"
-      return false;
-    } else {
       return true;
+    } else {
+      console.error("[STORE_USER_SETTING]", data.error);
+      return false;
     }
   } catch (error) {
-    console.log("bloc try failed :");
-    console.log(error);
+    console.error("[STORE_USER_SETTING]", error);
     return false;
   }
 }

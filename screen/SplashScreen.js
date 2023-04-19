@@ -1,70 +1,40 @@
 import { View, StyleSheet, Image, Text, ActivityIndicator } from "react-native";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import {
-  getThemeRequest,
-  getThemeSuccess,
-  getThemeFailure,
-} from "../core/reducers/themeReducer";
+import {getUserSettingRequest, getUserSettingSuccess, getUserSettingFailure } from "../core/reducers/userSettingReducer";
+import {getThemeRequest, getThemeSuccess, getThemeFailure,} from "../core/reducers/themeReducer";
+import {initCardRequest, initCardSuccess, initCardFailure } from "../core/reducers/cardReducer";
+
 import store from "../core";
 
 import * as SecureStore from "expo-secure-store"; // voir doc expo pour ios (peut etre une props a set to false)
 
 import { Colors } from "../constant/Colors";
-import {
-  getAuthData,
-  signup,
-  splashRequest,
-  refreshAuth,
-  login,
-} from "../BackEnd/controllers/userData";
+import {getAuthData, signup, splashRequest, refreshAuth, login, tryAuth,} from "../BackEnd/controllers/userData";
 
 export default function SplashScreen({ navigation }) {
   const [errorMessage, setErrorMessage] = useState();
 
   const dispatch = useDispatch();
 
-  // async function goToScreen() {
-  //   const isUserToken = await checkUserToken();
-  //   if (isUserToken) {
-  //     navigation.navigate("Main Screens");
-  //   } else {
-  //     navigation.navigate("Login Screen");
-  //   }
-  // }
-
-  // useEffect(() => {
-  //   goToScreen();
-  // }, []);
-
-  // todo: implementer le stop des boucles infinies
-
-  function navigateToScreen(userSettingStatus) {
-    if (userSettingStatus) {
-      navigation.navigate("Main Screens");
-    } else {
-      navigation.navigate("First Questions Screen");
-    }
-  }
-
   async function tryLogin(authData) {
     console.log("on va passer dans login");
     const data = await login(authData?.userId, authData?.password);
     if (data.token) {
       // console.log(data);
-      const newAuthData = storeNewAuthData(authData, data);
+      const newAuthData = await storeNewAuthData(authData, data);
       console.log("newAuthData", newAuthData);
-      tryToken(newAuthData);
+      tryToken(newAuthData, false);
     } else {
       setErrorMessage("une erreur est survenue");
     }
   }
 
-  function storeNewAuthData(authData, newData) {
+  async function storeNewAuthData(authData, newData) {
     authData.token = newData.token;
     authData.refreshToken = newData.refreshToken;
     console.log("authData maj: ", authData);
-    SecureStore.setItemAsync("authData", JSON.stringify(authData));
+    await SecureStore.setItemAsync("authData", JSON.stringify(authData)); // ! si store echoue, pas d'erreur déclenchée --> bug sur Home
     return authData;
   }
 
@@ -72,7 +42,7 @@ export default function SplashScreen({ navigation }) {
     console.log("refreshToken", authData.refreshToken);
     const data = await refreshAuth(authData.refreshToken);
     if (data.token) {
-      const newAuthData = storeNewAuthData(authData, data);
+      const newAuthData = await storeNewAuthData(authData, data);
       tryToken(newAuthData, false);
     } else {
       if (data?.error) {
@@ -84,18 +54,35 @@ export default function SplashScreen({ navigation }) {
   }
 
   async function tryToken(authData, letTryRefresh = true) {
-    const data = await splashRequest(authData.token);
+    const data = await tryAuth(authData.token);
     if (data.success) {
-      console.log("[splashRequest]", data);
-      dispatch(getThemeSuccess(data.themeObj));
-      console.log("themeObj : ", store.getState().themeReducer); // .themeReducer.theme pour avoir que l'objet
-
-      navigateToScreen(data?.userSettingStatus);
+      if (data.userSettingStatus) {
+        storeSplashData();
+      } else {
+        navigation.navigate("First Questions Screen");
+      }
     } else {
-      dispatch(getThemeFailure());
       letTryRefresh
         ? tryRefreshToken(authData)
         : setErrorMessage("token invalide");
+    }
+  }
+
+  async function storeSplashData() {
+    const splashData = await splashRequest();
+    if (splashData.error) {
+      setErrorMessage(splashData.error);
+      dispatch(getThemeFailure("splashRequest failed"));
+      dispatch(getUserSettingFailure("splashRequest failed"));
+      dispatch(initCardFailure("splashRequest failed"));
+    } else {
+      const {themeObj, filiere, secondYearFiliere, answeredCardList, idCardsList, minSwipeForRanking } = splashData
+      const cursusType = "ingenieur";
+      dispatch(getThemeSuccess(themeObj));
+      dispatch(getUserSettingSuccess({filiere, secondYearFiliere, cursusType}));
+      dispatch(initCardSuccess({answeredCardList, idCardsList, minSwipeForRanking}));
+      console.log("themeObj : ", store.getState().themeReducer); // .themeReducer.theme pour avoir que l'objet
+      navigation.navigate("Main Screens");
     }
   }
 
@@ -108,9 +95,8 @@ export default function SplashScreen({ navigation }) {
       const signUpAnswer = await signup();
       if (signUpAnswer.token) {
         setErrorMessage(); // éviter d'avoir un msg d'erreur si on revient sur la page de connexion plus tard
-        // delete signUpAnswer.message  // ! considéré inutile
-        SecureStore.setItemAsync("authData", JSON.stringify(signUpAnswer));
-        tryToken(signUpAnswer, false);
+        SecureStore.setItemAsync("authData", JSON.stringify(signUpAnswer)) // ! si store echoue, pas d'erreur déclenchée --> bug sur Home
+          .then(() => tryToken(signUpAnswer, false));
       } else {
         const message = signUpAnswer?.message
           ? signUpAnswer.message
@@ -143,7 +129,9 @@ export default function SplashScreen({ navigation }) {
         style={{ height: "100%", width: "100%" }}
         resizeMode="contain"
       />
-      <Text style={styles.errorText}>{errorMessage}</Text>
+      <View style={styles.errorContainer}>
+        <Text style={styles.errorText}>{errorMessage}</Text>
+      </View>
     </View>
   );
 }
@@ -155,8 +143,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: Colors.backgroundColor,
   },
-  errorText: {
+  errorContainer: {
+    alignSelf: "center",
+    width: "80%",
     position: "absolute",
     top: 150,
+  },
+  errorText: {
+    textAlign: "center",
+    color: Colors.orange500,
+    fontWeight: "600",
   },
 });

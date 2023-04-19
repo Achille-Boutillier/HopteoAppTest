@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { initialCardState } from "../store/cardState";
 
 export const cardSlice = createSlice({
-  name: "allCard",
+  name: "card",
   initialState: initialCardState,
   reducers: {
     getCardRequest: (state) => {
@@ -19,23 +19,28 @@ export const cardSlice = createSlice({
       state.loading = false;
       state.error = action.payload; // payload contient l'argument passé au dispatch
     },
-    // getDetailRequest: (state) => {
-    //   state.loading = true;
-    //   state.error = null;
-    // },
-    // getDetailSuccess: (state, action) => {
-    //   state.card = action.payload;
-    //   state.loading = false;
-    //   state.error = null;
-    // },
-    // getDetailFailure: (state, action) => {
-    //   state.loading = false;
-    //   state.error = action.payload; // payload contient l'argument passé au dispatch
-    // },
+
+
+    initCardRequest: (state) => {
+      state.loading = true;
+      state.error = null;
+    },
+    initCardSuccess: (state, action) => {
+      const {answeredCardList, idCardsList, minSwipeForRanking} = action.payload
+      state.answeredCardList = answeredCardList;
+      state.idCardsList = idCardsList;
+      state.minSwipeForRanking = minSwipeForRanking;
+      state.loading = false;
+      state.error = null;
+    },
+    initCardFailure: (state, action) => {
+      state.loading = false;
+      state.error = action.payload; // payload contient l'argument passé au dispatch
+    },
   },
 });
 
-export const { getCardRequest, getCardSuccess, getCardFailure } =
+export const { getCardRequest, getCardSuccess, getCardFailure, initCardRequest, initCardSuccess, initCardFailure } =
   cardSlice.actions;
 
 export default cardSlice.reducer;

@@ -19,7 +19,7 @@ import PrimaryButton from "../../component/PrimaryButton";
 import { Colors } from "../../constant/Colors";
 import { HeaderButton } from "../../component/TopBar";
 import {
-  getProposition,
+  nextPile,
   unDoSwipe,
   swipeHandler,
 } from "../../BackEnd/controllers/cards";
@@ -84,6 +84,9 @@ export default function Home({ navigation, route }) {
   const [isUndoPress, setIsUndoPress] = useState(false);
 
   const themeState = useSelector((state) => state.themeReducer.theme);
+  const userSettingState = useSelector((state) => state.userSettingReducer);
+  const cardState = useSelector((state) => state.cardReducer);
+  
 
   useEffect(() => {
     setTheme(themeState);
@@ -111,17 +114,16 @@ export default function Home({ navigation, route }) {
   }
 
   async function getCards() {
+    const idCardsList = cardState.idCardsList.slice(0,10);    // todo : gérer quelle carte requeter
     unableCard();
-    const propositionObject = await getProposition();
+    const propositionObject = await nextPile(userSettingState, idCardsList);
     console.log("Je passe dans getCards");
     console.log(propositionObject);
-    if (propositionObject?.propositionPile) {
-      console.log(propositionObject.themeColor);
-      // setTheme(propositionObject.themeColor);
+    if (propositionObject?.cardsPile) {
       setListIndex(0);
       setInitialLength(propositionObject.propSwipedLength);
       setMinSwipeForRanking(propositionObject.minSwipeForRanking);
-      setProposition(propositionObject.propositionPile);
+      setProposition(propositionObject.cardsPile);
       setIsPropositionLoaded(true);
 
       // if (isPropositionLoaded) {

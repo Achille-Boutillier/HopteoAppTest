@@ -7,19 +7,28 @@ import { getAuthData } from "./userData";
 
 // Obtenir 2 propositions pour initialiser la pile tinde
 
-export async function getProposition() {
+export async function nextPile(userSettingState, idCardsList) {
+  console.log("idCardsList", idCardsList);
   const authData = await getAuthData();
+  const idCardsString = idCardsList.join(",");
+  console.log("idCardsString","aaa"+ idCardsString);
+  console.log("usersettingstate ---- : ", userSettingState.filiere);
 
   const requestOptions = {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
       authorization: "Bearer " + authData.token,
+      cursusType: userSettingState.cursusType,
+      filiere: userSettingState.filiere,
+      
     },
   };
 
   try {
-    const response = await fetch(route + "/listProposition", requestOptions);
+    // const response = await fetch(route + `/nextPile/${idCardsString}`, requestOptions);
+    // todo : omer doit corriger les idProp
+    const response = await fetch(route + "/nextPile/proposition1,proposition2", requestOptions);
     console.log(response.status);
     const data = await response.json();
     // console.log(data);
