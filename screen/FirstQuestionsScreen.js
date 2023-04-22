@@ -8,7 +8,7 @@ import UserStudyField from "../component/firstQuestionsComponents/UserStudyField
 import UserBacMean from "../component/firstQuestionsComponents/UserBacMean";
 import { alertProvider } from "../BackEnd/errorHandler";
 import {getUserSettingFailure, getUserSettingRequest, getUserSettingSuccess} from "../core/reducers/userSettingReducer";
-import { initCardRequest, initCardSuccess, initCardFailure } from "../core/reducers/cardReducer";
+import { splashSwipeRequest, splashSwipeSuccess, splashSwipeFailure } from "../core/reducers/swipeReducer";
 import { getThemeRequest, getThemeSuccess, getThemeFailure } from "../core/reducers/themeReducer";
 
 function FirstQuestionsScreen({ navigation }) {
@@ -56,13 +56,13 @@ function FirstQuestionsScreen({ navigation }) {
       setErrorMessage(splashData.error);
       dispatch(getThemeFailure("splashRequest failed"));
       dispatch(getUserSettingFailure("splashRequest failed"));
-      dispatch(initCardFailure("splashRequest failed"));
+      dispatch(splashSwipeFailure("splashRequest failed"));
     } else {
-      const {themeObj, filiere, secondYearFiliere, answeredCardList, idCardsList, minSwipeForRanking } = splashData
+      const {themeObj, filiere, secondYearFiliere, answeredCardList, idCardsList, minSwipeForRanking, swipeTypeObj } = splashData
       const cursusType = "ingenieur";
       dispatch(getThemeSuccess(themeObj));
-      dispatch(getUserSettingSuccess({filiere, secondYearFiliere, cursusType}));
-      dispatch(initCardSuccess({answeredCardList, idCardsList, minSwipeForRanking}));
+      dispatch(getUserSettingSuccess({filiere, secondYearFiliere, cursusType }));
+      dispatch(splashSwipeSuccess( {answeredCardList, idCardsList, minSwipeForRanking, swipeTypeObj: {} } ));
       console.log("themeObj : ", store.getState().themeReducer); // .themeReducer.theme pour avoir que l'objet
       navigation.navigate("Main Screens");
     }

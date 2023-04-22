@@ -1,62 +1,66 @@
 // Controller de l'accueil de l'application
 
-import { mainUrl } from "./userData";
+import { mainUrl, getAuthData, getUserSettingStatus } from "./userData";
 const route = mainUrl + "/cards";
 
-import { getAuthData } from "./userData";
 
 // Obtenir 2 propositions pour initialiser la pile tinde
 
-export async function nextPile(userSettingState, idCardsList) {
-  console.log("idCardsList", idCardsList);
+export async function nextPile(nextIdCardList) {
   const authData = await getAuthData();
-  const idCardsString = idCardsList.join(",");
-  console.log("idCardsString","aaa"+ idCardsString);
-  console.log("usersettingstate ---- : ", userSettingState.filiere);
+  const nextIdCardString = nextIdCardList.join(",");
+  console.log("[nextIdCardsString]", nextIdCardString);
+
+  const {cursusType, filiere} = getUserSettingStatus();
+  
+  
 
   const requestOptions = {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
       authorization: "Bearer " + authData.token,
-      cursusType: userSettingState.cursusType,
-      filiere: userSettingState.filiere,
+      cursusType: cursusType,
+      filiere: filiere,
       
     },
   };
 
   try {
-    // const response = await fetch(route + `/nextPile/${idCardsString}`, requestOptions);
-    // todo : omer doit corriger les idProp
-    const response = await fetch(route + "/nextPile/proposition1,proposition2", requestOptions);
+    const response = await fetch(route + `/nextPile/${nextIdCardString}`, requestOptions);
     console.log(response.status);
     const data = await response.json();
-    // console.log(data);
-    return data;
+    if (response.status===200) {
+      return data;
+    } else {
+      return {error: "Un problème est survenu avec le serveur" }
+    }
   } catch (error) {
     console.log("echec du bloc try :");
     console.log(error);
-    return { error };
+    return {error: "Un problème est survenu avec le serveur" };
   }
 }
 
-export async function swipeHandler(id, swipeType) {
+export async function swipeHandler(idCard, swipeType) {
   const authData = await getAuthData();
   console.log("[authData]", authData);
-  console.log("[id]", id);
+  console.log("[id]", idCard);
   console.log("[swipeType]", swipeType);
+
+  const {cursusType, filiere} = getUserSettingStatus();
 
   const requestOptions = {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
       authorization: "Bearer " + authData.token,
+      cursusType: cursusType,
+      filiere: filiere,
     },
     body: JSON.stringify({
-      // propId: "proposition1",
-      propId: id,
+      idCard: idCard,
       swipeType: swipeType,
-      // swipeType: "like",
     }),
   };
 
@@ -64,9 +68,11 @@ export async function swipeHandler(id, swipeType) {
     const response = await fetch(route + "/onSwipe", requestOptions);
     console.log(response.status);
     const data = await response.json();
-    // console.log("[swipeHandler]", data)
-    console.log("[swipeHandler] : ", data);
-    return data;
+    if (response.status===200) {
+      return true;
+    } else {
+      return false
+    }
   } catch (error) {
     console.log("bloc try failed :");
     console.log(error);

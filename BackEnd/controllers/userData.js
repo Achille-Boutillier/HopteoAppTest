@@ -1,8 +1,9 @@
-// import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import * as SecureStore from "expo-secure-store"; // voir doc expo pour ios (peut etre une props a set to false)
 // import * as Keychain from "react-native-keychain";           // marche pas sur expo
-// "email": "omer972@hotmail.fr",
-// "password": "orientis"
+import store from "../../core";
+
+
 export const mainUrl = "https://app.hopteo.fr/api/v0";
 const route = mainUrl + "/user";
 
@@ -10,6 +11,11 @@ export async function getAuthData() {
   let authData = await SecureStore.getItemAsync("authData");
   authData = JSON.parse(authData);
   return authData;
+}
+
+export function getUserSettingStatus() {
+  const {cursusType, filiere} = store.getState().userSettingReducer;
+  return {cursusType, filiere} 
 }
 
 export async function tryAuth(token) {

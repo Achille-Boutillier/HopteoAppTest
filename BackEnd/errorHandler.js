@@ -1,21 +1,13 @@
 import { Alert } from "react-native";
 
-export function alertProvider(loginScreenNavigation, leftFunction) {
-  // let onLeftButtonPress;
-  // let leftButtonName;
-  // if (!!leftFunction) {
-  //   leftButtonName = "Réessayer";
-  //   onLeftButtonPress = leftFunction;
-  // } else {
-  //   leftButtonName = "Fermer";
-  //   onLeftButtonPress = null ;   // function sans action
-  // }
+export function alertProvider(message) {
+  
 
   Alert.alert(
     "Une erreur s'est produite...",
-    "Mince alors ! Retentes ta chance dans quelques instants",
+    message ? message : "Mince alors ! Retentes ta chance dans quelques instants",
     [
-      { text: leftButtonName, style: "cancel", onPress: onLeftButtonPress },
+      { text: "fermer", style: "cancel"},
       // {text: "Se Reconnecter", style: "delete", onPress: loginScreenNavigation}
     ]
   );

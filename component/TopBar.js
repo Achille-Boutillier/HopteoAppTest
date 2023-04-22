@@ -31,7 +31,6 @@ export function BrandComponent() {
 export function HeaderButton({
   onSettingsPress,
   onUndoPress,
-  ManageSwipeButtonPressed,
 }) {
   // const manageButton = onManageSwipeButtonPressed ? (
   //   <PrimaryButton

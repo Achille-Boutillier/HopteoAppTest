@@ -1,17 +1,17 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import schoolReducer from "./reducers/schoolReducer";
 import themeReducer from "./reducers/themeReducer";
-import cardReducer from "./reducers/cardReducer";
+import swipeReducer from "./reducers/swipeReducer";
 import userSettingReducer from "./reducers/userSettingReducer";
 
 // todo : Attention !!! store.getState().school pour obtenir l'état de schoolReducer
 // todo : à modif dans classement.js
 const rootReducer = combineReducers({
   // combineReducers plus performant
-  schoolReducer: schoolReducer,
-  themeReducer: themeReducer,
-  cardReducer: cardReducer,
-  userSettingReducer: userSettingReducer,
+  schoolReducer,    // syntaxe equivalente à "schoolReducer: schoolReducer"
+  themeReducer,
+  swipeReducer,
+  userSettingReducer,
 });
 
 const store = configureStore({

@@ -1,16 +1,8 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  ActivityIndicator,
-  TouchableOpacity,
-  Button,
-  Alert,
-} from "react-native";
+import {StyleSheet, Text, View, ActivityIndicator, TouchableOpacity, Button, Alert, } from "react-native";
 // import Modal from "react-native-modal";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
-import { useState, useEffect, useLayoutEffect, createRef } from "react";
+import { useState, useEffect, useLayoutEffect, createRef,  } from "react";
 
 import Swiper from "react-native-deck-swiper";
 
@@ -18,15 +10,12 @@ import Card from "../../component/Card";
 import PrimaryButton from "../../component/PrimaryButton";
 import { Colors } from "../../constant/Colors";
 import { HeaderButton } from "../../component/TopBar";
-import {
-  nextPile,
-  unDoSwipe,
-  swipeHandler,
-} from "../../BackEnd/controllers/cards";
+import {nextPile, unDoSwipe, swipeHandler, } from "../../BackEnd/controllers/cards";
 import SmileyDontKnow from "../../assets/icons/smileyDontKnow.svg";
 import SwipeLevel from "../../component/SwipeLevel";
 import { alertProvider } from "../../BackEnd/errorHandler";
 import MessageContainer from "../../component/MessageContainer";
+import { storeNewSwipe, removeSwipe } from "../../core/reducers/swipeReducer";
 
 const swiperRef = createRef();
 
@@ -68,90 +57,73 @@ function SwipeButton() {
 }
 
 export default function Home({ navigation, route }) {
-  const [theme, setTheme] = useState();
-  const [listIndex, setListIndex] = useState(); // listIndex = indice relatif à la liste "proposition"
-  const [initialLength, setInitialLength] = useState(); // initialLength + index = total number of proposition answered
-  const [absoluteIndex, setAbsoluteIndex] = useState(); // index total en comptant toutes les propositions
-  const [minSwipeForRanking, setMinSwipeForRanking] = useState();
+  const themeState = useSelector((state) => state.themeReducer.theme);
+  const swipeReducer = useSelector((state) => state.swipeReducer);
 
-  const [isPropositionLoaded, setIsPropositionLoaded] = useState(false);
-  const [proposition, setProposition] = useState([]);
-  // const [theme, setTheme] = useState();
-  const [isSwipeButtonActivated, setIsSwipeButtonActivated] = useState(true);
-  const [swipeButtonValue, setSwipeButtonValue] = useState(null);
+  const dispatch = useDispatch();
+
+  const [theme, setTheme] = useState();
+  const [listIndex, setListIndex] = useState(); // listIndex = indice relatif à "cardList"
+  const [absoluteIndex, setAbsoluteIndex] = useState(); // index total en comptant toutes les cartes
+
+  const [isPileOver, setIsPileOver] = useState(true); // true car necessite un chargement initial
+
+  const [isCardListLoaded, setIsCardListLoaded] = useState(false);
+  const [cardList, setCardList] = useState([]);
+  
 
   const [swipeButtonZIndex, setSwipeButtonZIndex] = useState(2);
   const [isUndoPress, setIsUndoPress] = useState(false);
 
-  const themeState = useSelector((state) => state.themeReducer.theme);
-  const userSettingState = useSelector((state) => state.userSettingReducer);
-  const cardState = useSelector((state) => state.cardReducer);
+  
   
 
   useEffect(() => {
     setTheme(themeState);
     console.log("[themeState]", themeState);
+    console.log("[swipeReducer]", swipeReducer);
+
   }, [themeState]);
 
-  function loginScreenNavigation() {
-    navigation.navigate("Login Screen");
-  }
-
-  function onManageSwipeButtonPressed() {
-    setIsSwipeButtonActivated((value) => !value);
-  }
-
-  useEffect(() => {
-    if (isSwipeButtonActivated) {
-      setSwipeButtonValue(<SwipeButton />);
-    } else {
-      setSwipeButtonValue(null);
-    }
-  }, [isSwipeButtonActivated]);
+  
+// ========= gestion cartes swipe ================================
 
   function unableCard() {
-    setIsPropositionLoaded(false);
+    setIsCardListLoaded(false);
   }
 
-  async function getCards() {
-    const idCardsList = cardState.idCardsList.slice(0,10);    // todo : gérer quelle carte requeter
+  async function getCards(nextIdCardList) {
+    setIsPileOver(false);
+    if (nextIdCardList.length===0) {
+      setCardList("Tu as swipé toutes les cartes disponibles \n Nos équipes travaillent pour t'en proposer d'autres");
+      setIsCardListLoaded(true);
+      return
+    }
+    console.log("[idCardList]", nextIdCardList)
     unableCard();
-    const propositionObject = await nextPile(userSettingState, idCardsList);
+    const response = await nextPile(nextIdCardList);
     console.log("Je passe dans getCards");
-    console.log(propositionObject);
-    if (propositionObject?.cardsPile) {
+    console.log( "[cardsObject]" ,response);
+    if (response.cardsPile) {
       setListIndex(0);
-      setInitialLength(propositionObject.propSwipedLength);
-      setMinSwipeForRanking(propositionObject.minSwipeForRanking);
-      setProposition(propositionObject.cardsPile);
-      setIsPropositionLoaded(true);
-
-      // if (isPropositionLoaded) {
-      //   swiperRef.current.jumpToCardIndex(0);   // reset l'index de la carte
-      // }
-    } else if (propositionObject?.message) {
-      // console.log("message", "haha" instanceof String);
-      setProposition(propositionObject.message);
-      setIsPropositionLoaded(true);
+      setCardList(response.cardsPile);
+      setIsCardListLoaded(true);  
     } else {
-      alertProvider(loginScreenNavigation, getCards);
+      alertProvider();
     }
   }
-
+ 
   useEffect(() => {
-    // ? Comment connaitre le previous screen ? réponse GPT, marche pas :
-    // ?  les élements de .routes ne changent pas d'ordre en fonction d'où l'on vient
-    // ? .history ne possède que "Home" à chaque fois
-    // const navState = navigation.getState();            //* Get the current navigation state
-    // const prevScreenIndex = navState.index - 1;        //* Get the index of the previous route/screen
-    // const prevScreenName = navState?.routes[prevScreenIndex]?.name;    //* Get the name of the previous screen using the route object
-    // ou tester avec navState.history ?
+    if (isPileOver) {
+      console.log("[swipeReducer]", swipeReducer);
+      const answeredCards = Object.keys(swipeReducer.swipeTypeObj);
+      const notAnsweredCards = swipeReducer.idCardsList.filter(item => !(answeredCards.includes(item)));
+      const nextIdCardList = notAnsweredCards.slice(0,10);
+      getCards(nextIdCardList);
+    }
+  }, [isPileOver]);
 
-    const unsubscribe = navigation.addListener("focus", () => {
-      getCards();
-    });
-    return unsubscribe;
-  }, [navigation]);
+  // ================== fin gestion cartes swipe ==============================
 
   //================= gestion header buttons =======================================
 
@@ -208,52 +180,40 @@ export default function Home({ navigation, route }) {
   // Créer les boutons
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerRight: () => (
-        <HeaderButton
-          onSettingsPress={onSettingsPress}
-          onUndoPress={onUndoPress}
-          onManageSwipeButtonPressed={onManageSwipeButtonPressed}
-        />
-      ),
+      headerRight: () => ( <HeaderButton onSettingsPress={onSettingsPress} onUndoPress={onUndoPress} />),
     });
   }, [navigation]);
 
-  //=======================================================================================
+  //================== fin header button ==========================================================
+
+
 
   async function onSwiped(index, swipeType) {
     console.log(`swiper index : ${index}`);
-    const id = proposition[index].id;
-    console.log(id);
+    const id = cardList[index]._id;         // todo: remplacer "_id" par "id"
+    console.log( "[id swipe ]" ,id);
     setListIndex(index + 1);
-    const response = await swipeHandler(id, swipeType);
-    console.log(response);
+    dispatch(storeNewSwipe({id, swipeType}))
+    // todo: maj les reducers avec réponse question
+    const isSuccessfull = await swipeHandler(id, swipeType);
+    if (!isSuccessfull) {
+      dispatch(removeSwipe(id));
+      alertProvider("Le swipe n'a pas été pris en compte")
+    }
   }
 
-  useEffect(() => {
-    setAbsoluteIndex(listIndex + initialLength);
-  }, [listIndex, initialLength]);
-
-  useEffect(() => {
-    console.log(`AbsoluteIndex : ${absoluteIndex}`);
-    // console.log(absoluteIndex);
-  }, [absoluteIndex]);
-
-  // async function handleSwipe() {
-
-  //   const propId = proposition[listIndex-1].id;
-  //   console.log(propId);
-
-  //   const isSwipeHandled = await swipeHandler(propId, routeEnd);
-  //   console.log(isSwipeHandled);
-  //   console.log(listIndex);
-
-  // }
-
   // useEffect(() => {
-  //   if (listIndex>0) {
-  //     handleSwipe();
-  //   }
-  // }, [listIndex])
+  //   setAbsoluteIndex(listIndex + initialLength);
+  // }, [listIndex, initialLength]);
+
+  useEffect(() => {
+    console.log("[swipeReducer]", swipeReducer);
+    length = Object.keys(swipeReducer.swipeTypeObj).length;
+    console.log("[absoluteIndex]", length);
+    setAbsoluteIndex(length);
+  }, [swipeReducer.swipeTypeObj]);
+
+
 
   // ---------- méthodes relatives au swipe ----------------------
 
@@ -262,28 +222,28 @@ export default function Home({ navigation, route }) {
 
   //------------------------------------------
 
-  if (isPropositionLoaded && proposition instanceof Array) {
+  if (isCardListLoaded && cardList instanceof Array) {
     return (
       <View style={styles.mainContainer}>
         <SwipeLevel
           absoluteIndex={absoluteIndex}
-          minSwipeForRanking={minSwipeForRanking} // 'pas' des levels
+          minSwipeForRanking={swipeReducer.minSwipeForRanking} // 'pas' des levels
           progressBarColor={"#ebd226"}
           borderColor={null}
           mainBarColor={"#efe9bd"}
         />
 
         <View style={[styles.bottomContainer, { zIndex: swipeButtonZIndex }]}>
-          {swipeButtonValue}
+          <SwipeButton />
         </View>
 
         <View style={styles.cardContainer}>
           <Swiper
             ref={swiperRef}
-            cards={proposition}
-            extraData={proposition}
+            cards={cardList}
+            extraData={cardList}
             cardIndex={0} // 0 si premier elem tt le temps
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item._id}     // todo: rechanger _id par id
             renderCard={(currentCard) => (
               <Card
                 cardValue={currentCard}
@@ -300,7 +260,7 @@ export default function Home({ navigation, route }) {
             onSwipedBottom={(index) => onSwiped(index, "dontKnow")}
             // infinite // repars sur les premières cartes quand c'est fini => à changer
             // onSwipedAll={() => {}}  // function à appeler quand toutes les cartes ont été swipées
-            onSwipedAll={() => getCards()}
+            onSwipedAll={() => setIsPileOver(true)}
             dragStart={setSwipeButtonZIndex.bind(this, 0)}
             dragEnd={setSwipeButtonZIndex.bind(this, 2)}
             backgroundColor={"transparent"}
@@ -378,10 +338,10 @@ export default function Home({ navigation, route }) {
         </View>
       </View>
     );
-  } else if (isPropositionLoaded && typeof proposition === "string") {
+  } else if (isCardListLoaded && typeof cardList === "string") {
     return (
       <View style={[styles.mainContainer, { alignItems: "center" }]}>
-        <MessageContainer>{proposition}</MessageContainer>
+        <MessageContainer>{cardList}</MessageContainer>
       </View>
     );
   } else {

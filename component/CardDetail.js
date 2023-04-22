@@ -7,7 +7,7 @@ import {
   getCardRequest,
   getCardFailure,
   getCardSuccess,
-} from "../core/reducers/cardReducer";
+} from "../core/reducers/swipeReducer";
 import { useSelector } from "react-redux";
 import store from "../core";
 
