@@ -10,6 +10,7 @@ import { alertProvider } from "../BackEnd/errorHandler";
 import {getUserSettingFailure, getUserSettingRequest, getUserSettingSuccess} from "../core/reducers/userSettingReducer";
 import { splashSwipeRequest, splashSwipeSuccess, splashSwipeFailure } from "../core/reducers/swipeReducer";
 import { getThemeRequest, getThemeSuccess, getThemeFailure } from "../core/reducers/themeReducer";
+import { splashRequest } from "../BackEnd/controllers/userData";
 
 function FirstQuestionsScreen({ navigation }) {
   const [studyField, setStudyField] = useState();

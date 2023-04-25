@@ -67,6 +67,7 @@ export async function swipeHandler(idCard, swipeType) {
   try {
     const response = await fetch(route + "/onSwipe", requestOptions);
     console.log(response.status);
+    
     const data = await response.json();
     if (response.status===200) {
       return true;

@@ -190,7 +190,7 @@ export default function Home({ navigation, route }) {
 
   async function onSwiped(index, swipeType) {
     console.log(`swiper index : ${index}`);
-    const id = cardList[index]._id;         // todo: remplacer "_id" par "id"
+    const id = cardList[index].id;         // todo: remplacer "_id" par "id"
     console.log( "[id swipe ]" ,id);
     setListIndex(index + 1);
     dispatch(storeNewSwipe({id, swipeType}))
@@ -243,7 +243,7 @@ export default function Home({ navigation, route }) {
             cards={cardList}
             extraData={cardList}
             cardIndex={0} // 0 si premier elem tt le temps
-            keyExtractor={(item) => item._id}     // todo: rechanger _id par id
+            keyExtractor={(item) => item.id}     // todo: rechanger _id par id
             renderCard={(currentCard) => (
               <Card
                 cardValue={currentCard}

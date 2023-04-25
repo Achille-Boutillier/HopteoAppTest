@@ -6,6 +6,7 @@ import {getThemeRequest, getThemeSuccess, getThemeFailure,} from "../core/reduce
 import {splashSwipeRequest, splashSwipeSuccess, splashSwipeFailure } from "../core/reducers/swipeReducer";
 
 import store from "../core";
+// import store from "../core";
 
 import * as SecureStore from "expo-secure-store"; // voir doc expo pour ios (peut etre une props a set to false)
 
@@ -80,8 +81,8 @@ export default function SplashScreen({ navigation }) {
       const cursusType = "ingenieur";
       dispatch(getThemeSuccess(themeObj));
       dispatch(getUserSettingSuccess({filiere, secondYearFiliere, cursusType}));
-      dispatch(splashSwipeSuccess({answeredCardList, idCardsList, minSwipeForRanking, swipeTypeObj: {}}));   // todo: changer les {} de swipeTypeObj
-      console.log("themeObj : ", store.getState().themeReducer); // .themeReducer.theme pour avoir que l'objet
+      dispatch(splashSwipeSuccess({answeredCardList, idCardsList, minSwipeForRanking, swipeTypeObj}));   // todo: changer les {} de swipeTypeObj
+      // console.log("themeObj : ", store.getState().themeReducer); // .themeReducer.theme pour avoir que l'objet
       navigation.navigate("Main Screens");
     }
   }
@@ -108,11 +109,11 @@ export default function SplashScreen({ navigation }) {
 
   // tester les différents cas :
   async function tester() {
-    // SecureStore.deleteItemAsync("authData");
-    const authData = await getAuthData();
-    authData.token = "a";
+    SecureStore.deleteItemAsync("authData");
+    // const authData = await getAuthData();
+    // authData.token = "a";
     // authData.refreshToken = "b";
-    await SecureStore.setItemAsync("authData", JSON.stringify(authData));
+    // await SecureStore.setItemAsync("authData", JSON.stringify(authData));
   }
 
   useEffect(() => {
