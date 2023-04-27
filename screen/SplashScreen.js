@@ -5,7 +5,7 @@ import {getUserSettingRequest, getUserSettingSuccess, getUserSettingFailure } fr
 import {getThemeRequest, getThemeSuccess, getThemeFailure,} from "../core/reducers/themeReducer";
 import {splashSwipeRequest, splashSwipeSuccess, splashSwipeFailure } from "../core/reducers/swipeReducer";
 
-import store from "../core";
+// import store from "../core";
 // import store from "../core";
 
 import * as SecureStore from "expo-secure-store"; // voir doc expo pour ios (peut etre une props a set to false)

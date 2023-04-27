@@ -10,100 +10,45 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import PrimaryButton from "./PrimaryButton";
 import { Colors } from "../constant/Colors";
 import { useEffect, useState } from "react";
-import {
-  getSchool,
-  onSchoolLike,
-  getLikeValue,
-} from "../BackEnd/controllers/classement";
+
 import { alertProvider } from "../BackEnd/errorHandler";
+import { useSelector, useDispatch } from "react-redux";
+import {setSchoolLikeFailure, setSchoolLikeSuccess } from "../core/reducers/schoolReducer";
+import { modifyLike } from "../BackEnd/controllers/school";
 
-export default function SchoolBanner({
-  id,
-  rank,
-  nomEcole,
-  typeFormation,
-  globalSchoolGrade,
-  like,
-  rankList,
-  setRankList,
-}) {
+
+export default function SchoolBanner({schoolId}) {    //id, rank, nomEcole, typeFormation, like
   const navigation = useNavigation();
-
-  const [schoolData, setSchoolData] = useState({});
-  const [isSchoolPressed, setIsSchoolPressed] = useState(false);
-  // const [isSchoolLiked, setIsSchoolLiked] = useState(like);
+  const dispatch = useDispatch();
+  const singleSchoolData = useSelector((state) => state.schoolReducer.schoolsData[schoolId]);
 
   function loginScreenNavigation() {
     navigation.navigate("Login Screen");
   }
 
   // --------------- like ecole -------------------------------------
-  // ! like disabled car pas le time
+  
+  async function handleLikePress() {
+    const newLike = !singleSchoolData.like;
+    dispatch(setSchoolLikeSuccess({schoolId, newLike}));
+    const success = await modifyLike(schoolId, newLike);
+    if (!success) {
+      dispatch(setSchoolLikeFailure({schoolId, newLike}));
+      alertProvider("Un problème est survenu... Le like n'a pas été pris en compte.");
+    }
 
-  // async function handleLikePress() {
-  //   console.log("like press");
-  //   // const bool = !isSchoolLiked;
-  //   // setIsSchoolLiked(!isSchoolLiked);
-  //   const likeSuccess = await onSchoolLike(id, !like);
-  //   if(likeSuccess){
-  //     updateSchool(id, like)
-  //   }
-  //   return;
-  //   // console.log(likeSuccess);
-  // };
-
-  // function updateSchool(currentid,  currentLike){
-  //   const index = rankList.findIndex((uni)=> uni.id === currentid);
-  //   if(index !== -1){
-  //     rankList[index].like = !currentLike;
-  //     return setRankList(rankList);
-  //   }
-  //   return console.error("index pas trouvé");
-  // }
+  }
   // --------------- fin like ecole -------------------------------------
 
-  // -------------- école pressed ----------------------------------
-
-  async function getSchoolData() {
-    console.log("je passe dans getSchoolData");
-    const data = await getSchool(id);
-    // console.log()
-    if (data) {
-      setSchoolData(data);
-    } else {
-      setIsSchoolPressed(false);
-      alertProvider(loginScreenNavigation);
-    }
-  }
-
   function onPressSchool() {
-    setIsSchoolPressed(true);
+    navigation.navigate("School Page", {schoolId, previousScreen: "SchoolRanking"});
   }
 
-  useEffect(() => {
-    if (isSchoolPressed) {
-      // console.log("[isschoolpressed]", isSchoolPressed);
-      // empêcher l'execution inutile
-      getSchoolData();
-    }
-  }, [isSchoolPressed]);
-
-  useEffect(() => {
-    if (isSchoolPressed) {
-      setIsSchoolPressed(false);
-      navigation.navigate("School Page", {
-        schoolPressedData: { ...schoolData, id: id },
-        previousScreen: "SchoolRanking",
-      });
-    }
-  }, [schoolData]);
-
-  // ------------- fin ecole pressed -----------------------------------
 
   return (
     <TouchableOpacity
       style={styles.bannerContainer}
-      onPress={onPressSchool.bind(this, id)}
+      onPress={onPressSchool.bind(this, schoolId)}
     >
       <View style={styles.rankContainer}>
         <Text
@@ -114,33 +59,33 @@ export default function SchoolBanner({
             marginTop: -2,
           }}
         >
-          {rank}
+          {singleSchoolData.rank}
         </Text>
       </View>
       <View style={styles.writtenInfo}>
-        <Text style={{ fontWeight: "500" }}>{nomEcole}</Text>
-        <Text style={{ color: Colors.grey }}>{typeFormation}</Text>
+        <Text style={{ fontWeight: "500" }}>{singleSchoolData.nomEcole}</Text>
+        <Text style={{ color: Colors.grey }}>{singleSchoolData.typeFormation}</Text>
       </View>
 
       {/* like disabled : */}
 
-      {/* <View style={styles.rightContainer}>
-        <View style={styles.rightItems}>
+      <View style={styles.rightContainer}>
+        {/* <View style={styles.rightItems}>
           <Text>
             {globalSchoolGrade ? String(parseInt(globalSchoolGrade) + "%") : "0%"}
           </Text>
-        </View>
+        </View> */}
         <View style={styles.rightItems}>
           <PrimaryButton
             onPress={handleLikePress}
             // name={isSchoolLiked ? "heart" : "heart-outline"}  
-            name={like ? "heart" : "heart-outline"}  
+            name={singleSchoolData.like ? "heart" : "heart-outline"}  
             size={30}
             color={Colors.orange500}
             bigButton={true}
           />
         </View>
-      </View> */}
+      </View>
     </TouchableOpacity>
   );
 }

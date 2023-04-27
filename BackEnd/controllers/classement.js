@@ -1,87 +1,50 @@
 // Controller de la page classement
 
 import { getAuthData } from "./userData";
-import {
-  getSchoolFailure,
-  getSchoolRequest,
-  getSchoolSuccess,
-  setSchoolLike,
-  setSchoolLikeFailure,
-  setSchoolLikeSuccess,
-} from "../../core/reducers/schoolReducer";
-import { mainUrl } from "./userData";
+// import {getRankRequest, getRankSuccess, getRankFailure} from "../../core/reducers/schoolReducer";
+import { mainUrl, getUserSettingStatus } from "./userData";
 import store from "../../core";
-const route = mainUrl + "/classement";
+const route = mainUrl + "/ranking";
 
-// todo :
-export async function getSchool2(dispatch) {
-  const authData = await getAuthData();
-  const requestOptions = {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      authorization: "Bearer " + authData.token,
-    },
-    // body: {}
-  };
-
-  return async () => {
-    dispatch(getSchoolRequest());
-    console.log("coucouuuuuuuu");
-    console.log("initial", store.getState());
-    try {
-      const response = fetch(route + "/allSchoolRanking", requestOptions)
-        .then(async (response) => {
-          const data = await response.json();
-          dispatch(getSchoolSuccess(data));
-          console.log("success", store.getState()); //getState("schoolLits") pour choper la clé schoolList
-        })
-        .catch((error) => {
-          console.log("echec du bloc try :");
-          console.log(error);
-          dispatch(getSchoolFailure(error));
-          console.log("echecs", store.getState());
-        }); // console.log(response.status)
-      // console.log(data);
-    } catch (error) {
-      console.log("echec du bloc try :");
-      console.log(error);
-      dispatch(getSchoolFailure(error));
-      console.log("echecs", store.getState());
-    }
-  };
-}
 
 // Fournir le classement des écoles
 export async function getSchoolRanking() {
   const authData = await getAuthData();
+  const {cursusType, filiere} = getUserSettingStatus();
+
   const requestOptions = {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
       authorization: "Bearer " + authData.token,
+      cursusType,
+      filiere,
     },
-    // body: {}
   };
 
   try {
-    const response = await fetch(route + "/allSchoolRanking", requestOptions);
-    // console.log(response.status)
+    const response = await fetch(route + "/generate", requestOptions);
+    console.log(response.status)
     const data = await response.json();
-    // console.log(data);
-
-    console.log("success", store.getState());
-
-    return data;
+    console.log("[getSchoolRanking()]",data);
+    if (response.status===200) {
+      return data;
+    } else {
+      return { error: "erreur de requete" };
+    }
   } catch (error) {
     console.log("echec du bloc try :");
     console.log(error);
-    dispatch(getSchoolFailure(error));
-    console.log("echecs", store.getState());
 
-    return { error };
+    return { error: "erreur de requete" };
   }
 }
+
+
+
+
+
+// ! fonction inutiles : ----------------------------------------------------
 
 // Afficher une école depuis la page du classement
 export async function getSchool(schoolId) {
@@ -115,35 +78,7 @@ export async function getSchool(schoolId) {
   }
 }
 
-export async function onSchoolLike(schoolId, bool) {
-  const authData = await getAuthData();
 
-  const requestOptions = {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      authorization: "Bearer " + authData.token,
-    },
-    body: JSON.stringify({
-      bool: bool,
-    }),
-  };
-
-  try {
-    const response = await fetch(
-      route + `/onSchoolLike/${schoolId}`,
-      requestOptions
-    );
-    // console.log(response.status);
-    const data = await response.json();
-    console.log(data);
-    return data;
-  } catch (error) {
-    console.log("echec du bloc try :");
-    console.log(error);
-    return error;
-  }
-}
 
 function setLike(schoolList, id) {
   // console.log(["TEEEESST"], store.getState());

@@ -4,6 +4,7 @@ export const initialSwipeState = {
   idCardsList: [],          // [ingeCard1, ingeCard2, ingeCard3, ingeCard4, ingeCard5, ...]
   sentToBackAnswers: [],    // [ingeCard1, ingeCard2]
   minSwipeForRanking: null,
+  rankingAbsoluteIndex: 0,
   loading: null,
   error: null,
 };

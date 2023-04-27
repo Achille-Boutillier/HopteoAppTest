@@ -64,7 +64,7 @@ function FirstQuestionsScreen({ navigation }) {
       dispatch(getThemeSuccess(themeObj));
       dispatch(getUserSettingSuccess({filiere, secondYearFiliere, cursusType }));
       dispatch(splashSwipeSuccess( {answeredCardList, idCardsList, minSwipeForRanking, swipeTypeObj: {} } ));
-      console.log("themeObj : ", store.getState().themeReducer); // .themeReducer.theme pour avoir que l'objet
+      // console.log("themeObj : ", store.getState().themeReducer); // .themeReducer.theme pour avoir que l'objet
       navigation.navigate("Main Screens");
     }
   }

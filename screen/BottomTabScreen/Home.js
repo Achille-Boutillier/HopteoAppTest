@@ -7,54 +7,17 @@ import { useState, useEffect, useLayoutEffect, createRef,  } from "react";
 import Swiper from "react-native-deck-swiper";
 
 import Card from "../../component/Card";
-import PrimaryButton from "../../component/PrimaryButton";
+// import PrimaryButton from "../../component/PrimaryButton";
 import { Colors } from "../../constant/Colors";
 import { HeaderButton } from "../../component/TopBar";
 import {nextPile, unDoSwipe, swipeHandler, } from "../../BackEnd/controllers/cards";
-import SmileyDontKnow from "../../assets/icons/smileyDontKnow.svg";
 import SwipeLevel from "../../component/SwipeLevel";
 import { alertProvider } from "../../BackEnd/errorHandler";
 import MessageContainer from "../../component/MessageContainer";
 import { storeNewSwipe, removeSwipe } from "../../core/reducers/swipeReducer";
-
+import SwipeButton from "../../component/SwipeButton";
 const swiperRef = createRef();
 
-function SwipeButton() {
-  return (
-    <View style={styles.buttonContainer}>
-      <PrimaryButton
-        onPress={() => swiperRef.current.swipeLeft()}
-        name="close"
-        size={48}
-        color="red"
-      />
-      <TouchableOpacity
-        onPress={() => swiperRef.current.swipeBottom()}
-        style={{
-          height: 55,
-          width: 55,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <SmileyDontKnow width={35} height={35} fill={Colors.orange500} />
-      </TouchableOpacity>
-
-      <PrimaryButton
-        onPress={() => swiperRef.current.swipeRight()}
-        name="heart"
-        size={40}
-        color="red"
-      />
-      <PrimaryButton
-        onPress={() => swiperRef.current.swipeTop()}
-        name="star"
-        size={39}
-        color={Colors.orange500}
-      />
-    </View>
-  );
-}
 
 export default function Home({ navigation, route }) {
   const themeState = useSelector((state) => state.themeReducer.theme);
@@ -73,6 +36,7 @@ export default function Home({ navigation, route }) {
   
 
   const [swipeButtonZIndex, setSwipeButtonZIndex] = useState(2);
+  const [swipeDir, setSwipeDir] = useState(null);
   const [isUndoPress, setIsUndoPress] = useState(false);
 
   
@@ -213,7 +177,23 @@ export default function Home({ navigation, route }) {
     setAbsoluteIndex(length);
   }, [swipeReducer.swipeTypeObj]);
 
+// ==================position de la carte===================================
 
+function onSwiping(x, y){
+  let direction;
+  if (Math.abs(x) > Math.abs(y) && x > 40) {
+    direction = "like";
+  } else if (Math.abs(x) > Math.abs(y) && x < -40) {
+    direction = "dislike";
+  } else if (Math.abs(y) > Math.abs(x) && y > 70) {
+    direction = "dontKnow";
+  } else if (Math.abs(y) > Math.abs(x) && y < -70) {
+    direction = "superLike";
+  } else {
+    direction = null;
+  }
+  setSwipeDir(direction);
+}
 
   // ---------- méthodes relatives au swipe ----------------------
 
@@ -234,7 +214,7 @@ export default function Home({ navigation, route }) {
         />
 
         <View style={[styles.bottomContainer, { zIndex: swipeButtonZIndex }]}>
-          <SwipeButton />
+          <SwipeButton swiperRef={swiperRef} swipeDir={swipeDir}/>
         </View>
 
         <View style={styles.cardContainer}>
@@ -256,13 +236,17 @@ export default function Home({ navigation, route }) {
             // onSwiped={onSwiped}
             onSwipedRight={(index) => onSwiped(index, "like")}
             onSwipedLeft={(index) => onSwiped(index, "dislike")}
-            onSwipedTop={(index) => onSwiped(index, "superLike")}
+            onSwipedTop={(index) => onSwiped(index, "superlike")}
             onSwipedBottom={(index) => onSwiped(index, "dontKnow")}
             // infinite // repars sur les premières cartes quand c'est fini => à changer
             // onSwipedAll={() => {}}  // function à appeler quand toutes les cartes ont été swipées
+            onSwiping={onSwiping}
             onSwipedAll={() => setIsPileOver(true)}
-            dragStart={setSwipeButtonZIndex.bind(this, 0)}
-            dragEnd={setSwipeButtonZIndex.bind(this, 2)}
+            // dragStart={setSwipeButtonZIndex.bind(this, 0)}
+            dragEnd={()=>{
+              // setSwipeButtonZIndex(2);
+              setSwipeDir(null);
+            }}
             backgroundColor={"transparent"}
             animateCardOpacity // crée le changement d'opacité de la carte quand on swipe
             animateOverlayLabelsOpacity // opacité sur le "nope", "yes"
@@ -273,8 +257,10 @@ export default function Home({ navigation, route }) {
                 style: {
                   label: {
                     backgroundColor: "white",
-                    color: "red",
+                    color: Colors.dislike,
                     fontSize: 24,
+                    borderColor: Colors.dislike,
+                    borderWidth: 2,
                   },
                   wrapper: {
                     alignItems: "flex-end",
@@ -290,8 +276,10 @@ export default function Home({ navigation, route }) {
                 style: {
                   label: {
                     backgroundColor: "white",
-                    color: "green",
+                    color: Colors.like,
                     fontSize: 24,
+                    borderColor: Colors.like,
+                    borderWidth: 2,
                   },
                   wrapper: {
                     alignItems: "flex-start",
@@ -307,8 +295,10 @@ export default function Home({ navigation, route }) {
                 style: {
                   label: {
                     backgroundColor: "white",
-                    color: "green",
+                    color: Colors.superLike,
                     fontSize: 24,
+                    borderColor: Colors.superLike,
+                    borderWidth: 2,
                   },
                   wrapper: {
                     alignItems: "center",
@@ -318,13 +308,14 @@ export default function Home({ navigation, route }) {
                 },
               },
               bottom: {
-                // top et bottom si necessaire
-                title: "PAS D'AVIS",
+                title: "INDECIS",
                 style: {
                   label: {
                     backgroundColor: "white",
-                    color: "red",
+                    color: Colors.dontKnow,
                     fontSize: 24,
+                    borderColor: Colors.dontKnow,
+                    borderWidth: 2,
                   },
                   wrapper: {
                     alignItems: "center",
@@ -376,6 +367,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
+    // borderWidth: 1,
+  },
+  arroundButton: {
+    backgroundColor: Colors.white,
+
   },
   loadingContainer: {
     flex: 1,

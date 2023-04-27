@@ -1,6 +1,6 @@
 export const initialSchoolState = {
-  schoolList: [],
-  schools: {}, //todo : remplacer schoolList par cet objet
+  rankIdList: null,
+  schoolsData: {}, 
   loading: null,
-  error: null,
+  error: false,
 };

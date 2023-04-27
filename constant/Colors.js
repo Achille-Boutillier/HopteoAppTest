@@ -21,33 +21,12 @@ export const Colors = {
   backgroundColor: "#EFF2F5",
   navBarColor: "#F8FAFB",
   podiumColor: "#93C1EC",
-  // themeColors: {
-  //   formation500: formationColor,
-  //   formation100: formationColor + "33", // "33" sert à aténuer la couleur
-  //   campus500: campusColor,
-  //   campus100: campusColor + "33",
-  //   extrascolaire500: extrasclolaireColor,
-  //   extrascolaire100: extrasclolaireColor + "33",
-  //   excellence500: excellenceColor,
-  //   excellence100: excellenceColor + "33",
-  //   argent500: argentColor,
-  //   argent100: argentColor + "33",
-  //   valeurs500: valeursColor,
-  //   valeurs100: valeursColor + "33",
 
-    // formation500: "#00AEE5",
-    // formation100: "#00AEE533",
-    // campus500: "#00B232C7",
-    // campus100: "#00B23233",
-    // extrascolaire500: "#E50097",
-    // extrascolaire100: "#E5009733",
-    // excellence500: "#D60101",
-    // excellence100: "#D6010133",
-    // argent500: "#E5CF00",
-    // argent100: "#E5CF0033",
-    // valeurs500: "#AA00E5",
-    // valeurs100: "#AA00E533",
-  // },
+  dislike: "red",
+  dontKnow: "yellow",
+  like: "lightgreen",
+  superLike: "blue",
+
 };
 
 // export default Colors;

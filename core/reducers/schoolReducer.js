@@ -5,42 +5,96 @@ export const schoolSlice = createSlice({
   name: "school",
   initialState: initialSchoolState,
   reducers: {
-    getSchoolRequest: (state) => {
+
+
+    // ------------ banner -------------------------
+    getSchoolBannerRequest: (state) => {
       state.loading = true;
-      state.error = null;
+      state.error = false;
     },
-    getSchoolSuccess: (state, action) => {
-      state.schoolList = action.payload;
+    getSchoolBannerSuccess: (state, action) => {
+      const schoolId = Object.keys(action.payload);
+      schoolId.map((item)=> {state.schoolsData[item] = action.payload[item] })    // ! {ingeSchool1 : {..., id: ingeSchool1}, ...}
       state.loading = false;
       state.error = null;
     },
-    getSchoolFailure: (state, action) => {
+    getSchoolBannerFailure: (state, action) => {
       state.loading = false;
-      state.error = action.payload; // payload contient l'argument passé au dispatch
+      state.error = true; // payload contient l'argument passé au dispatch
     },
-    setSchoolLike: (state) => {
+
+    //----------------------page ecole-------------------------------------
+
+    getSchoolPageRequest: (state) => {
       state.loading = true;
-      state.error = null;
+      state.error = false;
     },
+    getSchoolPageSuccess: (state, action) => {
+      const {schoolId, data} = action.payload
+      console.log("[schoolPagereducer]", data);
+      console.log("[schoolPagereducer]", schoolId);
+
+      state.schoolsData[schoolId] = {...state.schoolsData[schoolId], ...data};
+      console.log("[schoolPagereducer]", state.schoolsData[schoolId]);
+
+      state.loading = false;
+      state.error = false;
+    },
+    getSchoolPageFailure: (state, action) => {
+      state.loading = false;
+      state.error = true; // payload contient l'argument passé au dispatch
+    },
+
+    //----------------------like-------------------------------------
+
     setSchoolLikeSuccess: (state, action) => {
-      state.loading = false;
-      state.error = null;
-      state.schoolList = action.payload;
+      const {schoolId, newLike } = action.payload;
+      state.schoolsData[schoolId].like = newLike ;
+      state.error = false;
     },
+    
     setSchoolLikeFailure: (state, action) => {
-      // console.log("Payload:", action.payload);
+      const {schoolId, newLike } = action.payload;
+      state.schoolsData[schoolId].like = !newLike ;
       state.loading = false;
-      state.error = action.payload;
+      state.error = true; 
     },
+
+    // --------------------rank----------------------------
+
+    getRankRequest: (state) => {
+      state.loading = true;
+      state.error = false;
+    },
+    getRankSuccess: (state, action) => {
+      if (Array.isArray(action.payload)) {
+        const idList = [];
+        action.payload.map((item) => {
+          idList.push(item.id);
+          if (state.schoolsData[item.id]) {
+            state.schoolsData[item.id].rank = item.rank;
+          }
+        });
+        state.rankIdList = idList;
+      } else {
+        state.rankIdList = action.payload;
+      }
+      state.loading = false;
+      state.error = false;
+    },
+    getRankFailure: (state, action) => {
+      state.loading = false;
+      state.error = true; // payload contient l'argument passé au dispatch
+    },
+
+
   },
 });
 
 export const {
-  getSchoolRequest,
-  getSchoolSuccess,
-  getSchoolFailure,
-  setSchoolLike,
-  setSchoolLikeFailure,
-  setSchoolLikeSuccess,
+  getRankRequest, getRankSuccess, getRankFailure, 
+  setSchoolLikeSuccess, setSchoolLikeFailure, 
+  getSchoolBannerRequest, getSchoolBannerSuccess, getSchoolBannerFailure, 
+  getSchoolPageRequest, getSchoolPageSuccess, getSchoolPageFailure,
 } = schoolSlice.actions;
 export default schoolSlice.reducer;

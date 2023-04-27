@@ -1,126 +1,135 @@
-import {
-  FlatList,
-  StyleSheet,
-  View,
-  ActivityIndicator,
-  Text,
-} from "react-native";
+import {FlatList, StyleSheet, View, ActivityIndicator, Text,} from "react-native";
 import { useEffect, useState, useLayoutEffect } from "react";
+import { getRankRequest, getRankSuccess, getRankFailure, getSchoolBannerRequest, getSchoolBannerSuccess, getSchoolBannerFailure } from "../../core/reducers/schoolReducer";
 
 import { Colors } from "../../constant/Colors";
-import {
-  getSchool2,
-  getSchoolRanking,
-} from "../../BackEnd/controllers/classement";
+import {getSchoolRanking,} from "../../BackEnd/controllers/classement";
+import { getBannerData } from "../../BackEnd/controllers/school";
 import SchoolBanner from "../../component/SchoolBanner";
 import MessageContainer from "../../component/MessageContainer";
 import { HeaderButton } from "../../component/TopBar";
 import { alertProvider } from "../../BackEnd/errorHandler";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { storeRankingAbsoluteIndex } from "../../core/reducers/swipeReducer";
+import store from "../../core";
+
 
 function SchoolRanking({ navigation, route }) {
-  const [rankList, setRankList] = useState(); // ?  si le screen se recharge pour une quelconque raison, ranklist devient vide : "continue de swiper..."
-  // const [handler, setHandler] = useState(0) ;
-  // const [chargingComponent, setChargingComponent]  = useState(true);
+  const schoolReducer = useSelector((state) => state.schoolReducer);
+  const swipeReducer = useSelector((state) => state.swipeReducer);
+
+
+  // todo : virer le componentToShow du useEffect, direct dans le return sous condition if
+  
+  // const [previousAbsoluteIndex, setPreviousAbsoluteIndex] = useState(-1);
+  const [readyToDisplayRank, setReadyToDisplayRank] = useState(false);
   const [componentToShow, setComponentToShow] = useState();
   const dispatch = useDispatch();
 
-  // function updateSchool(school){
-  //   const index = rankList.findIndex((uni)=> uni.id === school.id);
-  //   if(index !== -1){
-  //     rankList[index].like = school.like;
-  //     setHandler(handler+1);
-  //     return setRankList(rankList);
-  //   }
-  //   return console.error("index pas trouvé");
+  
+  // function loginScreenNavigation() {
+  //   navigation.navigate("Login Screen");
   // }
 
-  // useEffect(() => {
-  //   const unsubscribe = navigation.addListener('focus', () => {
-  //   const school = route?.params?.school;
-  //   if (school) {
-  //     updateSchool(school)
-  //   }
-  //     })
-  //   }, [navigation, route?.params?.school])
-
-  function loginScreenNavigation() {
-    navigation.navigate("Login Screen");
-  }
-
+  
   async function loadSchoolRank() {
-    console.log(
-      "je passe dans loadSchoolRank ---------------------------------------------------"
-    );
-    const list = await getSchoolRanking();
-    const list2 = await getSchool2(dispatch);
-    list2();
-
-    // console.log(list)
-    if (list?.error) {
-      alertProvider(loginScreenNavigation);
+    setReadyToDisplayRank(false);
+    console.log("je passe dans loadSchoolRank ---------------------------------------------------");
+    dispatch(getRankRequest());
+    const data = await getSchoolRanking();
+    console.log("[LOADSCHOOLRANK]", data.sortedSchoolList)
+    if (data?.sortedSchoolList){
+      dispatch(getRankSuccess(data.sortedSchoolList));
+    } else if (data?.message) {
+      dispatch(getRankSuccess(data.message));
+    } else if (data?.error) {
+      alertProvider(data.error);
+      dispatch(getRankFailure());
     } else {
-      console.log("[rankList]", list);
-      setRankList(list);
+      alertProvider();
+      dispatch(getRankFailure());
     }
   }
 
-  // function updateList(newList) {
-  //   setRankList(newList);
-  //   setHandler(handler+1);
-  // }
+  useEffect(() => {
+    //todo: appeler loadSchoolRank que lorsque necessaire
+    // 'focus' quand on atteri sur le screen; 'blur' quand on quitte
+    const unsubscribe = navigation.addListener("focus", () => {
 
-  // useEffect(() => {
-  //     setComponentToShow(
-  //       <FlatList
-  //         data={rankList}
-  //         renderItem={(schoolData) => {
-  //           return (<SchoolBanner {...schoolData.item} setRankList={updateList} rankList={rankList}/>);
-  //         }}
-  //       />
-  //     );
+      currentAbsoluteIndex = Object.keys(store.getState().swipeReducer.swipeTypeObj).length;
+      // const previousAbsoluteIndex = swipeReducer.rankingAbsoluteIndex;
+      const previousAbsoluteIndex = store.getState().swipeReducer.rankingAbsoluteIndex;
+      console.log("======================================")
+      console.log("[currentAbsoluteIndex]", currentAbsoluteIndex);
+      console.log("[swipetypeObj]", swipeReducer.swipeTypeObj);
+      console.log("[previousabsoluteindex]", previousAbsoluteIndex);
+      if (previousAbsoluteIndex!==currentAbsoluteIndex){
+        dispatch(storeRankingAbsoluteIndex(currentAbsoluteIndex));
+        console.log("[previousAbsoluteIndex]",previousAbsoluteIndex);
+        loadSchoolRank(); 
+        // setPreviousAbsoluteIndex(currentAbsoluteIndex);     // !!! foctionne pas, reste null quand on revient sur le screen classement, ne se set pas
+      }
+    });
+    return unsubscribe;
+  }, [navigation]);
 
-  // }, [rankList, handler])
+
+  async function loadMissingSchoolData(missingSchoolId) {
+    dispatch(getSchoolBannerRequest())
+    const data = await getBannerData(missingSchoolId);
+    if (!data.error) {
+      dispatch(getSchoolBannerSuccess(data));
+      setReadyToDisplayRank(true);
+    } else {
+      dispatch(getSchoolBannerFailure());
+      alertProvider();
+    }
+  }
+
+  useEffect(()=> {
+    const rankIdList = schoolReducer.rankIdList;
+    if (Array.isArray(rankIdList)) {
+      const schoolsData = schoolReducer.schoolsData;
+      const notMissingSchoolId = Object.keys(schoolsData);
+      const missingSchoolId = rankIdList.filter((item)=>!notMissingSchoolId.includes(item))
+      missingSchoolId.length>0 ? loadMissingSchoolData(missingSchoolId) : setReadyToDisplayRank(true);
+    } else {
+      setReadyToDisplayRank(true);
+    }
+  }, [schoolReducer.rankIdList])
+
+
 
   useEffect(() => {
-    if (Array.isArray(rankList)) {
-      setComponentToShow(
-        <FlatList
-          data={rankList}
-          // extraData={rankList}     // todo : extraData permet de mettre à jour la flatList quand la data change
-          keyExtractor={(item) => item.id}
-          renderItem={(schoolData) => {
-            return (
-              <SchoolBanner
-                {...schoolData.item}
-                setRankList={() => {}}
-                rankList={rankList}
-              />
-            );
-            // return (<SchoolBanner {...schoolData.item} setRankList={updateList} rankList={rankList}/>);
-          }}
-        />
-      );
-    } else if (rankList?.message) {
-      setComponentToShow(
-        <MessageContainer>{rankList.message}</MessageContainer>
-      );
+    if (readyToDisplayRank) {
+      // const rankIdList = schoolReducer.rankIdList;
+      
+      if (Array.isArray(schoolReducer.rankIdList)) {
+        setComponentToShow(
+          <FlatList
+            data={schoolReducer.rankIdList}
+            // extraData={} 
+            keyExtractor={(item) => item}
+            renderItem={({item}) => {
+              return (<SchoolBanner schoolId={item} />);
+            }}
+          />
+        );
+      } else {
+        setComponentToShow(
+          <MessageContainer>{schoolReducer.rankIdList}</MessageContainer>
+        );
+      }
     } else {
       setComponentToShow(
-        <View>
+        <View style={{flex: 1, justifyContent: "center", alignItems: "center"} }>
           <ActivityIndicator size="large" color={Colors.orange500} />
         </View>
       );
     }
-  }, [rankList]);
+  }, [readyToDisplayRank]);
 
-  useEffect(() => {
-    // 'focus' quand on atteri sur le screen; 'blur' quand on quitte
-    const unsubscribe = navigation.addListener("focus", () => {
-      loadSchoolRank(); // TODO : set un charging screen le temps du chargement
-    });
-    return unsubscribe;
-  }, [navigation]);
+  
 
   function onSettingsPress() {
     navigation.navigate("Settings");
@@ -132,6 +141,8 @@ function SchoolRanking({ navigation, route }) {
       headerRight: () => <HeaderButton onSettingsPress={onSettingsPress} />,
     });
   }, [navigation]);
+
+
 
   return (
     <View style={styles.mainContainer}>

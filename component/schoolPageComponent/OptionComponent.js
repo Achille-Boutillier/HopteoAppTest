@@ -9,25 +9,22 @@ export default function OptionComponent({optionSynthese, optionDetail}) {
   const [optionToSchow, setOptionToSchow] = useState([]);
   const [buttonName, setButtonName] = useState();
 
-  const optionSyntheseList = optionSynthese.split(", ");
-  const optionDetailList = optionDetail.split(', ')
-
   function onPress(){
     setIsPressed(bool => !bool)
   }
   
   useEffect(() => {
     if (isPressed) {
-      console.log(optionDetailList)
-      setOptionToSchow(optionDetailList);
-      // setOptionToSchow(optionDetail);
-      setButtonName("Voir la synthèse");
+      // console.log(optionDetailList)
+      setOptionToSchow(optionDetail);
+      // setOptionToSchow(["test1", "test2"]); //todo: request optionDetail
+      // setButtonName("Voir la synthèse");
 
     } else {
-      setOptionToSchow(optionSyntheseList);
+      setOptionToSchow(optionSynthese);
       // setOptionToSchow(optionSynthese);
       setButtonName("Voir le détail");
-      console.log(optionSyntheseList);
+      console.log(optionSynthese);
 
     } 
   }, [isPressed])

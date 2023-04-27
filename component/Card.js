@@ -1,18 +1,38 @@
 import { useEffect, useState } from "react";
 import { View, StyleSheet, Text } from "react-native";
-import Modal from "react-native-modal";
+
 import CardDetail from "./CardDetail";
-import { useSelector } from "react-redux";
+import { getDetails } from "../BackEnd/controllers/cards";
 
 import { Colors } from "../constant/Colors";
 import PrimaryButton from "./PrimaryButton";
 
 export default function Card({ cardValue, currentTheme }) {
   const [isCardDetailVisible, setIsCardDetailVisible] = useState(false);
+  const [cardDetail, setCardDetail] = useState(null);
 
   function handleCardDetail() {
+    if (cardDetail==="Erreur de chargement") {
+      setCardDetail(null);
+    }
     setIsCardDetailVisible((bool) => !bool);
   }
+
+  async function getCardDetail() {
+    const data = await getDetails(cardValue.id);
+    if (typeof data?.detail === "string") {
+      setCardDetail(data.detail);
+    } else {
+      setCardDetail("Erreur de chargement")
+    }
+  }
+
+
+  useEffect(()=> {
+    if (isCardDetailVisible && !cardDetail) {
+      getCardDetail();
+    }
+  }, [isCardDetailVisible])
 
   // ------------------ si couleur clair en backGround -----------------
   // const allLightColor = {theme1: "#c9ebf5", theme2: "#cdf1d7", theme3: "#eeb6b5", theme4: null, theme5: "#efeab2", theme6: null};
@@ -41,10 +61,7 @@ export default function Card({ cardValue, currentTheme }) {
         >
           {cardValue.titre}
         </Text>
-
-        {isCardDetailVisible ? (
-          <CardDetail currentTheme={currentTheme} idCard={cardValue.id} />
-        ) : null}
+        {isCardDetailVisible ? <CardDetail currentTheme={currentTheme} cardDetail={cardDetail} /> : null}
       </View>
 
       <View style={styles.infoButtonContainer}>

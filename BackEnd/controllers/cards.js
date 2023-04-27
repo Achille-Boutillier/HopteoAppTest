@@ -81,21 +81,26 @@ export async function swipeHandler(idCard, swipeType) {
   }
 }
 
-export async function getDetails(propId) {
+export async function getDetails(idCard) {
   const authData = await getAuthData();
-
+  const {cursusType, filiere} = getUserSettingStatus();
+  
   const requestOptions = {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
       authorization: "Bearer " + authData.token,
+      cursusType: cursusType,
+      filiere: filiere,
     },
   };
 
   try {
-    const response = await fetch(route + `/detail/${propId}`, requestOptions);
+    const response = await fetch(route + `/detail/${idCard}`, requestOptions);
     console.log(response.status);
     const data = await response.json();
+    console.log(data);
+
     return data;
   } catch (error) {
     console.log("bloc try failed :");

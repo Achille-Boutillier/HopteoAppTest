@@ -5,22 +5,6 @@ export const swipeSlice = createSlice({
   name: "swipe",
   initialState: initialSwipeState,
   reducers: {
-    // getCardRequest: (state) => {
-    //   state.loading = true;
-    //   state.error = null;
-    // },
-    // getCardSuccess: (state, action) => {
-    //   const { id, card } = action.payload;
-    //   state.allCard[id] = card;
-    //   state.loading = false;
-    //   state.error = null;
-    // },
-    // getCardFailure: (state, action) => {
-    //   state.loading = false;
-    //   state.error = action.payload; // payload contient l'argument passé au dispatch
-    // },
-
-
     splashSwipeRequest: (state) => {
       state.loading = true;
       state.error = null;
@@ -51,10 +35,14 @@ export const swipeSlice = createSlice({
       delete state.swipeTypeObj[id] 
     },
     
+
+    storeRankingAbsoluteIndex : (state, action) => {
+      state.rankingAbsoluteIndex = action.payload;
+    }
   },
 });
 
-export const { splashSwipeRequest, splashSwipeSuccess, splashSwipeFailure, storeNewSwipe, removeSwipe } =
+export const { splashSwipeRequest, splashSwipeSuccess, splashSwipeFailure, storeNewSwipe, removeSwipe, storeRankingAbsoluteIndex } =
   swipeSlice.actions;
 
 export default swipeSlice.reducer;
