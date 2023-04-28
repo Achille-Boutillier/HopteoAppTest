@@ -10,14 +10,14 @@ const route = mainUrl + "/ranking";
 // Fournir le classement des écoles
 export async function getSchoolRanking() {
   const authData = await getAuthData();
-  const {cursusType, filiere} = getUserSettingStatus();
+  const {cursustype, filiere} = getUserSettingStatus();
 
   const requestOptions = {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
       authorization: "Bearer " + authData.token,
-      cursusType,
+      cursustype,
       filiere,
     },
   };

@@ -8,7 +8,7 @@ const route = mainUrl + "/schools";
 
 export async function getBannerData(idList) {
   const authData = await getAuthData();
-  const {cursusType} = getUserSettingStatus();
+  const {cursustype} = getUserSettingStatus();
 
   const schoolIdString = idList.join(",");
 
@@ -17,7 +17,7 @@ export async function getBannerData(idList) {
     headers: {
       "Content-Type": "application/json",
       authorization: "Bearer " + authData.token,
-      cursustype: cursusType,
+      cursustype: cursustype,
     },
   };
 
@@ -42,14 +42,14 @@ export async function getBannerData(idList) {
 
 export async function getPageData(schoolId) {
   const authData = await getAuthData();
-  const {cursusType} = getUserSettingStatus();
+  const {cursustype} = getUserSettingStatus();
 
   const requestOptions = {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
       authorization: "Bearer " + authData.token,
-      cursustype: cursusType,
+      cursustype: cursustype,
     },
   };
 
@@ -76,14 +76,14 @@ export async function getPageData(schoolId) {
 
 export async function modifyLike(schoolId, like) {
   const authData = await getAuthData();
-  const {cursusType} = getUserSettingStatus();
+  const {cursustype} = getUserSettingStatus();
 
   const requestOptions = {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
       authorization: "Bearer " + authData.token,
-      cursustype: cursusType,
+      cursustype: cursustype,
     },
     body: JSON.stringify({
       bool: like,

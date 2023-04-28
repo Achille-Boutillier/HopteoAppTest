@@ -11,7 +11,7 @@ export async function nextPile(nextIdCardList) {
   const nextIdCardString = nextIdCardList.join(",");
   console.log("[nextIdCardsString]", nextIdCardString);
 
-  const {cursusType, filiere} = getUserSettingStatus();
+  const {cursustype, filiere} = getUserSettingStatus();
   
   
 
@@ -20,7 +20,7 @@ export async function nextPile(nextIdCardList) {
     headers: {
       "Content-Type": "application/json",
       authorization: "Bearer " + authData.token,
-      cursusType: cursusType,
+      cursustype: cursustype,
       filiere: filiere,
       
     },
@@ -48,14 +48,14 @@ export async function swipeHandler(idCard, swipeType) {
   console.log("[id]", idCard);
   console.log("[swipeType]", swipeType);
 
-  const {cursusType, filiere} = getUserSettingStatus();
+  const {cursustype, filiere} = getUserSettingStatus();
 
   const requestOptions = {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
       authorization: "Bearer " + authData.token,
-      cursusType: cursusType,
+      cursustype: cursustype,
       filiere: filiere,
     },
     body: JSON.stringify({
@@ -83,14 +83,14 @@ export async function swipeHandler(idCard, swipeType) {
 
 export async function getDetails(idCard) {
   const authData = await getAuthData();
-  const {cursusType, filiere} = getUserSettingStatus();
+  const {cursustype, filiere} = getUserSettingStatus();
   
   const requestOptions = {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
       authorization: "Bearer " + authData.token,
-      cursusType: cursusType,
+      cursustype: cursustype,
       filiere: filiere,
     },
   };

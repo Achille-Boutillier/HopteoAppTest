@@ -1,7 +1,7 @@
 export const initialUserSettingState = {
   filiere: "",
   secondYearFiliere: [],
-  cursusType: "",
+  cursustype: "",
   moyBac: null,
   loading: null,
   error: null,

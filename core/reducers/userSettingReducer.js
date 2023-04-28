@@ -10,10 +10,10 @@ export const userSettingSlice = createSlice({
       state.error = null;
     },
     getUserSettingSuccess: (state, action) => {
-      const {filiere, secondYearFiliere, cursusType} = action.payload;
+      const {filiere, secondYearFiliere, cursustype} = action.payload;
       state.filiere = filiere;
       state.secondYearFiliere = secondYearFiliere;
-      state.cursusType = cursusType;
+      state.cursustype = cursustype;
       state.loading = false;
       state.error = null;
     },

@@ -1,14 +1,7 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import { TextInput, TouchableOpacity } from "react-native";
-import {
-  FlatList,
-  StyleSheet,
-  View,
-  ActivityIndicator,
-  Text,
-  Image,
-} from "react-native";
+import {FlatList, StyleSheet, View, ActivityIndicator, Text, Image} from "react-native";
 import { login } from "../../BackEnd/controllers/userData";
 
 import { Colors } from "../../constant/Colors";

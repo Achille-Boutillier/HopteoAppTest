@@ -7,23 +7,14 @@ import Logo from "../assets/icons/logo.svg";
 
 const buttonSize = 30;
 
-export function BrandComponent() {
+export function BrandComponent({marginLeft="4%", logoSize=52, fontSize=22}) {
   return (
-    <View style={styles.brandContainer}>
+    <View style={[styles.brandContainer, { marginLeft: marginLeft}]}>
       <Logo
-        width={52}
-        height={52}
-        // style={{ borderWidth: 1 }}
+        width={logoSize}
+        height={logoSize}
       />
-      {/* <Image
-      source={require("../assets/images/newLogo.png")}
-      style={{ height: 100, width: 100, borderWidth: 1 }}
-    /> */}
-      {/* <Image
-      source={require("../assets/images/logo.png")}
-      style={{ height: 30, width: 30 }}
-    /> */}
-      <Text style={styles.text}>Hopteo</Text>
+      <Text style={[styles.text, {fontSize: fontSize}]}>Hopteo</Text>
     </View>
   );
 }
@@ -70,16 +61,13 @@ export function HeaderButton({
 const styles = StyleSheet.create({
   brandContainer: {
     flex: 1,
-    // height:
     marginLeft: "4%",
-    // width: "100%",
     flexDirection: "row",
     alignItems: "center",
     // borderWidth: 1,
   },
   text: {
     color: Colors.orange500,
-    fontSize: 22,
     marginLeft: 10,
     // paddingLeft: 10,
     fontWeight: "bold",

@@ -112,8 +112,8 @@ export default function App() {
           >
             <NativeStack.Screen name="Splash Screen" component={SplashScreen} />
 
+            <NativeStack.Screen name="Signup Screen" component={SignUp} />
             <NativeStack.Screen name="Login Screen" component={Login} />
-            <NativeStack.Screen name="Sign Up Screen" component={SignUp} />
             <NativeStack.Screen
               name="First Questions Screen"
               component={FirstQuestionsScreen}

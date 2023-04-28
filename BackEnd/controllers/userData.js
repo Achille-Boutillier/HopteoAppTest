@@ -2,6 +2,10 @@
 import * as SecureStore from "expo-secure-store"; // voir doc expo pour ios (peut etre une props a set to false)
 // import * as Keychain from "react-native-keychain";           // marche pas sur expo
 import store from "../../core";
+import { getThemeSuccess, getThemeRequest, getThemeFailure } from "../../core/reducers/themeReducer";
+import { getUserSettingRequest, getUserSettingSuccess, getUserSettingFailure } from "../../core/reducers/userSettingReducer";
+import { splashSwipeSuccess } from "../../core/reducers/swipeReducer";
+
 
 
 export const mainUrl = "https://app.hopteo.fr/api/v0";
@@ -14,9 +18,24 @@ export async function getAuthData() {
 }
 
 export function getUserSettingStatus() {
-  const {cursusType, filiere} = store.getState().userSettingReducer;
-  return {cursusType, filiere} 
+  const {cursustype, filiere} = store.getState().userSettingReducer;
+  return {cursustype, filiere} 
 }
+
+export async function storeNewAuthData(newAuthData) {
+  await SecureStore.setItemAsync("authData", JSON.stringify(newAuthData)); // ! si store echoue, pas d'erreur déclenchée --> bug sur Home
+}
+
+
+export function storeSplashData(splashData, dispatch) {
+  const {themeObj, filiere, cursustype, secondYearFiliere, answeredCardList, idCardsList, minSwipeForRanking, swipeTypeObj } = splashData;
+  dispatch(getThemeSuccess(themeObj));
+  dispatch(getUserSettingSuccess({filiere, secondYearFiliere, cursustype}));
+  dispatch(splashSwipeSuccess({answeredCardList, idCardsList, minSwipeForRanking, swipeTypeObj}));
+}
+
+
+// ---------------------------------------------------------------------
 
 export async function tryAuth(token) {
   const requestOptions = {
@@ -33,58 +52,62 @@ export async function tryAuth(token) {
     const data = await response.json();
     if (response.status === 200) {
       console.log("[TRY_AUTH]", data);
-      return { ...data, success: true };
+      return {...data, success: true};
     } else {
       console.log("[TRY_AUTH FAILED]", data);
-      return { success: false };
+      return {success: false};
     }
   } catch (error) {
     console.error(error);
     return {
-      message:
-        "Serveur inaccessible !\n Nos équipes mettent tout en oeuvre pour résoudre le problème",
+      message: "Serveur inaccessible !\n Nos équipes mettent tout en oeuvre pour résoudre le problème",
+      success: false,
     };
   }
 }
 
-export async function splashRequest() {
-  const authData = await getAuthData();
 
-  const requestOptions = {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      authorization: "Bearer " + authData.token,
-    },
-  };
+// export async function splashRequest() {
+//   const authData = await getAuthData();
 
-  try {
-    const response = await fetch(route + "/splashRequest", requestOptions);
-    console.log("[SPLASH_REQUEST]", response.status);
-    const data = await response.json();
-    if (response.status === 200) {
-      console.log("[SPLASH_REQUEST]", data);
-      return data;
-    } else {
-      console.log("[SPLASH_REQUEST FAILED]", data);
-      return { error: "l'initialisation a echoué" };
-    }
-  } catch (error) {
-    console.error(error);
-    return {
-      error:
-        "Serveur inaccessible !\n Nos équipes mettent tout en oeuvre pour résoudre le problème",
-    };
-  }
-}
+//   const requestOptions = {
+//     method: "GET",
+//     headers: {
+//       "Content-Type": "application/json",
+//       authorization: "Bearer " + authData.token,
+//     },
+//   };
 
-export async function refreshAuth(refreshToken) {
+//   try {
+//     const response = await fetch(route + "/splashRequest", requestOptions);
+//     console.log("[SPLASH_REQUEST]", response.status);
+//     const data = await response.json();
+//     if (response.status === 200) {
+//       console.log("[SPLASH_REQUEST]", data);
+//       return data;
+//     } else {
+//       console.log("[SPLASH_REQUEST FAILED]", data);
+//       return { error: "l'initialisation a echoué" };
+//     }
+//   } catch (error) {
+//     console.error(error);
+//     return {
+//       error:
+//         "Serveur inaccessible !\n Nos équipes mettent tout en oeuvre pour résoudre le problème",
+//     };
+//   }
+// }
+
+export async function refreshAuth(refreshToken, getSplashData) {
   const requestOptions = {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       authorization: "Bearer " + refreshToken,
     },
+    body: JSON.stringify({
+      getSplashData: getSplashData      //true ou false
+    }),
   };
 
   try {
@@ -136,12 +159,16 @@ export async function login(userId, password) {
 }
 
 // Se créer un compte hopteo
-export async function signup() {
+export async function signup(email, password) {
   const requestOptions = {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
+    body: JSON.stringify({
+      email: email,
+      password: password
+    }),
   };
 
   try {
@@ -149,10 +176,15 @@ export async function signup() {
     console.log("[signup]", response.status);
     const data = await response.json();
     console.log("[signup]", data);
-    return data;
+    if (response.status===201) {
+      return {...data, success: true};
+    } else {
+      return {...data, success: false};
+    }
   } catch (error) {
     console.error(error);
     return {
+      success: false,
       message:
         "Serveur inaccessible !\n Nos équipes mettent tout en oeuvre pour résoudre le problème",
     };
@@ -160,7 +192,7 @@ export async function signup() {
 }
 
 // Enregistrer le type de cursus et la moyenne au bac de l'utilisateur
-export async function storeUserSetting(cursusType, field, moyBac) {
+export async function storeUserSetting(cursustype, field, moyBac) {
   let authData = await getAuthData();
 
   const requestOptions = {
@@ -170,7 +202,7 @@ export async function storeUserSetting(cursusType, field, moyBac) {
       authorization: "Bearer " + authData.token,
     },
     body: JSON.stringify({
-      cursusType: cursusType,
+      cursusType: cursustype,
       filiere: field,
       moyBac: moyBac,
     }),
@@ -182,15 +214,17 @@ export async function storeUserSetting(cursusType, field, moyBac) {
     const data = await response.json();
     console.log("[STORE_USER_SETTING]", data);
     if (response.status === 200) {
-      // la double négation "!!" est équivalente à la fonction "boolean()"
-      return true;
+      return {...data, success: true};
     } else {
       console.error("[STORE_USER_SETTING]", data.error);
-      return false;
+      return {...data, success: true};
     }
   } catch (error) {
     console.error("[STORE_USER_SETTING]", error);
-    return false;
+    return {
+      success: false,
+      error: "L'enregistrement des données renseignées à échoué"
+    };
   }
 }
 

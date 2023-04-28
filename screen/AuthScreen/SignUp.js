@@ -1,31 +1,29 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import { TextInput, TouchableOpacity } from "react-native";
-import {
-  FlatList,
-  StyleSheet,
-  View,
-  ActivityIndicator,
-  Text,
-} from "react-native";
-import { signup } from "../../BackEnd/controllers/userData";
+import {FlatList, StyleSheet, View, ActivityIndicator, Text } from "react-native";
+import { signup, storeNewAuthData } from "../../BackEnd/controllers/userData";
 
 import { Colors } from "../../constant/Colors";
 import Logo from "../../assets/icons/logo.svg";
+import InputComponent from "../../component/InputContainer";
+import {BrandComponent} from "../../component/TopBar";
+import TerciaryButton from "../../component/TerciaryButton";
+import { useDispatch } from "react-redux";
+
 
 export default function SignUp({ navigation }) {
   const [email, setEmail] = useState("");
-  const [confirmEmail, setConfirmEmail] = useState("");
   const [password, setPassword] = useState("");
   const [signUpButtonPressed, setSignUpButtonPressed] = useState(false);
   const [signUpErrorMessage, setSignUpErrorMessage] = useState();
+
 
   function onSignUpPress() {
     setSignUpButtonPressed(true);
   }
   function backToLogin() {
     setEmail("");
-    setConfirmEmail("");
     setPassword("");
     setSignUpErrorMessage();
     navigation.navigate("Login Screen");
@@ -33,20 +31,17 @@ export default function SignUp({ navigation }) {
 
   async function trySignUp() {
     setSignUpButtonPressed(false); // reset l'etat du bouton au cas où l'authentification echoue
-    if (confirmEmail === email) {
-      const signUpAnswer = await signup(email, password);
-      if (signUpAnswer?.success) {
-        setSignUpErrorMessage(); // éviter d'avoir un msg d'erreur si on revient sur la page de connexion plus tard
-        navigation.navigate("First Questions Screen");
-      } else {
-        if (signUpAnswer?.message) {
-          setSignUpErrorMessage(signUpAnswer.message);
-        } else {
-          setSignUpErrorMessage("Une erreur s'est produite");
-        }
-      }
+    const signUpAnswer = await signup(email, password);
+    if (signUpAnswer?.success) {
+      setSignUpErrorMessage(); // éviter d'avoir un msg d'erreur si on revient sur la page de connexion plus tard
+      storeNewAuthData(signUpAnswer.authData);
+      navigation.navigate("First Questions Screen");
     } else {
-      setSignUpErrorMessage("Les deux email doivent être identiques");
+      if (signUpAnswer?.message) {
+        setSignUpErrorMessage(signUpAnswer.message);
+      } else {
+        setSignUpErrorMessage("Une erreur s'est produite");
+      }
     }
   }
 
@@ -58,66 +53,33 @@ export default function SignUp({ navigation }) {
 
   return (
     <View style={styles.mainContainer}>
-      <Logo width={101} height={101} />
-
-      <Text style={{ fontSize: 18, fontWeight: "500" }}>
-        Crée ton compte Hopteo !
-      </Text>
-
-      <Text
-        style={{
-          textAlign: "center",
-          color: Colors.orange500,
-          marginBottom: "3%",
-          marginTop: "3%",
-          width: "75%",
-        }}
-      >
-        {signUpErrorMessage}
-      </Text>
-
-      <View style={styles.formContainer}>
-        <TextInput
-          style={styles.inputContainer}
-          placeholder="email"
-          onChangeText={(text) => setEmail(text.trim())}
-          value={email}
-          type="email"
-          autoCapitalize="none"
-          autoComplete="email"
-          keyboardType="email-address"
-          selectionColor={Colors.orange500}
-        />
-        <TextInput
-          style={styles.inputContainer}
-          placeholder="Confirmer l'email"
-          onChangeText={(text) => setConfirmEmail(text.trim())}
-          value={confirmEmail}
-          type="email"
-          autoCapitalize="none"
-          autoComplete="email"
-          keyboardType="email-address"
-          selectionColor={Colors.orange500}
-        />
-        <TextInput
-          style={styles.inputContainer}
-          placeholder="Mot de passe"
-          onChangeText={(text) => setPassword(text.trim())}
-          onSubmitEditing={onSignUpPress}
-          value={password}
-          autoCapitalize="none"
-          secureTextEntry
-          selectionColor={Colors.orange500}
-        />
-
-        <TouchableOpacity style={styles.button} onPress={onSignUpPress}>
-          <Text>Créer mon compte</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={{ marginTop: "10%" }} onPress={backToLogin}>
-          <Text style={{ textAlign: "center" }}>{"J'ai déjà un compte"}</Text>
-        </TouchableOpacity>
+     
+      <View style={styles.headerContainer}>
+        <Text style={styles.pageTitle}>Inscription</Text>
       </View>
+
+
+      <View style={styles.bodyContainer}>
+
+        <Text style={styles.catchPhrase}>
+          Crée ton compte gratuitement pour continuer sur Hopteo !
+        </Text>
+
+        <Text style={styles.errorMessage} >{signUpErrorMessage}</Text>
+
+        <View style={styles.formContainer}>
+          <InputComponent title="Email" input={email} setInput={setEmail} />
+          <InputComponent title="Mot de passe" input={password} setInput={setPassword} onSubmitEditing={onSignUpPress}/>
+        </View>
+
+          
+        <TerciaryButton title="Je m'inscris" onPress={onSignUpPress} color={Colors.orange500} isFullColor={true}/>
+        <TerciaryButton title="J'ai déjà un compte" onPress={backToLogin} color={Colors.orange500} />
+        
+        <BrandComponent marginLeft={0} logoSize={60} fontSize={30}/>
+
+      </View>
+      
     </View>
   );
 }
@@ -125,29 +87,59 @@ export default function SignUp({ navigation }) {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: Colors.backgroundColor,
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: Colors.orange500,
+    justifyContent: "flex-start",
     // marginTop: "10%",
   },
+  headerContainer: {
+    height: "13%",
+    alignSelf: "center",
+    justifyContent: "center",
+    // borderWidth: 1,
+
+  },
+  pageTitle: {
+    // verticalAlign: "center",
+    textAlign: "center",
+    color: Colors.white,
+    fontSize: 30,
+    fontWeight: "700",
+
+  },
+
+  bodyContainer: {
+    backgroundColor: Colors.white,
+    position: "absolute",
+    bottom: 0,
+    height: "87%",
+    width: "100%",
+    borderTopLeftRadius: 80,
+    alignItems: "center",
+  },
+
+  catchPhrase: { 
+    fontSize: 18, 
+    fontWeight: "500",
+    textAlign: "center",
+    marginTop: 50,
+    marginHorizontal: "10%",
+  },
+
+  errorMessage: {
+    textAlign: "center", 
+    color: Colors.orange500, 
+    marginBottom: "3%", 
+    marginTop: "3%", 
+    width: "75%",
+  },
   formContainer: {
-    //  height: "40%",
-    height: 300,
+    height: 170,
     width: "80%",
     alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: Colors.blue400,
-    borderRadius: 20,
+    justifyContent: "space-between",
   },
-  inputContainer: {
-    height: "15%",
-    width: "80%",
-    //  borderWidth: 1,
-    marginBottom: "3%",
-    borderRadius: 10,
-    paddingLeft: 15,
-    backgroundColor: Colors.white,
-  },
+  
+
   button: {
     width: "60%",
     height: 30,
