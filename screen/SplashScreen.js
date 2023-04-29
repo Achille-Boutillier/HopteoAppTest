@@ -74,6 +74,7 @@ export default function SplashScreen({ navigation }) {
 
   useEffect(() => {
     // dispatch(getThemeRequest());
+
     splashHandler();
     // tester();
   }, []);

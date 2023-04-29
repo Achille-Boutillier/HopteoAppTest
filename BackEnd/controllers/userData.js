@@ -131,15 +131,15 @@ export async function refreshAuth(refreshToken, getSplashData) {
 }
 
 // se connecter à son compte
-export async function login(userId, password) {
+export async function login(email, password) {
   const requestOptions = {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      userId: userId,
-      password: password,
+      email,
+      password,
     }),
   };
 
@@ -148,10 +148,15 @@ export async function login(userId, password) {
     console.log("[login]", response.status);
     const data = await response.json();
     console.log("[login]", data);
-    return data;
+    if (response.status===200) {
+      return {...data, success: true};
+    } else {
+      return {...data, success: false}
+    }
   } catch (error) {
     console.error(error);
     return {
+      success: false,
       error:
         "Serveur inaccessible !\n Nos équipes mettent tout en oeuvre pour résoudre le problème",
     };

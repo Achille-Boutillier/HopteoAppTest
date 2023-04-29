@@ -1,152 +1,61 @@
-import { useEffect } from "react";
-import { useState } from "react";
-import { TextInput, TouchableOpacity } from "react-native";
-import {FlatList, StyleSheet, View, ActivityIndicator, Text } from "react-native";
+import { useEffect, useState } from "react";
+// import { TextInput, TouchableOpacity } from "react-native";
+import {StyleSheet} from "react-native";
 import { signup, storeNewAuthData } from "../../BackEnd/controllers/userData";
 
 import { Colors } from "../../constant/Colors";
-import Logo from "../../assets/icons/logo.svg";
-import InputComponent from "../../component/InputContainer";
-import {BrandComponent} from "../../component/TopBar";
-import TerciaryButton from "../../component/TerciaryButton";
-import { useDispatch } from "react-redux";
+import AuthComponent from "../../component/AuthComponent";
+// import { useDispatch } from "react-redux";
 
 
-export default function SignUp({ navigation }) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [signUpButtonPressed, setSignUpButtonPressed] = useState(false);
-  const [signUpErrorMessage, setSignUpErrorMessage] = useState();
+export default function SignUp({ navigation, route }) {
+
+  const [errorMessage, setErrorMessage] = useState();
 
 
-  function onSignUpPress() {
-    setSignUpButtonPressed(true);
-  }
-  function backToLogin() {
-    setEmail("");
-    setPassword("");
-    setSignUpErrorMessage();
-    navigation.navigate("Login Screen");
-  }
+  // function onSignUpPress() {
+  //   setSignUpButtonPressed(true);
+  // }
 
-  async function trySignUp() {
-    setSignUpButtonPressed(false); // reset l'etat du bouton au cas où l'authentification echoue
+  // function backToLogin() {
+  //   setEmail("");
+  //   setPassword("");
+  //   setErrorMessage();
+  //   navigation.navigate("Login Screen");
+  // }
+
+  async function trySignUp(email, password) {
+    // setSignUpButtonPressed(false); // reset l'etat du bouton au cas où l'authentification echoue
     const signUpAnswer = await signup(email, password);
     if (signUpAnswer?.success) {
-      setSignUpErrorMessage(); // éviter d'avoir un msg d'erreur si on revient sur la page de connexion plus tard
+      setErrorMessage(); // éviter d'avoir un msg d'erreur si on revient sur la page de connexion plus tard
       storeNewAuthData(signUpAnswer.authData);
       navigation.navigate("First Questions Screen");
     } else {
       if (signUpAnswer?.message) {
-        setSignUpErrorMessage(signUpAnswer.message);
+        setErrorMessage(signUpAnswer.message);
       } else {
-        setSignUpErrorMessage("Une erreur s'est produite");
+        setErrorMessage("Une erreur s'est produite");
       }
     }
   }
 
-  useEffect(() => {
-    if (signUpButtonPressed) {
-      trySignUp();
-    }
-  }, [signUpButtonPressed]);
+  // useEffect(() => {
+  //   if (signUpButtonPressed) {
+  //     trySignUp();
+  //   }
+  // }, [signUpButtonPressed]);
+
+  function goToLogin() {
+    setErrorMessage();
+    navigation.navigate("Login Screen");
+  }
 
   return (
-    <View style={styles.mainContainer}>
-     
-      <View style={styles.headerContainer}>
-        <Text style={styles.pageTitle}>Inscription</Text>
-      </View>
-
-
-      <View style={styles.bodyContainer}>
-
-        <Text style={styles.catchPhrase}>
-          Crée ton compte gratuitement pour continuer sur Hopteo !
-        </Text>
-
-        <Text style={styles.errorMessage} >{signUpErrorMessage}</Text>
-
-        <View style={styles.formContainer}>
-          <InputComponent title="Email" input={email} setInput={setEmail} />
-          <InputComponent title="Mot de passe" input={password} setInput={setPassword} onSubmitEditing={onSignUpPress}/>
-        </View>
-
-          
-        <TerciaryButton title="Je m'inscris" onPress={onSignUpPress} color={Colors.orange500} isFullColor={true}/>
-        <TerciaryButton title="J'ai déjà un compte" onPress={backToLogin} color={Colors.orange500} />
-        
-        <BrandComponent marginLeft={0} logoSize={60} fontSize={30}/>
-
-      </View>
-      
-    </View>
+    <AuthComponent typeScreen="signup" onSubmit={trySignUp} onChangeTypeScreen={goToLogin} errorMessage={errorMessage}/>
   );
 }
 
-const styles = StyleSheet.create({
-  mainContainer: {
-    flex: 1,
-    backgroundColor: Colors.orange500,
-    justifyContent: "flex-start",
-    // marginTop: "10%",
-  },
-  headerContainer: {
-    height: "13%",
-    alignSelf: "center",
-    justifyContent: "center",
-    // borderWidth: 1,
-
-  },
-  pageTitle: {
-    // verticalAlign: "center",
-    textAlign: "center",
-    color: Colors.white,
-    fontSize: 30,
-    fontWeight: "700",
-
-  },
-
-  bodyContainer: {
-    backgroundColor: Colors.white,
-    position: "absolute",
-    bottom: 0,
-    height: "87%",
-    width: "100%",
-    borderTopLeftRadius: 80,
-    alignItems: "center",
-  },
-
-  catchPhrase: { 
-    fontSize: 18, 
-    fontWeight: "500",
-    textAlign: "center",
-    marginTop: 50,
-    marginHorizontal: "10%",
-  },
-
-  errorMessage: {
-    textAlign: "center", 
-    color: Colors.orange500, 
-    marginBottom: "3%", 
-    marginTop: "3%", 
-    width: "75%",
-  },
-  formContainer: {
-    height: 170,
-    width: "80%",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
+// const styles = StyleSheet.create({
   
-
-  button: {
-    width: "60%",
-    height: 30,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: Colors.orange100,
-    marginTop: "3%",
-    borderRadius: 10,
-  },
-});
+// });
