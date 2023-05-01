@@ -2,7 +2,7 @@ import { getAuthData } from "./userData";
 // import {getRankRequest, getRankSuccess, getRankFailure} from "../../core/reducers/schoolReducer";
 import { mainUrl, getUserSettingStatus } from "./userData";
 import store from "../../core";
-import {getSchoolBannerRequest, getSchoolBannerSuccess, getSchoolBannerFailure } from "../../core/reducers/schoolReducer";
+import {getSchoolBannerRequest, getSchoolBannerSuccess, getSchoolBannerFailure, setSchoolLike, setSchoolLikeFailure } from "../../core/reducers/schoolReducer";
 const route = mainUrl + "/schools";
 
 
@@ -80,7 +80,11 @@ export async function getPageData(schoolId) {
 
 
 
-export async function modifyLike(schoolId, like) {
+export async function modifyLike(schoolId, newLike, dispatch) {
+  try {
+
+  dispatch(setSchoolLike({schoolId, newLike}));
+
   const authData = await getAuthData();
   const {cursustype} = getUserSettingStatus();
 
@@ -92,27 +96,25 @@ export async function modifyLike(schoolId, like) {
       cursustype: cursustype,
     },
     body: JSON.stringify({
-      bool: like,
+      bool: newLike,
     }),
   };
 
-  try {
-    const response = await fetch(
-      route + "/modifyLike/" + schoolId,
-      requestOptions
-    );
-    // console.log(response.status);
-    // const data = await response.json();
-    // console.log(data);
+    const response = await fetch(route + "/modifyLike/" + schoolId, requestOptions);
     if (response.status===200) {
       return true;
     } else {
+      dispatch(setSchoolLikeFailure({schoolId, newLike}));
       return false;
     }
   } catch (error) {
+    dispatch(setSchoolLikeFailure({schoolId, newLike}));
+
     console.log("echec du bloc try :");
     console.log(error);
 
     return false;
   }
+
+
 }

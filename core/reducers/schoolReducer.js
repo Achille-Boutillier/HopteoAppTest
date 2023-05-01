@@ -47,7 +47,7 @@ export const schoolSlice = createSlice({
 
     //----------------------like-------------------------------------
 
-    setSchoolLikeSuccess: (state, action) => {
+    setSchoolLike: (state, action) => {
       const {schoolId, newLike } = action.payload;
       state.schoolsData[schoolId].like = newLike ;
       state.error = false;
@@ -117,7 +117,7 @@ export const schoolSlice = createSlice({
 
 export const {
   getRankRequest, getRankSuccess, getRankFailure, 
-  setSchoolLikeSuccess, setSchoolLikeFailure, 
+  setSchoolLike, setSchoolLikeFailure, 
   getSchoolBannerRequest, getSchoolBannerSuccess, getSchoolBannerFailure, 
   getSchoolPageRequest, getSchoolPageSuccess, getSchoolPageFailure,
   getSchoolByAreaRequest, getSchoolByAreaSuccess, getSchoolByAreaFailure,

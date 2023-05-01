@@ -15,12 +15,8 @@ function PrimaryButton({
   const buttonHeight = bigButton ? size + 25 : size + 15; // size + 20 pour une meilleure cliquabilité
 
   return (
-    <TouchableOpacity
-      style={[
-        styles.buttonContainer,
-        { width: size + 15, height: buttonHeight },
-        style,
-      ]}
+    <TouchableOpacity 
+      style={[ styles.buttonContainer, { width: size + 15, height: buttonHeight }, style,]} 
       onPress={onPress}
     >
       <Ionicons name={name} size={size} color={color} />

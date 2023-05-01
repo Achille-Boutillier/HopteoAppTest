@@ -21,6 +21,7 @@ export default function SchoolBanner({schoolId}) {    //id, rank, nomEcole, type
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const singleSchoolData = useSelector((state) => state.schoolReducer.schoolsData[schoolId]);
+  // ? est-ce mieux d'envoyer 
 
   function loginScreenNavigation() {
     navigation.navigate("Login Screen");
@@ -30,13 +31,12 @@ export default function SchoolBanner({schoolId}) {    //id, rank, nomEcole, type
   
   async function handleLikePress() {
     const newLike = !singleSchoolData.like;
-    dispatch(setSchoolLikeSuccess({schoolId, newLike}));
-    const success = await modifyLike(schoolId, newLike);
+    // dispatch(setSchoolLikeSuccess({schoolId, newLike}));
+    const success = await modifyLike(schoolId, newLike, dispatch);
     if (!success) {
-      dispatch(setSchoolLikeFailure({schoolId, newLike}));
+      // dispatch(setSchoolLikeFailure({schoolId, newLike}));
       alertProvider("Un problème est survenu... Le like n'a pas été pris en compte.");
     }
-
   }
   // --------------- fin like ecole -------------------------------------
 

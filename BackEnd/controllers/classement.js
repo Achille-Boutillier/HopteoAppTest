@@ -11,6 +11,8 @@ const route = mainUrl + "/ranking";
 export async function getSchoolRanking() {
   const authData = await getAuthData();
   const {cursustype, filiere} = getUserSettingStatus();
+  console.log("cursusType", cursustype);
+  console.log("filiere", filiere);
 
   const requestOptions = {
     method: "PUT",

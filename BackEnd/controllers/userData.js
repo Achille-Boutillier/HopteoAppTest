@@ -98,16 +98,14 @@ export async function tryAuth(token) {
 //   }
 // }
 
-export async function refreshAuth(refreshToken, getSplashData) {
+export async function refreshAuth(refreshToken) {
   const requestOptions = {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       authorization: "Bearer " + refreshToken,
+      getSplashData: true   
     },
-    body: JSON.stringify({
-      getSplashData: getSplashData      //true ou false
-    }),
   };
 
   try {
@@ -136,6 +134,7 @@ export async function login(email, password) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      getSplashData: true
     },
     body: JSON.stringify({
       email,
@@ -205,6 +204,7 @@ export async function storeUserSetting(cursustype, field, moyBac) {
     headers: {
       "Content-Type": "application/json",
       authorization: "Bearer " + authData.token,
+      getSplashData: true,
     },
     body: JSON.stringify({
       cursusType: cursustype,

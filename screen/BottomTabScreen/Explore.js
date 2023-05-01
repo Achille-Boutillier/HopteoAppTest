@@ -32,7 +32,7 @@ export default function Explore({ navigation, route }) {
 
 
   const scrollWidth = 0.95 * width;
-  const scrollHeight = 90;
+  const scrollHeight = 110;
   const dispatch = useDispatch();
 
   const [exploreContent, setExploreContent] = useState();
@@ -179,18 +179,19 @@ export default function Explore({ navigation, route }) {
             extraData={searchedData}      // mettre une 2eme data en liste ?
             keyExtractor={(item) => item.id}
             showsVerticalScrollIndicator={false}
-            numColumns={3}
-            key={3} // obligatoire avec numColumns
+            numColumns={2}
+            key={2} // obligatoire avec numColumns
             renderItem={({ item }) => {
               return (
                 <View
                   style={[
                     styles.innerScrollViewContainer,
                     // scrollViewSize,
-                    { width: scrollWidth / 3, height: scrollHeight },
+                    { width: scrollWidth / 2, height: scrollHeight },
                   ]}
                 >
-                  <ExploreSchoolBanner school={item} />
+                  <ExploreSchoolBanner singleSchoolData={item} /> 
+                  {/* //todo: syntaxe corrigée:  singleSchoolData={} schoolId={} */}
                 </View>
               );
             }}
@@ -228,10 +229,10 @@ export default function Explore({ navigation, route }) {
                           style={[
                             styles.innerScrollViewContainer,
                             // scrollViewSize,
-                            { width: scrollWidth / 3, height: scrollHeight },
+                            { width: scrollWidth / 2, height: scrollHeight },
                           ]}
                         >
-                          <ExploreSchoolBanner school={schoolsData[schoolId]} schoolId={schoolId} />
+                          <ExploreSchoolBanner singleSchoolData={schoolsData[schoolId]} schoolId={schoolId} />
                         </View>
                       )
                     )}
@@ -312,6 +313,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     // borderWidth: 1,
     flexWrap: "wrap",
-    padding: 4,
+    padding: 6,
   },
 });

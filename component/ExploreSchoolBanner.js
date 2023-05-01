@@ -1,19 +1,29 @@
-import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity, Button, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons";
+import { modifyLike } from "../BackEnd/controllers/school";
+import { useDispatch, useSelector } from "react-redux";
+
+// import PrimaryButton from "./PrimaryButton";
 import { useEffect} from "react";
 
 import { Colors } from "../constant/Colors";
 
-export default function ExploreSchoolBanner({ school, schoolId }) {
+export default function ExploreSchoolBanner({ schoolId }) {
   const navigation = useNavigation();
-
-  useEffect(()=> {
-    console.log("[schoolId]", schoolId)
-    console.log("[school]", school[schoolId])
-  }, [])
+  const singleSchoolData = useSelector((state) => state.schoolReducer.schoolsData[schoolId]);
+  const dispatch = useDispatch();
 
   function onPressSchool() {
     navigation.navigate("School Page", {schoolId, previousScreen: "Explore"});
+  }
+
+  async function handleLikePress() {
+    const newLike = !singleSchoolData.like;
+    const success = await modifyLike(schoolId, newLike, dispatch);
+    if (!success) {
+      alertProvider("Un problème est survenu... Le like n'a pas été pris en compte.");
+    }
   }
 
   // ! ----- manage minimal fontSize (Android) -----------------
@@ -48,16 +58,16 @@ export default function ExploreSchoolBanner({ school, schoolId }) {
         // onLayout={handleViewLayout}  //! manage minimal fontSize (Android)
       >
         <Text
-          numberOfLines={3}
+          numberOfLines={2}
           adjustsFontSizeToFit={true} // IOS & Android
           // minimumFontSize={9.5} // IOS only
           // onLayout={handleTextLayout} // IOS & Android   //! manage minimal fontSize (Android)
-          style={[
-            styles.schoolName,
+          style={
+            [styles.schoolName,
             // { fontSize: nameFontSize }, // ! manage minimal fontSize (Android)
           ]}
         >
-          {school.nomEcole}
+          {singleSchoolData.nomEcole}
         </Text>
       </View>
 
@@ -67,9 +77,19 @@ export default function ExploreSchoolBanner({ school, schoolId }) {
           // minimumFontScale={0.8} // ! android only
           style={styles.typeFormation}
         >
-          {school.typeFormation}
+          {singleSchoolData.typeFormation}
         </Text>
       </View>
+      {/* <View style={styles.likeContainer}> */}
+        <Pressable 
+          style={{justifyContent: "center", alignItems: "center", width: 40, height: 28 }} 
+          onPress={handleLikePress}
+        >
+          <Ionicons name={singleSchoolData.like ? "heart" : "heart-outline"} size={24} color={Colors.orange500} />
+        </Pressable>
+          
+        
+        {/* </View> */}
     </TouchableOpacity>
   );
 }
@@ -87,25 +107,32 @@ const styles = StyleSheet.create({
   },
 
   schoolNameContainer: {
-    height: "65%",
+    height: "45%",
     width: "100%",
     justifyContent: "center",
+    // borderWidth:1,
   },
 
   schoolName: {
-    fontSize: 12,
+    fontSize: 14,
     textAlign: "center",
     fontWeight: "500",
   },
 
   typeFormationContainer: {
-    height: "35%",
+    height: "24%",
     width: "100%",
     justifyContent: "center",
+    // borderWidth:1,
   },
   typeFormation: {
     textAlign: "center",
-    fontSize: 10,
+    fontSize: 12,
     // color: Colors.grey,
   },
+  // likeContainer: {
+  //   width: "100%",
+  //   borderWidth: 1,
+  // // height: "30%",
+  // }
 });
