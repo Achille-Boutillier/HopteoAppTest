@@ -11,7 +11,8 @@ import { listTheme } from "../BackEnd/data/themes";
 
 
 export const Colors = {
-  orange500: "#E4A951",
+  // orange500: "#E4A951",
+  orange500: "#EC8C27",
   orange100: "#EAD9AE",
   blue400: "#C9EBF5",
   white: "#FFFFFF",
@@ -22,10 +23,14 @@ export const Colors = {
   navBarColor: "#F8FAFB",
   podiumColor: "#93C1EC",
 
-  dislike: "red",
-  dontKnow: "yellow",
-  like: "lightgreen",
-  superLike: "blue",
+  // dislike: "red",
+  dislike: "#FF0000",
+  // dontKnow: "yellow",
+  dontKnow: "#F8C92C",
+  // like: "lightgreen",
+  like: "#03C9D6",
+  // superLike: "blue",
+  superLike: "#FF498A" ,
 
 };
 

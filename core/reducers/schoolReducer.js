@@ -42,7 +42,7 @@ export const schoolSlice = createSlice({
     },
     getSchoolPageFailure: (state, action) => {
       state.loading = false;
-      state.error = true; // payload contient l'argument passé au dispatch
+      state.error = true; // payload contient l'argument passé à la fonction du dispatch
     },
 
     //----------------------like-------------------------------------
@@ -83,10 +83,34 @@ export const schoolSlice = createSlice({
       state.error = false;
     },
     getRankFailure: (state, action) => {
+      state.rankIdList = action.payload;
       state.loading = false;
-      state.error = true; // payload contient l'argument passé au dispatch
+      state.error = true; 
     },
 
+
+
+    // -------------------- Explore ----------------------------------
+
+    getSchoolByAreaRequest: (state) => {
+      state.loading = true;
+      state.error = false;
+    },
+    getSchoolByAreaSuccess: (state, action) => {
+      if (action.payload.schoolPack) {
+        const {schoolPack, listFormation} = action.payload;
+        state.schoolByArea = {schoolPack, listFormation, message: null};
+      } else if (action.payload.message) {
+        state.schoolByArea = {message: action.payload.message}
+      } 
+      // state.schoolByArea = action.payload;          // schoolByArea={schoolPack: null, listFormation: null},
+      state.loading = false;
+      state.error = false;
+    },
+    getSchoolByAreaFailure: (state, action) => {
+      state.loading = false;
+      state.error = true; 
+    },
 
   },
 });
@@ -96,5 +120,6 @@ export const {
   setSchoolLikeSuccess, setSchoolLikeFailure, 
   getSchoolBannerRequest, getSchoolBannerSuccess, getSchoolBannerFailure, 
   getSchoolPageRequest, getSchoolPageSuccess, getSchoolPageFailure,
+  getSchoolByAreaRequest, getSchoolByAreaSuccess, getSchoolByAreaFailure,
 } = schoolSlice.actions;
 export default schoolSlice.reducer;

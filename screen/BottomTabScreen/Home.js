@@ -208,9 +208,11 @@ function onSwiping(x, y){
         <SwipeLevel
           absoluteIndex={absoluteIndex}
           minSwipeForRanking={swipeReducer.minSwipeForRanking} // 'pas' des levels
-          progressBarColor={"#ebd226"}
+          // progressBarColor={"#ebd226"}
+          progressBarColor={"#70DDFF"}
           borderColor={null}
-          mainBarColor={"#efe9bd"}
+          // mainBarColor={"#efe9bd"}
+          mainBarColor={"#BFF0FF"}
         />
 
         <View style={[styles.bottomContainer, { zIndex: swipeButtonZIndex }]}>

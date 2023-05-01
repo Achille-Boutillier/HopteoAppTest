@@ -1,10 +1,52 @@
 // Controller de la page Explore
 
-import { mainUrl } from "./userData";
+import { getAuthData, mainUrl, getUserSettingStatus } from "./userData";
+import { getSchoolByAreaFailure, getSchoolByAreaRequest, getSchoolByAreaSuccess } from "../../core/reducers/schoolReducer";
+
+
 const route = mainUrl + "/explore";
 
-import { getAuthData } from "./userData";
 
+
+export async function getSchoolByArea() {
+  // dispatch(getSchoolByAreaRequest());
+
+
+  const authData = await getAuthData();
+  const {cursustype} = getUserSettingStatus();
+
+  const requestOptions = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: "Bearer " + authData.token,
+      cursustype,
+    },
+  };
+
+  try {
+    const response = await fetch(route + "/schoolByArea", requestOptions);
+    // console.log(response.status);
+    const data = await response.json();
+    // console.log(data);
+    if (response.status===200) {
+      // dispatch(getSchoolByAreaSuccess(data));
+      return {...data, success: true};
+    } else {
+      // dispatch(getSchoolByAreaFailure());
+      return {...data, success: false};
+    }
+  } catch (error) {
+    console.log("echec du bloc try :");
+    console.log(error);
+    return {success: false, message:  "Un problème est survenu avec le serveur..."};
+  }
+}
+
+
+
+
+//----------------------------------------------------
 export async function getAllSchool() {
   const authData = await getAuthData();
 

@@ -1,54 +1,20 @@
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { useEffect, useState } from "react";
-import { getSchool } from "../BackEnd/controllers/classement";
+import { useEffect} from "react";
 
 import { Colors } from "../constant/Colors";
-import { alertProvider } from "../BackEnd/errorHandler";
 
-export default function SchoolComponent({ school }) {
+export default function ExploreSchoolBanner({ school, schoolId }) {
   const navigation = useNavigation();
-  const [isSchoolPressed, setIsSchoolPressed] = useState(false);
-  const [schoolData, setSchoolData] = useState({});
 
-  function loginScreenNavigation() {
-    navigation.navigate("Login Screen");
-  }
-
-  // -------------- école pressed ----------------------------------
-
-  async function getSchoolData() {
-    const data = await getSchool(school.id);
-    if (data) {
-      setSchoolData(data);
-    } else {
-      setIsSchoolPressed(false);
-      alertProvider(loginScreenNavigation);
-    }
-  }
+  useEffect(()=> {
+    console.log("[schoolId]", schoolId)
+    console.log("[school]", school[schoolId])
+  }, [])
 
   function onPressSchool() {
-    setIsSchoolPressed(true);
+    navigation.navigate("School Page", {schoolId, previousScreen: "Explore"});
   }
-
-  useEffect(() => {
-    if (isSchoolPressed) {
-      // empêcher l'execution inutile
-      getSchoolData();
-    }
-  }, [isSchoolPressed]);
-
-  useEffect(() => {
-    if (isSchoolPressed) {
-      setIsSchoolPressed(false);
-      navigation.navigate("School Page", {
-        schoolPressedData: schoolData,
-        previousScreen: "Explore",
-      });
-    }
-  }, [schoolData]);
-
-  // ------------- fin ecole pressed -----------------------------------
 
   // ! ----- manage minimal fontSize (Android) -----------------
   // ! --- non fonctionnel : à cause de "numberOfLines", textWidth ne dépasse jamais ViewWidth, -------------

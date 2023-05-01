@@ -7,7 +7,7 @@ import Logo from "../assets/icons/logo.svg";
 
 const buttonSize = 30;
 
-export function BrandComponent({marginLeft="4%", logoSize=52, fontSize=22}) {
+export function BrandComponent({marginLeft="4%", logoSize=52, fontSize=25}) {
   return (
     <View style={[styles.brandContainer, { marginLeft: marginLeft}]}>
       <Logo
@@ -35,7 +35,7 @@ export function HeaderButton({
   const unDoButton = onUndoPress ? (
     <PrimaryButton
       onPress={onUndoPress}
-      name="arrow-undo-circle-outline"
+      name="arrow-undo-circle"
       size={buttonSize}
       color={Colors.orange500}
     />

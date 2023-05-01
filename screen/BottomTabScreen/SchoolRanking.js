@@ -37,14 +37,14 @@ function SchoolRanking({ navigation, route }) {
     console.log("je passe dans loadSchoolRank ---------------------------------------------------");
     dispatch(getRankRequest());
     const data = await getSchoolRanking();
-    console.log("[LOADSCHOOLRANK]", data.sortedSchoolList)
+    // console.log("[LOADSCHOOLRANK]", data.sortedSchoolList)
     if (data?.sortedSchoolList){
       dispatch(getRankSuccess(data.sortedSchoolList));
     } else if (data?.message) {
       dispatch(getRankSuccess(data.message));
     } else if (data?.error) {
-      alertProvider(data.error);
-      dispatch(getRankFailure());
+      // alertProvider(data.error);
+      dispatch(getRankFailure(data.error));
     } else {
       alertProvider();
       dispatch(getRankFailure());
@@ -75,13 +75,10 @@ function SchoolRanking({ navigation, route }) {
 
 
   async function loadMissingSchoolData(missingSchoolId) {
-    dispatch(getSchoolBannerRequest())
-    const data = await getBannerData(missingSchoolId);
-    if (!data.error) {
-      dispatch(getSchoolBannerSuccess(data));
+    const data = await getBannerData(missingSchoolId, dispatch);
+    if (data.success) {
       setReadyToDisplayRank(true);
     } else {
-      dispatch(getSchoolBannerFailure());
       alertProvider();
     }
   }
@@ -89,7 +86,8 @@ function SchoolRanking({ navigation, route }) {
   useEffect(()=> {
     const rankIdList = schoolReducer.rankIdList;
     if (Array.isArray(rankIdList)) {
-      const schoolsData = schoolReducer.schoolsData;
+      // const schoolsData = schoolReducer.schoolsData;    //! attention, risque de pas être maj si rankIdList n'a pas changé
+      const schoolsData = store.getState().schoolReducer.schoolsData;
       const notMissingSchoolId = Object.keys(schoolsData);
       const missingSchoolId = rankIdList.filter((item)=>!notMissingSchoolId.includes(item))
       missingSchoolId.length>0 ? loadMissingSchoolData(missingSchoolId) : setReadyToDisplayRank(true);

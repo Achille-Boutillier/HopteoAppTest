@@ -69,7 +69,7 @@ export default function Card({ cardValue, currentTheme }) {
           <PrimaryButton
             onPress={handleCardDetail}
             // name= {isCardDetailVisible ? "chevron-down" : "chevron-up" }
-            name={isCardDetailVisible ? "chevron-down" : "help-outline"}
+            name={isCardDetailVisible ? "remove-circle-outline" : "add-circle-outline"}
             size={36}
             color={Colors.orange500}
           />

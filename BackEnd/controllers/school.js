@@ -2,15 +2,18 @@ import { getAuthData } from "./userData";
 // import {getRankRequest, getRankSuccess, getRankFailure} from "../../core/reducers/schoolReducer";
 import { mainUrl, getUserSettingStatus } from "./userData";
 import store from "../../core";
+import {getSchoolBannerRequest, getSchoolBannerSuccess, getSchoolBannerFailure } from "../../core/reducers/schoolReducer";
 const route = mainUrl + "/schools";
 
 
 
-export async function getBannerData(idList) {
+export async function getBannerData(missingSchoolId, dispatch) {
+  dispatch(getSchoolBannerRequest());
+
   const authData = await getAuthData();
   const {cursustype} = getUserSettingStatus();
 
-  const schoolIdString = idList.join(",");
+  const schoolIdString = missingSchoolId.join(",");
 
   const requestOptions = {
     method: "GET",
@@ -27,20 +30,23 @@ export async function getBannerData(idList) {
     const data = await response.json();
     console.log("[getBannerData]",data);
     if (response.status===200) {
-      return data;
+      dispatch(getSchoolBannerSuccess(data));
+      return {success: true}
     } else {
-      return { error: "erreur de requete" };
+      dispatch(getSchoolBannerFailure());
+      return { error: "erreur de requete", success: false };
     }
   } catch (error) {
     console.log("echec du bloc try :");
     console.log(error);
-
-    return { error: "erreur de requete" };
+    dispatch(getSchoolBannerFailure());
+    return { error: "erreur de requete", success: false };
   }
 }
 
 
 export async function getPageData(schoolId) {
+
   const authData = await getAuthData();
   const {cursustype} = getUserSettingStatus();
 
