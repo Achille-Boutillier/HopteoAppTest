@@ -73,7 +73,7 @@ export default function ExploreSchoolBanner({ schoolId }) {
 
       <View style={styles.typeFormationContainer}>
         <Text
-          numberOfLines={2}
+          numberOfLines={1}
           // minimumFontScale={0.8} // ! android only
           style={styles.typeFormation}
         >

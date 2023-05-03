@@ -59,10 +59,10 @@ function SchoolRanking({ navigation, route }) {
       currentAbsoluteIndex = Object.keys(store.getState().swipeReducer.swipeTypeObj).length;
       // const previousAbsoluteIndex = swipeReducer.rankingAbsoluteIndex;
       const previousAbsoluteIndex = store.getState().swipeReducer.rankingAbsoluteIndex;
-      console.log("======================================")
-      console.log("[currentAbsoluteIndex]", currentAbsoluteIndex);
-      console.log("[swipetypeObj]", swipeReducer.swipeTypeObj);
-      console.log("[previousabsoluteindex]", previousAbsoluteIndex);
+      // console.log("======================================")
+      // console.log("[currentAbsoluteIndex]", currentAbsoluteIndex);
+      // console.log("[swipetypeObj]", swipeReducer.swipeTypeObj);
+      // console.log("[previousabsoluteindex]", previousAbsoluteIndex);
       if (previousAbsoluteIndex!==currentAbsoluteIndex){
         dispatch(storeRankingAbsoluteIndex(currentAbsoluteIndex));
         console.log("[previousAbsoluteIndex]",previousAbsoluteIndex);
@@ -74,23 +74,27 @@ function SchoolRanking({ navigation, route }) {
   }, [navigation]);
 
 
-  async function loadMissingSchoolData(missingSchoolId) {
-    const data = await getBannerData(missingSchoolId, dispatch);
-    if (data.success) {
-      setReadyToDisplayRank(true);
+  async function loadMissingSchoolData(rankIdList) {
+    const schoolsData = store.getState().schoolReducer.schoolsData;
+    const notMissingSchoolId = Object.keys(schoolsData);
+    const missingSchoolId = rankIdList.filter((item)=>!notMissingSchoolId.includes(item));
+    if (missingSchoolId.length>0) {
+      const data = await getBannerData(missingSchoolId, dispatch);
+      if (data.success) {
+        setReadyToDisplayRank(true);
+      } else {
+        alertProvider();
+      }
     } else {
-      alertProvider();
+      setReadyToDisplayRank(true)
     }
+    
   }
 
   useEffect(()=> {
     const rankIdList = schoolReducer.rankIdList;
     if (Array.isArray(rankIdList)) {
-      // const schoolsData = schoolReducer.schoolsData;    //! attention, risque de pas être maj si rankIdList n'a pas changé
-      const schoolsData = store.getState().schoolReducer.schoolsData;
-      const notMissingSchoolId = Object.keys(schoolsData);
-      const missingSchoolId = rankIdList.filter((item)=>!notMissingSchoolId.includes(item))
-      missingSchoolId.length>0 ? loadMissingSchoolData(missingSchoolId) : setReadyToDisplayRank(true);
+      loadMissingSchoolData(rankIdList);
     } else {
       setReadyToDisplayRank(true);
     }
@@ -108,6 +112,7 @@ function SchoolRanking({ navigation, route }) {
             data={schoolReducer.rankIdList}
             // extraData={} 
             keyExtractor={(item) => item}
+            showsVerticalScrollIndicator={false}
             renderItem={({item}) => {
               return (<SchoolBanner schoolId={item} />);
             }}

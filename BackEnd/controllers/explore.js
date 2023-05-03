@@ -47,54 +47,57 @@ export async function getSchoolByArea() {
 
 
 //----------------------------------------------------
-export async function getAllSchool() {
-  const authData = await getAuthData();
+// export async function getAllSchool() {
+//   const authData = await getAuthData();
 
-  const requestOptions = {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      authorization: "Bearer " + authData.token,
-    },
-  };
+//   const requestOptions = {
+//     method: "GET",
+//     headers: {
+//       "Content-Type": "application/json",
+//       authorization: "Bearer " + authData.token,
+//     },
+//   };
 
-  try {
-    const response = await fetch(route + "/AllSchools/", requestOptions);
-    // console.log(response.status);
-    const data = await response.json();
-    // console.log(data);
-    return data;
-  } catch (error) {
-    console.log("echec du bloc try :");
-    console.log(error);
-    return { error };
-  }
-}
+//   try {
+//     const response = await fetch(route + "/AllSchools/", requestOptions);
+//     // console.log(response.status);
+//     const data = await response.json();
+//     // console.log(data);
+//     return data;
+//   } catch (error) {
+//     console.log("echec du bloc try :");
+//     console.log(error);
+//     return { error };
+//   }
+// }
 
 export async function searchSchool(enteredText) {
+  try {
   const authData = await getAuthData();
+  const {cursustype} = getUserSettingStatus();
+
 
   const requestOptions = {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
       authorization: "Bearer " + authData.token,
+      cursustype,
     },
-  };
-
-  console.log(route + `/searchSchool/${enteredText}`);
-  try {
-    const response = await fetch(
-      route + `/searchSchool/${enteredText}`,
-      requestOptions
-    );
+  };  
+    const response = await fetch(route + "/searchSchool/" + enteredText, requestOptions);
     console.log(response.status);
     const data = await response.json();
     // console.log(data);
+    if (response.status===200) {
+      return {...data, success: true}
+    } else {
+      return {...data, success: false}
+    }
     return data;
   } catch (error) {
     console.log("echec du bloc try :");
     console.log(error);
-    return { error };
+    return { error: "Une erreur est survenue", success: false };
   }
 }

@@ -4,47 +4,49 @@ import { Colors } from "../constant/Colors";
 import PrimaryButton from "./PrimaryButton";
 
 export default function SearchBar({
-  handlePressSearch,
+  onPressSearch,
   handleStopResearch,
-  blurContent,
+  handleIsEditing,
+  // blurContent,
 }) {
   const [isResearching, setIsResearching] = useState(false);
   const [userInput, setUserInput] = useState("");
   const textInputRef = useRef(null);
 
   function onPressStopResearch() {
-    textInputRef.current.blur();
-    textInputRef.current.clear();
+    textInputRef.current.blur();    // quitter l'edition de UserInput
+    textInputRef.current.clear();   // reset l'edition à nulle
     setUserInput("");
     setIsResearching(false);
     handleStopResearch();
   }
 
   function onSubmit() {
-    if (textInputRef.current.isFocused()) {
-      // si userInput était en pleine édition
+    if (textInputRef.current.isFocused()) {       // si userInput était en pleine édition
       textInputRef.current.blur();
+      handleIsEditing(false);
       if (userInput) {
-        handlePressSearch(userInput);
+        onPressSearch(userInput);
       } else {
         handleStopResearch();
       }
-      blurContent(1);
-    } else {
-      // si userInput n'était pas en édition
+    } else {        // si userInput n'était pas en édition
       textInputRef.current.focus();
       setIsResearching(true);
-      blurContent(0.2);
+      // blurContent(0.2);
     }
   }
 
   function onPressIn() {
-    blurContent(0.2);
+    handleIsEditing(true);
+    // blurContent(0.2);
     setIsResearching(true);
+
   }
 
   function onEndEditing() {
-    blurContent(1);
+    handleIsEditing(false);
+    // blurContent(1);
     if (!userInput) {
       setIsResearching(false);
     }

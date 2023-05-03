@@ -2,23 +2,20 @@ import { View, StyleSheet, Image, Text, ActivityIndicator } from "react-native";
 import { useEffect, useState } from "react";
 import { Colors } from "../constant/Colors";
 
-export default function CardDetail({ currentTheme, cardDetail }) {
+export default function CardDetail({ cardDetail }) {
   const [isDetailLoaded, setIsDetailLoaded] = useState(false);
+  const [heigth, setHeigth] = useState("60%");
   useEffect(() => {
     if (cardDetail) {
+      setHeigth(cardDetail.length> 250 ? "90%" : "60%") ;
       setIsDetailLoaded(true)
     }
   }, [cardDetail])
 
   return (
-    <View
-      style={[
-        styles.mainContainer,
-        { backgroundColor: currentTheme?.detailColor },
-      ]}
-    >
-      <View style={styles.infoTitleContainer}>
-        <Text style={styles.infoTitleText}>Explications :</Text>
+    <View style={[styles.mainContainer, {height:heigth }]} >
+      <View style={styles.titleContainer}>
+        <Text style={styles.titleText}>Explications :</Text>
       </View>
 
       <View style={styles.infoTextContainer}>
@@ -34,25 +31,30 @@ export default function CardDetail({ currentTheme, cardDetail }) {
 
 const styles = StyleSheet.create({
   mainContainer: {
+    // flex: 0,
     // alignItems: "center",
     marginHorizontal: "5%",
     marginTop: "5%",
     borderRadius: 10,
-    paddingVertical: "3%",
+    // borderTopLeftRadius: 10,
+    paddingTop: "3%",
+    backgroundColor: Colors.white,
     paddingHorizontal: "4%",
-    height: "70%",
+    // alignSelf: "flex-end",
+    // height: "100%",
     // width: "100%",
   },
 
-  infoTitleContainer: {
+  titleContainer: {
     // width: "100%",
     height: 25,
+    alignItems: "center",
     // borderWidth: 1,
     // justifyContent: "center",
     // paddingLeft: 10,
   },
 
-  infoTitleText: {
+  titleText: {
     textAlign: "left",
     fontWeight: "500",
     fontSize: 14,

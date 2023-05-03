@@ -50,7 +50,7 @@ export default function Card({ cardValue, currentTheme }) {
       ]}
     >
       <View style={styles.themeContainer}>
-        <Text style={[styles.themeText, { color: currentTheme?.color }]}>
+        <Text style={[styles.themeText, { color: currentTheme?.color }] }  >
           {currentTheme?.titre}
         </Text>
       </View>
@@ -58,10 +58,12 @@ export default function Card({ cardValue, currentTheme }) {
       <View style={[styles.cardTextContainer]}>
         <Text
           style={[styles.cardText, { fontSize: isCardDetailVisible ? 20 : 24 }]}
+          numberOfLines={isCardDetailVisible ? 2 : 5}
+          adjustsFontSizeToFit={isCardDetailVisible ? true : false}
         >
           {cardValue.titre}
         </Text>
-        {isCardDetailVisible ? <CardDetail currentTheme={currentTheme} cardDetail={cardDetail} /> : null}
+        {isCardDetailVisible ? <CardDetail cardDetail={cardDetail} /> : null}
       </View>
 
       <View style={styles.infoButtonContainer}>
@@ -82,7 +84,7 @@ export default function Card({ cardValue, currentTheme }) {
 const styles = StyleSheet.create({
   card: {
     overflow: "hidden",
-    justifyContent: "center",
+    justifyContent: "space-evenly",
     alignItems: "center",
     alignSelf: "center",
     borderRadius: 40,
@@ -100,7 +102,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     backgroundColor: Colors.white,
     position: "absolute",
-    top: "7%",
+    top: "5%",
   },
   themeText: {
     fontWeight: "700",

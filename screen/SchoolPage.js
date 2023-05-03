@@ -18,6 +18,7 @@ import ProfessionalOpportunities from "../component/schoolPageComponent/Professi
 import { useSelector, useDispatch } from "react-redux";
 import {setSchoolLikeFailure, setSchoolLikeSuccess, getSchoolPageRequest, getSchoolPageSuccess, getSchoolPageFailure, } from "../core/reducers/schoolReducer";
 import { getPageData } from "../BackEnd/controllers/school";
+import RibbonComponent from "../component/RibbonComponent";
 
 export default function SchoolPage({ navigation, route }) {
   const schoolId = route.params.schoolId;
@@ -29,6 +30,7 @@ export default function SchoolPage({ navigation, route }) {
   const previousScreen = route.params.previousScreen;
   console.log(previousScreen);
   const dispatch = useDispatch();
+
 
 
   // ---------------------data écoles --------------------------------------
@@ -105,32 +107,13 @@ export default function SchoolPage({ navigation, route }) {
   
           <View style={styles.imageContainer} />
           <View style={styles.schoolHeadInfo}>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <View style={styles.rankContainer}>
-                <Text
-                  style={{
-                    color: Colors.grey,
-                    fontWeight: "500",
-                    fontSize: 14,
-                    textAlign: "center",
-                    marginTop: -2,
-                  }}
-                >
-                  {singleSchoolData.rank}
-                </Text>
-              </View>
+            <View style={{flexDirection: "row", justifyContent: "center", alignItems: "center",}} >
+              <RibbonComponent rank={singleSchoolData.rank} size={35} />
   
-              <Text
-                style={{ fontSize: 20, fontWeight: "500", color: Colors.grey }}
-              >
+              <Text style={{ fontSize: 20, fontWeight: "500", color: Colors.grey }}>
                 {singleSchoolData.nomEcole}
               </Text>
+              
             </View>
             <Text style={{ fontSize: 14, fontWeight: "600", color: Colors.grey }}>
               {singleSchoolData.typeFormation}

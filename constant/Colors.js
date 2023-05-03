@@ -32,6 +32,10 @@ export const Colors = {
   // superLike: "blue",
   superLike: "#FF498A" ,
 
+
+  first: "#FFD700",
+  second: "#C0C0C0",
+  third: "#CD7F32",
 };
 
 // export default Colors;

@@ -1,27 +1,23 @@
-import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  Dimensions,
-} from "react-native";
+import {StyleSheet, View, Text, TouchableOpacity, Dimensions,} from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 
 import PrimaryButton from "./PrimaryButton";
 import { Colors } from "../constant/Colors";
 import { useEffect, useState } from "react";
 
+
 import { alertProvider } from "../BackEnd/errorHandler";
 import { useSelector, useDispatch } from "react-redux";
-import {setSchoolLikeFailure, setSchoolLikeSuccess } from "../core/reducers/schoolReducer";
 import { modifyLike } from "../BackEnd/controllers/school";
+import RibbonComponent from "./RibbonComponent";
 
 
 export default function SchoolBanner({schoolId}) {    //id, rank, nomEcole, typeFormation, like
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const singleSchoolData = useSelector((state) => state.schoolReducer.schoolsData[schoolId]);
-  // ? est-ce mieux d'envoyer 
+  const [bannerColor, setBannerColor] = useState(null);
+
 
   function loginScreenNavigation() {
     navigation.navigate("Login Screen");
@@ -47,27 +43,15 @@ export default function SchoolBanner({schoolId}) {    //id, rank, nomEcole, type
 
   return (
     <TouchableOpacity
-      style={styles.bannerContainer}
+      style={[styles.bannerContainer, bannerColor ? {borderWidth: 2, borderColor: bannerColor} : null]}
       onPress={onPressSchool.bind(this, schoolId)}
     >
-      <View style={styles.rankContainer}>
-        <Text
-          style={{
-            color: Colors.grey,
-            fontWeight: "500",
-            fontSize: 14,
-            marginTop: -2,
-          }}
-        >
-          {singleSchoolData.rank}
-        </Text>
-      </View>
+      <RibbonComponent rank={singleSchoolData.rank} size={35} setBannerColor={setBannerColor}/>
+      
       <View style={styles.writtenInfo}>
         <Text style={{ fontWeight: "500" }}>{singleSchoolData.nomEcole}</Text>
         <Text style={{ color: Colors.grey }}>{singleSchoolData.typeFormation}</Text>
       </View>
-
-      {/* like disabled : */}
 
       <View style={styles.rightContainer}>
         {/* <View style={styles.rightItems}>
@@ -81,7 +65,7 @@ export default function SchoolBanner({schoolId}) {    //id, rank, nomEcole, type
             // name={isSchoolLiked ? "heart" : "heart-outline"}  
             name={singleSchoolData.like ? "heart" : "heart-outline"}  
             size={30}
-            color={Colors.orange500}
+            color={bannerColor ? bannerColor : Colors.orange500}
             bigButton={true}
           />
         </View>
@@ -100,27 +84,15 @@ const styles = StyleSheet.create({
     width: 0.9 * Dimensions.get("window").width,
     height: 80,
     borderRadius: 15,
-    paddingLeft: "6%",
+    paddingLeft: "4%",
     paddingRight: "3%",
     paddingVertical: "3%",
     marginTop: "1%",
     marginBottom: "1%",
   },
 
-  rankContainer: {
-    marginRight: "5%",
-    // padding: 1,
-    borderWidth: 1,
-    borderColor: Colors.grey,
-    borderRadius: 20,
-    width: 20,
-    height: 20,
-    justifyContent: "center",
-    alignItems: "center",
-    // left: 5,
-    // flex: 1,
-  },
   writtenInfo: {
+    marginLeft: "3%",
     flexDirection: "column",
     width: "70%",
   },
