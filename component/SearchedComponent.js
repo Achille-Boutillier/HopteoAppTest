@@ -8,7 +8,7 @@ import { useDispatch } from "react-redux";
 import ExploreSchoolBanner from "./ExploreSchoolBanner";
 import MessageContainer from "./MessageContainer";
 
-export default function SearchedComponent({searchedIdList, scrollWidth, scrollHeight, isEditing }) {
+export default function SearchedComponent({searchedIdList, scrollWidth, scrollHeight}) {
   const dispatch = useDispatch();
   const [schoolIdList, setSchoolIdList] = useState(null);
   const [displayResearch, setDisplayResearch] = useState();
@@ -43,7 +43,7 @@ export default function SearchedComponent({searchedIdList, scrollWidth, scrollHe
   }, [searchedIdList])
 
 
-  if (isEditing) {
+  if (!searchedIdList) {
     return <MessageContainer>Lance vite ta recherche !</MessageContainer> 
   } else {
 

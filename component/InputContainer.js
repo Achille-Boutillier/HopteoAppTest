@@ -3,8 +3,20 @@ import { View, StyleSheet, TextInput, Text } from "react-native";
 import { Colors } from "../constant/Colors";
 
 
-export default function InputComponent({title, setInput, input, onSubmitEditing }) {
+export default function InputComponent({title, setInput, input, onSubmitEditing, setIsEditing }) {
   const [textInputSetting, setTextInputSetting] = useState({});
+
+
+  function onPressIn() {
+    setIsEditing(true);
+    console.log("in")
+  }
+
+  function onBlur(){
+    console.log("dismissed")
+    setIsEditing(false);
+  }
+
 
   useEffect(()=> {
     let placeholder;
@@ -40,6 +52,9 @@ export default function InputComponent({title, setInput, input, onSubmitEditing 
         secureTextEntry={textInputSetting.secureTextEntry}
         onSubmitEditing={onSubmitEditing ? onSubmitEditing : null}
         selectionColor={Colors.orange500}
+        onPressIn={onPressIn}
+        // onEndEditing={onEndEditing}
+        onBlur={onBlur}
       />
     </View>
   );

@@ -5,14 +5,7 @@ import { Colors } from "../constant/Colors";
 
 const orange500 = Colors.orange500;
 
-function PrimaryButton({
-  onPress,
-  name,
-  size,
-  color = { orange500 },
-  bigButton,
-  style,
-}) {
+function PrimaryButton({onPress, name, size, color = { orange500 }, bigButton, style,}) {
   const buttonHeight = bigButton ? size + 25 : size + 15; // size + 20 pour une meilleure cliquabilité
 
   return (

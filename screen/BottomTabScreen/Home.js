@@ -20,7 +20,7 @@ const swiperRef = createRef();
 
 
 export default function Home({ navigation, route }) {
-  const themeState = useSelector((state) => state.themeReducer.theme);
+  const themeState = useSelector((state) => state.themeReducer.themeObj);
   const swipeReducer = useSelector((state) => state.swipeReducer);
 
   const dispatch = useDispatch();
@@ -154,14 +154,15 @@ export default function Home({ navigation, route }) {
 
   async function onSwiped(index, swipeType) {
     console.log(`swiper index : ${index}`);
+    const idTheme = cardList[index].idTheme
     const id = cardList[index].id;         // todo: remplacer "_id" par "id"
     console.log( "[id swipe ]" ,id);
     setListIndex(index + 1);
-    dispatch(storeNewSwipe({id, swipeType}))
+    dispatch(storeNewSwipe({id, swipeType, idTheme}))
     // todo: maj les reducers avec réponse question
     const isSuccessfull = await swipeHandler(id, swipeType);
     if (!isSuccessfull) {
-      dispatch(removeSwipe(id));
+      dispatch(removeSwipe({id, idTheme}));
       alertProvider("Le swipe n'a pas été pris en compte")
     }
   }

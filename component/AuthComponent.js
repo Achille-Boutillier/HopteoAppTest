@@ -14,6 +14,7 @@ export default function AuthComponent({typeScreen ,onSubmit, onChangeTypeScreen,
   const [firstButtonTitle, setFirstButtonTitle] = useState("");
   const [secondButtonTitle, setSecondButtonTitle] = useState("");
   const [headerReadius, setHeaderRadius ] = useState({});
+  const [isEditing, setIsEditing] = useState(false);
 
   const [pageTitle, setPageTitle ] = useState("");
   const [catchPhrase, setCatchPhrase] = useState("");
@@ -39,27 +40,31 @@ export default function AuthComponent({typeScreen ,onSubmit, onChangeTypeScreen,
   return (
     <View style={styles.mainContainer}>
      
-      <View style={styles.headerContainer}>
-        <Text style={styles.pageTitle}>{pageTitle}</Text>
-      </View>
+      {!isEditing 
+        ? (
+          <View style={styles.headerContainer}>
+            <Text style={styles.pageTitle}>{pageTitle}</Text>
+          </View>
+        ) : null
+      }
 
 
-      <View style={[styles.bodyContainer, headerReadius]}>
+      <View style={[styles.bodyContainer, headerReadius, isEditing ? styles.bodyOnEditing : styles.bodyNotEditing]}>
 
         <Text style={styles.catchPhrase}>{catchPhrase}</Text>
 
         <Text style={styles.errorMessage} >{errorMessage}</Text>
 
         <View style={styles.formContainer}>
-          <InputComponent title="Email" input={email} setInput={setEmail} />
-          <InputComponent title="Mot de passe" input={password} setInput={setPassword} onSubmitEditing={()=> onSubmit(email, password)}/>
+          <InputComponent title="Email" input={email} setInput={setEmail} setIsEditing={setIsEditing}/>
+          <InputComponent title="Mot de passe" input={password} setInput={setPassword} onSubmitEditing={()=> onSubmit(email, password)} setIsEditing={setIsEditing}/>
         </View>
 
           
         <TerciaryButton title={firstButtonTitle} onPress={()=> onSubmit(email, password)} color={Colors.orange500} isFullColor={true}/>
-        <TerciaryButton title={secondButtonTitle} onPress={onChangeTypeScreen} color={Colors.orange500} />
+        {!isEditing ? <TerciaryButton title={secondButtonTitle} onPress={onChangeTypeScreen} color={Colors.orange500} /> : null}
         
-        <BrandComponent marginLeft={0} logoSize={60} fontSize={30}/>
+        {!isEditing ? <BrandComponent marginLeft={0} logoSize={60} fontSize={30}/> : null}
 
       </View>
       
@@ -90,23 +95,41 @@ const styles = StyleSheet.create({
 
   },
 
+  catchPhrase: { 
+    fontSize: 20, 
+    fontWeight: "500",
+    textAlign: "center",
+    // marginTop: 50,
+    marginHorizontal: "10%",
+  },
+
   bodyContainer: {
     backgroundColor: Colors.white,
-    position: "absolute",
-    bottom: 0,
-    height: "87%",
     width: "100%",
     alignItems: "center",
     // borderTopLeftRadius: 80,
+    justifyContent: "center",
+    // borderWidth: 1
+
   },
 
-  catchPhrase: { 
-    fontSize: 18, 
-    fontWeight: "500",
-    textAlign: "center",
-    marginTop: 50,
-    marginHorizontal: "10%",
+  bodyOnEditing: {
+    position: "relative",
+    height: "100%",
+    paddingTop: 0,
+    // bottom: null,
+    // justifyContent: "center",
+  }, 
+  bodyNotEditing: {
+    position: "absolute",
+    height: "87%",
+    bottom: 0,
+    paddingTop: 50,
+    // justifyContent: "center",
+
   },
+
+  
 
   errorMessage: {
     textAlign: "center", 

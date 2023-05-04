@@ -3,7 +3,8 @@ import { useEffect, useState, useLayoutEffect } from "react";
 import { getRankRequest, getRankSuccess, getRankFailure, getSchoolBannerRequest, getSchoolBannerSuccess, getSchoolBannerFailure } from "../../core/reducers/schoolReducer";
 
 import { Colors } from "../../constant/Colors";
-import {getSchoolRanking,} from "../../BackEnd/controllers/classement";
+import {getSchoolRanking, getRankingAlgoData} from "../../BackEnd/controllers/ranking";
+import { generateRanking } from "../../BackEnd/rankingFunction";
 import { getBannerData } from "../../BackEnd/controllers/school";
 import SchoolBanner from "../../component/SchoolBanner";
 import MessageContainer from "../../component/MessageContainer";
@@ -12,11 +13,14 @@ import { alertProvider } from "../../BackEnd/errorHandler";
 import { useSelector, useDispatch } from "react-redux";
 import { storeRankingAbsoluteIndex } from "../../core/reducers/swipeReducer";
 import store from "../../core";
+import { getForRankingFailure, getForRankingRequest, getForRankingSuccess } from "../../core/reducers/forRankingReducer";
 
 
 function SchoolRanking({ navigation, route }) {
   const schoolReducer = useSelector((state) => state.schoolReducer);
   const swipeReducer = useSelector((state) => state.swipeReducer);
+  const themeObj = useSelector((state)=> state.themeReducer.themeObj)
+  // const forRanking = useSelector(((state)=> state.forRankingReducer.))
 
 
   // todo : virer le componentToShow du useEffect, direct dans le return sous condition if
@@ -31,38 +35,68 @@ function SchoolRanking({ navigation, route }) {
   //   navigation.navigate("Login Screen");
   // }
 
+  // async function handleForRankingReducer() {
+    
+
+  // }
+
+
+  // ---------- rank calcul -------------------------------------------
+  function calculateNewRank(cards, schoolIdObj) {
+    dispatch(getRankRequest());
+
+    const swipe = {
+      answeredList : Object.keys(swipeReducer.swipeTypeObj), 
+      swipeObj : swipeReducer.swipeTypeObj,
+      answerByTheme : swipeReducer.answerByTheme 
+    };
+
+    const ranking = generateRanking(swipe, cards, schoolIdObj, 
+      swipeReducer.minSwipeForRanking, themeObj, 
+      swipeReducer.swipeSettings);
+
+      if (ranking?.sortedSchoolList){
+        dispatch(getRankSuccess(ranking.sortedSchoolList));
+      } else if (ranking?.message) {
+        dispatch(getRankSuccess(ranking.message));
+      } else if (ranking?.error) {
+        alertProvider(ranking?.error);
+        dispatch(getRankFailure(ranking.error));
+      } else {
+        alertProvider();
+        dispatch(getRankFailure());
+      }
+  }
+
   
   async function loadSchoolRank() {
     setReadyToDisplayRank(false);
-    console.log("je passe dans loadSchoolRank ---------------------------------------------------");
-    dispatch(getRankRequest());
-    const data = await getSchoolRanking();
-    // console.log("[LOADSCHOOLRANK]", data.sortedSchoolList)
-    if (data?.sortedSchoolList){
-      dispatch(getRankSuccess(data.sortedSchoolList));
-    } else if (data?.message) {
-      dispatch(getRankSuccess(data.message));
-    } else if (data?.error) {
-      // alertProvider(data.error);
-      dispatch(getRankFailure(data.error));
+    const {cards, schoolIdObj } = store.getState().forRankingReducer;
+
+    if (Object.keys(cards)>0) {
+      calculateNewRank(cards, schoolIdObj);
     } else {
-      alertProvider();
-      dispatch(getRankFailure());
+
+      dispatch(getForRankingRequest());
+      const data = await getRankingAlgoData();
+      if (data.success) {
+        delete data.success;
+        dispatch(getForRankingSuccess({cards: data.cards, schoolIdObj: data.schoolIdObj }));
+        calculateNewRank(data.cards, data.schoolIdObj);
+      } else {
+        dispatch(getForRankingFailure());
+      }
     }
   }
+// ---------------------- fin calcul ----------------------------------------------------
+
 
   useEffect(() => {
-    //todo: appeler loadSchoolRank que lorsque necessaire
     // 'focus' quand on atteri sur le screen; 'blur' quand on quitte
     const unsubscribe = navigation.addListener("focus", () => {
 
       currentAbsoluteIndex = Object.keys(store.getState().swipeReducer.swipeTypeObj).length;
-      // const previousAbsoluteIndex = swipeReducer.rankingAbsoluteIndex;
       const previousAbsoluteIndex = store.getState().swipeReducer.rankingAbsoluteIndex;
-      // console.log("======================================")
-      // console.log("[currentAbsoluteIndex]", currentAbsoluteIndex);
-      // console.log("[swipetypeObj]", swipeReducer.swipeTypeObj);
-      // console.log("[previousabsoluteindex]", previousAbsoluteIndex);
       if (previousAbsoluteIndex!==currentAbsoluteIndex){
         dispatch(storeRankingAbsoluteIndex(currentAbsoluteIndex));
         console.log("[previousAbsoluteIndex]",previousAbsoluteIndex);
@@ -132,7 +166,8 @@ function SchoolRanking({ navigation, route }) {
     }
   }, [readyToDisplayRank]);
 
-  
+
+ // ------------ boutons header ---------------------------
 
   function onSettingsPress() {
     navigation.navigate("Settings");
@@ -152,7 +187,6 @@ function SchoolRanking({ navigation, route }) {
       <View style={styles.listContainer}>{componentToShow}</View>
     </View>
   );
-  // <View style={styles.podiumContainer}></View>; // contener bleu à rajouter avant flatList
 }
 
 export default SchoolRanking;
@@ -164,20 +198,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     // padding: 10,
   },
-  // rankContainer: {
-  //   flex: 1,
-  //   width: "90%",
-  //   alignItems: "center",
-  //   backgroundColor: Colors.blue400,
-  // },
 
   listContainer: {
     alignItems: "center",
     flex: 1,
-    // borderWidth: 1,
     width: "90%",
     // padding: 5,
+    // borderWidth: 1,
   },
 
-  // },
 });

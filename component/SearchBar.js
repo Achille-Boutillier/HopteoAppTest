@@ -3,18 +3,15 @@ import { useState, useRef } from "react";
 import { Colors } from "../constant/Colors";
 import PrimaryButton from "./PrimaryButton";
 
-export default function SearchBar({
-  onPressSearch,
-  handleStopResearch,
-  handleIsEditing,
-  // blurContent,
-}) {
+export default function SearchBar({onSubmitResearch, handleStopResearch, onBeginResearch,}) {
   const [isResearching, setIsResearching] = useState(false);
   const [userInput, setUserInput] = useState("");
   const textInputRef = useRef(null);
 
   function onPressStopResearch() {
-    textInputRef.current.blur();    // quitter l'edition de UserInput
+    if (textInputRef.current.isFocused()){
+      textInputRef.current.blur();    // quitter l'edition de UserInput
+    }
     textInputRef.current.clear();   // reset l'edition à nulle
     setUserInput("");
     setIsResearching(false);
@@ -24,33 +21,35 @@ export default function SearchBar({
   function onSubmit() {
     if (textInputRef.current.isFocused()) {       // si userInput était en pleine édition
       textInputRef.current.blur();
-      handleIsEditing(false);
       if (userInput) {
-        onPressSearch(userInput);
+        onSubmitResearch(userInput);
       } else {
         handleStopResearch();
       }
     } else {        // si userInput n'était pas en édition
       textInputRef.current.focus();
       setIsResearching(true);
-      // blurContent(0.2);
+      onBeginResearch();
     }
   }
 
   function onPressIn() {
-    handleIsEditing(true);
-    // blurContent(0.2);
+    // handleIsEditing(true);
+    onBeginResearch();
     setIsResearching(true);
 
   }
 
-  function onEndEditing() {
-    handleIsEditing(false);
-    // blurContent(1);
-    if (!userInput) {
-      setIsResearching(false);
-    }
-  }
+  // todo: comment utiliser onEndEditing que si onSubmit n'a pas été utilisé (textInput always run onEndEditing after onSubmit)
+  // function onEndEditing() {
+  //   // handleIsEditing(false);
+  //   // blurContent(1);
+  //   setIsResearching(false);
+
+  //   // if (!userInput) {
+  //   //   setIsResearching(false);
+  //   // }
+  // }
 
   return (
     <View style={styles.mainContainer}>
@@ -67,7 +66,7 @@ export default function SearchBar({
         placeholder="Rechercher"
         onChangeText={setUserInput} // .trim() to remove whitespace at the end and begining
         onPressIn={onPressIn}
-        onEndEditing={onEndEditing}
+        // onEndEditing={onEndEditing}
         clearButtonMode="while-editing"
         onSubmitEditing={onSubmit}
         value={userInput}

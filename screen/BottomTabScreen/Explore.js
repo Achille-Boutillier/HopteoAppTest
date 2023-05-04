@@ -31,9 +31,9 @@ export default function Explore({ navigation, route }) {
 
   // const []
   const [searchedIdList, setSearchedIdList] = useState(null);
-  const [isSearchPress, setIsSearchPress] = useState(false);
+  const [isSubmitResearch, setIsSubmitResearch] = useState(false);
   const [searchInput, setSearchInput] = useState(null);
-  const [isEditing, setIsEditing] = useState(false);
+  const [isResearching, setIsResearching] = useState(false);
   // const [errorMessage, setErrorMessage] = useState(null);
 
   // -------- Obtenir list d'id by Area -----------------------------
@@ -79,35 +79,37 @@ export default function Explore({ navigation, route }) {
   //   console.log(value);
   // }
 
-  const handleIsEditing = useCallback((value)=> {   // todo: error : excessive number Pending callback (à cause du set passé au child)
-    setIsEditing(value);
+  const onBeginResearch = useCallback(()=> {   // todo: error : excessive number Pending callback (à cause du set passé au child)
+    console.log("Passing throught handleIsEditing");
+    setIsResearching(true);
   }, [])
 
   function handleStopResearch() {
     setSearchInput(null);
-    setIsSearchPress(false); 
+    setIsSubmitResearch(false); 
+    setIsResearching(false)
     setSearchedIdList(null);
   }
 
 
-  async function handlePressSearch() {
+  async function handleSubmitResearch() {
     const {schoolMatchId, success} = await searchSchool(searchInput);
     if (success) {
       setSearchedIdList(schoolMatchId);
     } else {
       alertProvider();
     }
-    // setIsSearchPress(true);   //!!! s'assurer que searchedIdList déjà storée
+    // setIsSubmitResearch(true);   //!!! s'assurer que searchedIdList déjà storée
   }
 
-  function onPressSearch(userInput){  ///!! appelé que quand j'appuie sur rechercher, il faut qu'elle soit appelé onfocus du textInput
-    setIsSearchPress(true);
+  function onSubmitResearch(userInput){  ///!! appelé que quand j'appuie sur rechercher, il faut qu'elle soit appelé onfocus du textInput
+    setIsSubmitResearch(true);
     setSearchInput(userInput);
   }
 
   useEffect(()=> {
-    if (isSearchPress) {
-      handlePressSearch();
+    if (isSubmitResearch) {
+      handleSubmitResearch();
     }
   }, [searchInput])
 
@@ -131,15 +133,20 @@ export default function Explore({ navigation, route }) {
 
       <View style={{ width: "100%", marginTop: "2%" }}>
         <SearchBar
-          onPressSearch={onPressSearch}
+          onSubmitResearch={onSubmitResearch}
           handleStopResearch={handleStopResearch}
-          handleIsEditing={handleIsEditing}
+          onBeginResearch={onBeginResearch}
         />
       </View>
 
-      {isSearchPress
-        ? <SearchedComponent searchedIdList={searchedIdList} scrollWidth={scrollWidth} scrollHeight={scrollHeight} isEditing={isEditing}/>
-        : <ExploreByArea scrollWidth={scrollWidth} scrollHeight={scrollHeight} />
+      <ExploreByArea scrollWidth={scrollWidth} scrollHeight={scrollHeight}/>
+      {isResearching
+        ? (
+          <View style={styles.researchContainer}>
+            <SearchedComponent searchedIdList={searchedIdList} scrollWidth={scrollWidth} scrollHeight={scrollHeight} />
+          </View>
+        )
+        : null
       }
 
     </View>
@@ -160,5 +167,12 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     flexWrap: "wrap",
     padding: 6,
+  },
+  researchContainer: {
+    flex: 1,
+    position: "absolute",
+    top: 50,
+    borderWidth: 1,
+    backgroundColor: Colors.backgroundColor,
   },
 });

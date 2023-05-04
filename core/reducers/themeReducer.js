@@ -10,7 +10,7 @@ export const themeSlice = createSlice({
       state.error = null;
     },
     getThemeSuccess: (state, action) => {
-      state.theme = action.payload;
+      state.themeObj = action.payload;
       state.loading = false;
       state.error = null;
     },

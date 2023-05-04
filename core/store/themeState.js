@@ -1,5 +1,5 @@
 export const initialThemeState = {
-  theme: {},
+  themeObj: {},
   loading: null,
   error: null,
 };

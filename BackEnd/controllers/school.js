@@ -26,9 +26,9 @@ export async function getBannerData(missingSchoolId, dispatch) {
 
   try {
     const response = await fetch(route + "/banners/" + schoolIdString, requestOptions);
-    console.log(response.status)
+    console.log("[getBannerData]", response.status)
     const data = await response.json();
-    console.log("[getBannerData]",data);
+    // console.log("[getBannerData]",data);
     if (response.status===200) {
       dispatch(getSchoolBannerSuccess(data.schoolBanners));
       return {success: true}

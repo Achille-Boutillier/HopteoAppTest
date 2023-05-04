@@ -28,10 +28,12 @@ export async function storeNewAuthData(newAuthData) {
 
 
 export function storeSplashData(splashData, dispatch) {
-  const {themeObj, filiere, cursustype, secondYearFiliere, answeredCardList, idCardsList, minSwipeForRanking, swipeTypeObj } = splashData;
+  const {themeObj, 
+    filiere, cursustype, secondYearFiliere, 
+    answeredCardList, idCardsList, minSwipeForRanking, swipeTypeObj, answerByTheme, swipeSettings } = splashData;
   dispatch(getThemeSuccess(themeObj));
   dispatch(getUserSettingSuccess({filiere, secondYearFiliere, cursustype}));
-  dispatch(splashSwipeSuccess({answeredCardList, idCardsList, minSwipeForRanking, swipeTypeObj}));
+  dispatch(splashSwipeSuccess({answeredCardList, idCardsList, minSwipeForRanking, swipeTypeObj, answerByTheme, swipeSettings}));
 }
 
 

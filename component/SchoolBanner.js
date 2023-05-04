@@ -19,9 +19,9 @@ export default function SchoolBanner({schoolId}) {    //id, rank, nomEcole, type
   const [bannerColor, setBannerColor] = useState(null);
 
 
-  function loginScreenNavigation() {
-    navigation.navigate("Login Screen");
-  }
+  // function loginScreenNavigation() {
+  //   navigation.navigate("Login Screen");
+  // }
 
   // --------------- like ecole -------------------------------------
   

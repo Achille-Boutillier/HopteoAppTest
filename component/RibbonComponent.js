@@ -14,7 +14,7 @@ export default function RibbonComponent({rank, size=35, setBannerColor}){
   useEffect(()=> {
     let color = null;
     // let RibbonIcon;
-    console.log(rank);
+    // console.log(rank);
     switch (rank) {
       case 1 :
         color=Colors.first;
@@ -44,7 +44,6 @@ export default function RibbonComponent({rank, size=35, setBannerColor}){
         break;
     }
 
-    // setRibbonIcon(<RibbonIcon width={35} height={35} fill={color} />);
     
   }, [rank])
 

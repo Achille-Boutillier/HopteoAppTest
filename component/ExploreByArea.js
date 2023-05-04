@@ -7,6 +7,7 @@ import HorizontalScroll from "./HorizontalScroll";
 import store from "../core";
 import { getBannerData } from "../BackEnd/controllers/school";
 import ExploreSchoolBanner from "./ExploreSchoolBanner";
+import MessageContainer from "./MessageContainer";
 
 
 
@@ -81,9 +82,7 @@ export default function ExploreByArea({scrollWidth, scrollHeight}) {
               <View style={{ marginBottom: 5 }}><Text> {section.item} </Text></View>
   
               { schoolByAreaState.schoolPack[section.item].length > 0 
-                // ? <HorizontalAreaScroll areaIdList={test} scrollWidth={scrollWidth} scrollHeight={scrollHeight}  />
                 ? <HorizontalAreaScroll areaIdList={schoolByAreaState.schoolPack[section.item]} scrollWidth={scrollWidth} scrollHeight={scrollHeight}  />
-                // ? <Text>haha</Text>
                 : ( 
                   <View style={styles.emptyAreaMessage} > 
                     <Text>Aucun favori</Text>  
@@ -100,7 +99,7 @@ export default function ExploreByArea({scrollWidth, scrollHeight}) {
   } else {
     return <ActivityIndicator color={Colors.orange500} />
   }
-    
+  
 }
 
 
