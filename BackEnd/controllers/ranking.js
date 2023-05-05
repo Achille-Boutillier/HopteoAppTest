@@ -63,7 +63,7 @@ export async function getRankingAlgoData() {
     const response = await fetch(route + "/data", requestOptions);
     console.log(response.status)
     const data = await response.json();
-    console.log("[getSchoolRanking()]",data);
+    // console.log("[getSchoolRanking()]",data);
     if (response.status===200) {
       return {...data, success: true};
     } else {

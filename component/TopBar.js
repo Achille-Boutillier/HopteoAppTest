@@ -60,11 +60,12 @@ export function HeaderButton({
 
 const styles = StyleSheet.create({
   brandContainer: {
-    flex: 1,
+    // flex: 1,
     marginLeft: "4%",
     flexDirection: "row",
     alignItems: "center",
     // borderWidth: 1,
+    // alignItems: "center",
   },
   text: {
     color: Colors.orange500,

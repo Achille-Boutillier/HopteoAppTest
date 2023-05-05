@@ -35,7 +35,7 @@ export default function Home({ navigation, route }) {
   const [cardList, setCardList] = useState([]);
   
 
-  const [swipeButtonZIndex, setSwipeButtonZIndex] = useState(2);
+  // const [swipeButtonZIndex, setSwipeButtonZIndex] = useState(2);
   const [swipeDir, setSwipeDir] = useState(null);
   const [isUndoPress, setIsUndoPress] = useState(false);
 
@@ -44,8 +44,8 @@ export default function Home({ navigation, route }) {
 
   useEffect(() => {
     setTheme(themeState);
-    console.log("[themeState]", themeState);
-    console.log("[swipeReducer]", swipeReducer);
+    // console.log("[themeState]", themeState);
+    // console.log("[swipeReducer]", swipeReducer);
 
   }, [themeState]);
 
@@ -79,7 +79,7 @@ export default function Home({ navigation, route }) {
  
   useEffect(() => {
     if (isPileOver) {
-      console.log("[swipeReducer]", swipeReducer);
+      // console.log("[swipeReducer]", swipeReducer);
       const answeredCards = Object.keys(swipeReducer.swipeTypeObj);
       const notAnsweredCards = swipeReducer.idCardsList.filter(item => !(answeredCards.includes(item)));
       const nextIdCardList = notAnsweredCards.slice(0,10);
@@ -172,7 +172,7 @@ export default function Home({ navigation, route }) {
   // }, [listIndex, initialLength]);
 
   useEffect(() => {
-    console.log("[swipeReducer]", swipeReducer);
+    // console.log("[swipeReducer]", swipeReducer);
     length = Object.keys(swipeReducer.swipeTypeObj).length;
     console.log("[absoluteIndex]", length);
     setAbsoluteIndex(length);
@@ -216,7 +216,10 @@ function onSwiping(x, y){
           mainBarColor={"#BFF0FF"}
         />
 
-        <View style={[styles.bottomContainer, { zIndex: swipeButtonZIndex }]}>
+        <View style={[styles.bottomContainer, 
+          // { zIndex: swipeButtonZIndex },
+          { zIndex: 2 },
+          ]}>
           <SwipeButton swiperRef={swiperRef} swipeDir={swipeDir}/>
         </View>
 
@@ -253,6 +256,13 @@ function onSwiping(x, y){
             backgroundColor={"transparent"}
             animateCardOpacity // crée le changement d'opacité de la carte quand on swipe
             animateOverlayLabelsOpacity // opacité sur le "nope", "yes"
+
+            // fonctionne vraimment ?
+            // overlayOpacityRange={[0, 0.25, 0.5, 1]} // adjust overlay opacity range
+            // overlayOpacityVerticalRange={[0, 0.25, 0.5, 1]} // adjust overlay vertical position range
+
+
+            // overlayOpacityVerticalThreshold={}   //todo: existe aussi pour horizontal
             overlayLabels={{
               left: {
                 // top et bottom si necessaire

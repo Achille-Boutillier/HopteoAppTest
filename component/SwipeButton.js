@@ -11,9 +11,9 @@ import Dislike from "../assets/icons/dislike.svg";
 
 export default function SwipeButton({swiperRef, swipeDir}) {
 
-  useEffect(()=> {
-    console.log("[swipeDir]", swipeDir)
-  },[swipeDir])
+  // useEffect(()=> {
+  //   console.log("[swipeDir haha]", swipeDir)
+  // },[swipeDir])
 
   return (
     <View style={styles.mainContainer}>

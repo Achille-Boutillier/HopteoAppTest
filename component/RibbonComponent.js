@@ -8,7 +8,7 @@ import SecondMedal from "../assets/icons/secondMedal.svg";
 import ThirdMedal from "../assets/icons/thirdMedal.svg";
 
 
-export default function RibbonComponent({rank, size=35, setBannerColor}){
+export default function RibbonComponent({rank, circleSize=22, fontSize=14, iconSize=35 ,setBannerColor}){
   const [ribbonIcon, setRibbonIcon] = useState(null);
 
   useEffect(()=> {
@@ -16,26 +16,29 @@ export default function RibbonComponent({rank, size=35, setBannerColor}){
     // let RibbonIcon;
     // console.log(rank);
     switch (rank) {
+      case null || undefined :
+        setRibbonIcon(null);
+        break;
       case 1 :
         color=Colors.first;
         setBannerColor ? setBannerColor(color) : null;
-        setRibbonIcon(<FirstMedal width={size} height={size} fill={color} />);
+        setRibbonIcon(<FirstMedal width={iconSize} height={iconSize} fill={color} />);
         break;
       case 2 :
         color=Colors.second;
         setBannerColor ? setBannerColor(color) : null;
-        setRibbonIcon(<SecondMedal width={size} height={size} fill={color} />);
+        setRibbonIcon(<SecondMedal width={iconSize} height={iconSize} fill={color} />);
         break;
       case 3 :
         color=Colors.third
         setBannerColor ? setBannerColor(color) : null;
-        setRibbonIcon(<ThirdMedal width={size} height={size} fill={color} />);
+        setRibbonIcon(<ThirdMedal width={iconSize} height={iconSize} fill={color} />);
         break;
       default : 
         setRibbonIcon(
-          <View style={{width: size, height: size, alignItems: "center", justifyContent:"center"}}>
-            <View style={styles.rankContainer}>
-              <Text style={{color: Colors.grey, fontWeight: "500", fontSize: 14, marginTop: -2,}}>
+          <View style={{ alignItems: "center", justifyContent:"center"}}>
+            <View style={[styles.rankContainer, {borderRadius: circleSize, width: circleSize, height: circleSize, }]}>
+              <Text style={[{color: Colors.white, fontWeight: "700", marginTop: -2,}, {fontSize: fontSize}]}>
                 {rank}
               </Text>
             </View>
@@ -52,11 +55,12 @@ export default function RibbonComponent({rank, size=35, setBannerColor}){
 
 const styles = StyleSheet.create({
   rankContainer: {
-    borderWidth: 1,
-    borderColor: Colors.grey,
-    borderRadius: 20,
-    width: 20,
-    height: 20,
+    // borderWidth: 1,
+    // borderColor: Colors.grey,
+    backgroundColor: Colors.grey,
+    // borderRadius: 22,
+    // width: 22,
+    // height: 22,
     justifyContent: "center",
     alignItems: "center",
   },

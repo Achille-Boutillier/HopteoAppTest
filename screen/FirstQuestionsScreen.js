@@ -7,10 +7,8 @@ import { storeSplashData, storeUserSetting } from "../BackEnd/controllers/userDa
 import UserStudyField from "../component/firstQuestionsComponents/UserStudyField";
 import UserBacMean from "../component/firstQuestionsComponents/UserBacMean";
 import { alertProvider } from "../BackEnd/errorHandler";
-// import {getUserSettingFailure, getUserSettingRequest, getUserSettingSuccess} from "../core/reducers/userSettingReducer";
-// import { splashSwipeRequest, splashSwipeSuccess, splashSwipeFailure } from "../core/reducers/swipeReducer";
-// import { getThemeRequest, getThemeSuccess, getThemeFailure } from "../core/reducers/themeReducer";
-// import { splashRequest } from "../BackEnd/controllers/userData";
+import {BrandComponent} from "../component/TopBar";
+
 
 function FirstQuestionsScreen({ navigation }) {
   const [studyField, setStudyField] = useState();
@@ -90,7 +88,12 @@ function FirstQuestionsScreen({ navigation }) {
     }
   }
 
-  return <View style={styles.mainContainer}>{screenToShow}</View>;
+  return (
+    <View style={styles.mainContainer}>
+      <BrandComponent/>
+      {screenToShow}
+    </View>
+    );
 }
 
 export default FirstQuestionsScreen;
@@ -99,8 +102,7 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     backgroundColor: Colors.backgroundColor,
-
-    justifyContent: "center",
+    justifyContent: "space-evenly",
     alignItems: "center",
   },
 });

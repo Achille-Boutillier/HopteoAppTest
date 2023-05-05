@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     alignItems: "center",
     alignSelf: "center",
-    marginTop: 20,
+    marginTop: 25,
   },
 
   separation:{

@@ -3,13 +3,16 @@ import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { modifyLike } from "../BackEnd/controllers/school";
 import { useDispatch, useSelector } from "react-redux";
+import RibbonComponent from "./RibbonComponent";
 
 // import PrimaryButton from "./PrimaryButton";
-import { useEffect} from "react";
+import { useEffect, useState} from "react";
 
 import { Colors } from "../constant/Colors";
 
 export default function ExploreSchoolBanner({ schoolId }) {
+
+  const [bannerColor, setBannerColor] = useState(null);
   const navigation = useNavigation();
   const singleSchoolData = useSelector((state) => state.schoolReducer.schoolsData[schoolId]);
   const dispatch = useDispatch();
@@ -52,7 +55,30 @@ export default function ExploreSchoolBanner({ schoolId }) {
   // ! ---------------------------------------------------------------------------------
 
   return (
-    <TouchableOpacity style={styles.schoolContainer} onPress={onPressSchool}>
+    <TouchableOpacity 
+      style={[styles.schoolContainer, bannerColor ? {borderWidth: 2, borderColor: bannerColor} : null]} 
+      onPress={onPressSchool}
+    >
+
+      <View style={styles.topContainer}>
+        <RibbonComponent rank={singleSchoolData.rank} circleSize={20} iconSize={30} fontSize={10} setBannerColor={setBannerColor}/>
+          
+        <Pressable 
+          style={{justifyContent: "center", alignItems: "center", position: "absolute", right: 0, }} 
+          onPress={handleLikePress}
+          hitSlop={{top: 30, bottom: 30, left: 10, right: 10}}
+          >
+          <Ionicons 
+            name={singleSchoolData.like ? "heart" : "heart-outline"} 
+            size={24} 
+            color={bannerColor ? bannerColor : Colors.orange500} 
+          />
+        </Pressable>
+          
+        
+      </View>
+      
+
       <View
         style={styles.schoolNameContainer}
         // onLayout={handleViewLayout}  //! manage minimal fontSize (Android)
@@ -80,16 +106,7 @@ export default function ExploreSchoolBanner({ schoolId }) {
           {singleSchoolData.typeFormation}
         </Text>
       </View>
-      {/* <View style={styles.likeContainer}> */}
-        <Pressable 
-          style={{justifyContent: "center", alignItems: "center", width: 40, height: 28 }} 
-          onPress={handleLikePress}
-        >
-          <Ionicons name={singleSchoolData.like ? "heart" : "heart-outline"} size={24} color={Colors.orange500} />
-        </Pressable>
-          
-        
-        {/* </View> */}
+      
     </TouchableOpacity>
   );
 }
@@ -134,5 +151,14 @@ const styles = StyleSheet.create({
   //   width: "100%",
   //   borderWidth: 1,
   // // height: "30%",
-  // }
+  // },
+  topContainer: {
+    flexDirection: "row",
+    alignSelf: "center",
+    justifyContent: "flex-start",
+    width: "90%",
+    height: 30,
+    // borderWidth: 1,
+    
+  }
 });

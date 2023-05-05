@@ -14,7 +14,7 @@ export const schoolSlice = createSlice({
     },
     getSchoolBannerSuccess: (state, action) => {
       const schoolId = Object.keys(action.payload);
-      schoolId.map((item)=> {state.schoolsData[item] = action.payload[item] })    // ! {ingeSchool1 : {..., id: ingeSchool1}, ...}
+      schoolId.map((item)=> {state.schoolsData[item] = {...state.schoolsData[item] , ...action.payload[item]} })    
       state.loading = false;
       state.error = null;
     },
@@ -62,27 +62,35 @@ export const schoolSlice = createSlice({
 
     // --------------------rank----------------------------
 
-    getRankRequest: (state) => {
+    calculNewRank: (state) => {
       state.loading = true;
       state.error = false;
     },
-    getRankSuccess: (state, action) => {
-      if (Array.isArray(action.payload)) {
+    calculNewRankSuccess: (state, action) => { 
+      console.log("storing new rank -----------------")  ;
+      const {sortedSchoolList, message} = action.payload;  
+      if (Array.isArray(sortedSchoolList)) {
         const idList = [];
-        action.payload.map((item) => {
+        sortedSchoolList.map((item) => {
           idList.push(item.id);
-          if (state.schoolsData[item.id]) {
+          if (state.schoolsData[item.id]) {   // si ecole déjà storée
+            state.schoolsData[item.id].rank = item.rank;
+          } else {
+            state.schoolsData[item.id]={};
             state.schoolsData[item.id].rank = item.rank;
           }
         });
         state.rankIdList = idList;
+      } else if (message) {
+        state.rankIdList = message;
       } else {
-        state.rankIdList = action.payload;
+        state.rankIdList = "Un Problème est survenu";
       }
+      console.log("[rankIdList]" , state.rankIdList)
       state.loading = false;
       state.error = false;
     },
-    getRankFailure: (state, action) => {
+    calculNewRankFailure: (state, action) => {
       state.rankIdList = action.payload;
       state.loading = false;
       state.error = true; 
@@ -116,7 +124,7 @@ export const schoolSlice = createSlice({
 });
 
 export const {
-  getRankRequest, getRankSuccess, getRankFailure, 
+  calculNewRank, calculNewRankSuccess, calculNewRankFailure, 
   setSchoolLike, setSchoolLikeFailure, 
   getSchoolBannerRequest, getSchoolBannerSuccess, getSchoolBannerFailure, 
   getSchoolPageRequest, getSchoolPageSuccess, getSchoolPageFailure,

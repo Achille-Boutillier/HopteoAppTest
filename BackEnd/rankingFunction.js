@@ -70,9 +70,6 @@ export function generateRanking(swipe, cards, schools, minSwipeForRanking, theme
                     sortedSchool.push({...newEcole});
                 }
                 //---------------------------------------------------------------------------//
-                if (schoolRank.rankObj.empty && Object.keys(schoolRank.rankObj).length > 1) {
-                    delete schoolRank.rankObj.empty;
-                }
                 return {sortedSchoolList: sortedSchool};
             } else {
                 throw "Impossible d'accéder au classement des écoles";

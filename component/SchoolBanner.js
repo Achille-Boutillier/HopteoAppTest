@@ -18,6 +18,12 @@ export default function SchoolBanner({schoolId}) {    //id, rank, nomEcole, type
   const singleSchoolData = useSelector((state) => state.schoolReducer.schoolsData[schoolId]);
   const [bannerColor, setBannerColor] = useState(null);
 
+  useEffect(()=>{
+    if (singleSchoolData.rank<3) {
+    console.log( "[singleSchoolData]" , singleSchoolData);
+
+    }
+  }, [singleSchoolData])
 
   // function loginScreenNavigation() {
   //   navigation.navigate("Login Screen");

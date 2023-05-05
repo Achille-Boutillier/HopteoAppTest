@@ -25,16 +25,19 @@ export default function ExploreByArea({scrollWidth, scrollHeight}) {
 
   useEffect(()=> {
     setSchoolByAreaState(schoolByArea);
+    console.log("[schoolByArea]", schoolByArea);
+    console.log("[test]", !!null);
+    console.log(schoolByArea?.listFormation);
   }, [schoolByArea])
 // -------- fin useSelector -----------------------------------------
 
   async function loadMissingSchoolData(idList) {
     idList = idList.filter((item, index)=> idList.indexOf(item)===index );    // delete redundant item
     const schoolsData = store.getState().schoolReducer.schoolsData;
-    const notMissingSchoolId = Object.keys(schoolsData);
+    const notMissingSchoolId = Object.keys(schoolsData).filter((item)=> schoolsData[item].nomEcole);
     const missingSchoolId = idList.filter((item)=>!notMissingSchoolId.includes(item));
-    console.log("[missingSchoolId]", missingSchoolId);
-    console.log("[notMissingSchoolId]", notMissingSchoolId);
+    console.log("[missingSchoolId length]", missingSchoolId.length);
+    console.log("[notMissingSchoolId length]", notMissingSchoolId.length);
     if (missingSchoolId.length>0) {
       const data = await getBannerData(missingSchoolId, dispatch);
       if (data.success) {
@@ -49,7 +52,7 @@ export default function ExploreByArea({scrollWidth, scrollHeight}) {
 
   function handleMissingData(){
     let idList = [];
-    for (let item of schoolByAreaState?.listFormation) {    // ?schoolByAreaState est-il vraiment MAJ avec cette utilisation ?
+    for (let item of schoolByAreaState.listFormation) {    // ?schoolByAreaState est-il vraiment MAJ avec cette utilisation ?
       // console.log("[liste d'Id par section]",schoolByAreaState.schoolPack[item])
       idList = idList.concat(schoolByAreaState.schoolPack[item]);   //list1.concat(list2) concatène (=aditionne) les 2 listes
     }
@@ -59,15 +62,16 @@ export default function ExploreByArea({scrollWidth, scrollHeight}) {
 
 
   useEffect(()=> {
-    // console.log(schoolByArea)
-    if (schoolByAreaState?.schoolPack){
+    // console.log(schoolByAreaState)
+    if (schoolByAreaState?.schoolPack && schoolByAreaState?.schoolPack){
       handleMissingData();
     }
   }, [schoolByAreaState])
 
   
 
-  if (schoolByAreaState?.schoolPack && isReadyToDisplay) {
+  if (!!schoolByAreaState && isReadyToDisplay) {
+    // return <ActivityIndicator color={Colors.orange500} />
     return (
       <FlatList
         data={schoolByAreaState.listFormation}

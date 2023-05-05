@@ -11,7 +11,7 @@ export default function ProfessionalOpportunities({secteurDebouche}) {
     <View style={styles.mainContainer}> 
       <View style={styles.textContainer}>
         {secteur.map((item, key) => (
-          <Text key={key} style={styles.textStyle} > {`\u2022  ${item} : ${secteurDebouche[item]}%`}</Text>
+          <Text key={key} style={styles.textStyle} > {`${item} : ${secteurDebouche[item]}%`}</Text>
         ))}
 
 
@@ -29,8 +29,9 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     justifyContent: "center",
     alignItems: "center",
-    borderWidth: 1.5,
-    borderColor: Colors.blue400,
+    backgroundColor: Colors.grey300,
+    // borderWidth: 1.5,
+    // borderColor: Colors.blue400,
     width: "70%",
     borderRadius: 10,
     // paddingLeft: 20,
@@ -47,6 +48,7 @@ const styles = StyleSheet.create({
     textAlign: "center", 
     color: Colors.grey, 
     fontWeight: "600",
+    margin: 2,
   },
   
 

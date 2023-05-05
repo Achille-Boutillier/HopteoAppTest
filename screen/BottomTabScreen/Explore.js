@@ -26,7 +26,7 @@ const width = Dimensions.get("window").width;
 export default function Explore({ navigation, route }) {
 
   const scrollWidth = 0.95 * width;
-  const scrollHeight = 110;
+  const scrollHeight = 120;
   const dispatch = useDispatch();
 
   // const []

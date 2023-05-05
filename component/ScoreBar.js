@@ -25,22 +25,11 @@ function ScoreBar({score, mainBarColor, progressBarColor , globalScore, hideScor
   return (
     <View
       style={[
-        styles.mainBar,
-        {
-          backgroundColor: mainBarColor,
-          width: globalScore ? "76%" : "100%",
-          height: globalScore ? "3%" : "100%",
-        },
+        styles.mainBar, {backgroundColor: mainBarColor, width: globalScore ? "76%" : "100%", height: globalScore ? "3%" : "100%",},
         hideScoreNumber ? shadowStyle : null
-
       ]}
     >
-      <View
-        style={[
-          styles.progressBar,
-          { backgroundColor: progressBarColor, width: scorePourcent },
-        ]}
-      >
+      <View style={[styles.progressBar, { backgroundColor: progressBarColor, width: scorePourcent },]} >
         {(!(hideScoreNumber) && (scoreInteger >= numberLimit)) ? barText : null}
       </View>
       

@@ -18,7 +18,7 @@ export default function OptionComponent({optionSynthese, optionDetail}) {
       // console.log(optionDetailList)
       setOptionToSchow(optionDetail);
       // setOptionToSchow(["test1", "test2"]); //todo: request optionDetail
-      // setButtonName("Voir la synthèse");
+      setButtonName("Voir la synthèse");
 
     } else {
       setOptionToSchow(optionSynthese);
@@ -54,13 +54,15 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     justifyContent: "center",
     alignItems: "center",
-    borderWidth: 1.5,
-    borderColor: Colors.orange100,
+    // borderWidth: 1.5,
+    // borderColor: Colors.orange500,
+    backgroundColor: Colors.grey300,
     width: "90%",
     borderRadius: 10,
     paddingHorizontal: "3%",
     // marginBottom: 50,
-    paddingVertical: 10,
+    paddingTop: 10,
+    paddingBottom: 20,
   },
 
   chipContainer:{
@@ -72,7 +74,9 @@ const styles = StyleSheet.create({
 
   textStyle: {
     // textAlign: "center", 
-    color: Colors.grey, 
+    color: Colors.blackTextColor, 
+    // color: Colors.white, 
+    // color: Colors.blackTextColor, 
     fontWeight: "600",
   },
   buttonContainer: {
@@ -80,8 +84,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 10,
     paddingHorizontal: 25,
-    paddingVertical: 3,
-    backgroundColor: Colors.orange100,
+    paddingVertical: 5,
+    backgroundColor: Colors.orange500,
     marginTop: 10,
     // borderWidth: 1,
     

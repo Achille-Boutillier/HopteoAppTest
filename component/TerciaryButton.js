@@ -3,7 +3,7 @@ import { Colors } from "../constant/Colors";
 import { useEffect } from "react";
 import { useState } from "react";
 
-export default function TerciaryButton({title, onPress, color, isFullColor}) {
+export default function TerciaryButton({title, onPress, color, isFullColor, fontSize=18}) {
   const [backgroundColor, setBackgroundColor] = useState();
   const [titleColor, setTitleColor] = useState();
 
@@ -17,7 +17,7 @@ export default function TerciaryButton({title, onPress, color, isFullColor}) {
     style={[styles.mainContainer, {backgroundColor: backgroundColor}, isFullColor ? null : {borderWidth: 1.5, borderColor: titleColor}]} 
     onPress={onPress}
     >
-      <Text style={[styles.textStyle, {color: titleColor}]}>{title}</Text>
+      <Text style={[styles.textStyle, {color: titleColor, fontSize: fontSize}]}>{title}</Text>
     </TouchableOpacity>
   );
 }
@@ -36,7 +36,6 @@ const styles = StyleSheet.create({
   textStyle: {
     textAlign: "center",
     verticalAlign: "middle",
-    fontSize: 18,
     fontWeight: "600",
   },
 });

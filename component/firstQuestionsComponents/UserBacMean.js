@@ -11,17 +11,11 @@ import {
 import { Colors } from "../../constant/Colors";
 import SecondaryButton from "../SecondaryButton";
 
-export default function UserBacMean({
-  bacMeanInputHandler,
-  bacMean,
-  nextPressed,
-}) {
+export default function UserBacMean({bacMeanInputHandler, bacMean, nextPressed,}) {
   return (
     <View style={styles.mainContainer}>
       <View style={styles.questionContainer}>
-        <Text style={styles.textStyle}>
-          {"Quelle était ta moyenne au Bac ?"}
-        </Text>
+        <Text style={styles.textStyle}>{"Quelle était ta moyenne au Bac ?"}</Text>
       </View>
       <View style={styles.bottomContainer}>
         <TextInput
@@ -45,23 +39,24 @@ export default function UserBacMean({
 
 const styles = StyleSheet.create({
   mainContainer: {
-    backgroundColor: Colors.blue400,
+    // backgroundColor: Colors.blue400,
     alignItems: "center",
     justifyContent: "space-evenly",
     // justifyContent: "center",
-    height: "50%",
+    height: 250,
     width: "85%",
-    borderRadius: 45,
-    padding: 10,
+    // borderWidth: 1,
+    // borderRadius: 45,
+    // padding: 10,
   },
   questionContainer: {
     // width: "70%",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: Colors.white,
-    borderRadius: 15,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
+    // backgroundColor: Colors.white,
+    // borderRadius: 15,
+    // paddingVertical: 5,
+    // paddingHorizontal: 10,
   },
   textStyle: {
     fontSize: 20,
@@ -90,9 +85,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 10,
-    backgroundColor: Colors.orange100,
-    height: 35,
-    width: "70%",
+    backgroundColor: Colors.orange500,
+    paddingVertical: 5,
+    paddingHorizontal: 25,
+    // height: 35,
+    // width: "70%",
   },
 
   // // todo : a tej :

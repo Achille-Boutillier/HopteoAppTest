@@ -37,26 +37,26 @@ export default function UserStudyField({ onPressField }) {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    backgroundColor: Colors.blue400,
+    // backgroundColor: Colors.blue400,
     alignItems: "center",
     justifyContent: "center",
     height: "80%",
     width: "90%",
-    borderRadius: 45,
+    // borderWidth: 1,
+    // borderRadius: 45,
 
   },
   questionContainer: {
     width: "70%",
     alignItems: "center",
     justifyContent: "center",
-    // alignSelf: "center",        
-    backgroundColor: Colors.white,
-    borderRadius: 15,
-    paddingVertical: 3,
+    // backgroundColor: Colors.white,
+    // borderRadius: 15,
+    // paddingVertical: 3,
     
   },
   textStyle: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: "500",
     textAlign: "center",
   },

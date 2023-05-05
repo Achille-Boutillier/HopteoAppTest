@@ -3,7 +3,7 @@ import { View, StyleSheet, Text } from "react-native";
 import { Colors } from "../constant/Colors";
 // import EStyleSheet from "react-native-extended-stylesheet";
 
-function BlueContainer({ name, text }) {
+function BlueContainer({name, text }) {
   return (
     <View style={styles.mainContainer}>
       <View style={styles.iconContainer}>
@@ -44,11 +44,6 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     flex: 1,
-    // alignSelf: "center",
-    // width: "90%",
-    // height: "100%",
-    // alignItems: "center",
-    // borderWidth:1,
   },
   text: {
     fontWeight: "600",

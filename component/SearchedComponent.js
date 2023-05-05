@@ -15,7 +15,7 @@ export default function SearchedComponent({searchedIdList, scrollWidth, scrollHe
 
   async function loadMissingSchoolData(idList) {
     const schoolsData = store.getState().schoolReducer.schoolsData;
-    const notMissingSchoolId = Object.keys(schoolsData);
+    const notMissingSchoolId = Object.keys(schoolsData).filter((item)=> schoolsData[item].nomEcole);
     const missingSchoolId = idList.filter((item)=>!notMissingSchoolId.includes(item));
 
     if (missingSchoolId.length>0) {

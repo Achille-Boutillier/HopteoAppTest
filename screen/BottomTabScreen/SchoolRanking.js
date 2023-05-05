@@ -1,9 +1,9 @@
 import {FlatList, StyleSheet, View, ActivityIndicator, Text,} from "react-native";
 import { useEffect, useState, useLayoutEffect } from "react";
-import { getRankRequest, getRankSuccess, getRankFailure, getSchoolBannerRequest, getSchoolBannerSuccess, getSchoolBannerFailure } from "../../core/reducers/schoolReducer";
+import { calculNewRank, calculNewRankSuccess, calculNewRankFailure, getSchoolBannerRequest, getSchoolBannerSuccess, getSchoolBannerFailure } from "../../core/reducers/schoolReducer";
 
 import { Colors } from "../../constant/Colors";
-import {getSchoolRanking, getRankingAlgoData} from "../../BackEnd/controllers/ranking";
+import {getRankingAlgoData} from "../../BackEnd/controllers/ranking";
 import { generateRanking } from "../../BackEnd/rankingFunction";
 import { getBannerData } from "../../BackEnd/controllers/school";
 import SchoolBanner from "../../component/SchoolBanner";
@@ -18,12 +18,14 @@ import { getForRankingFailure, getForRankingRequest, getForRankingSuccess } from
 
 function SchoolRanking({ navigation, route }) {
   const schoolReducer = useSelector((state) => state.schoolReducer);
-  const swipeReducer = useSelector((state) => state.swipeReducer);
   const themeObj = useSelector((state)=> state.themeReducer.themeObj)
   // const forRanking = useSelector(((state)=> state.forRankingReducer.))
 
 
   // todo : virer le componentToShow du useEffect, direct dans le return sous condition if
+
+  // todo: schoolReducer.rankIdList ne change pas tout le temps ==> reste sur activityIndicator si message identique
+  //todo: créer un nouvel état qui précise quand le calcul des écoles a été fait (différent de l'état isReadyToDisplay)
   
   // const [previousAbsoluteIndex, setPreviousAbsoluteIndex] = useState(-1);
   const [readyToDisplayRank, setReadyToDisplayRank] = useState(false);
@@ -43,28 +45,31 @@ function SchoolRanking({ navigation, route }) {
 
   // ---------- rank calcul -------------------------------------------
   function calculateNewRank(cards, schoolIdObj) {
-    dispatch(getRankRequest());
+    console.log("je passe dans calcuuuuull -----------------");
+    dispatch(calculNewRank());
 
+    const {swipeTypeObj, answerByTheme, minSwipeForRanking, swipeSettings} = store.getState().swipeReducer;
+    // const current
     const swipe = {
-      answeredList : Object.keys(swipeReducer.swipeTypeObj), 
-      swipeObj : swipeReducer.swipeTypeObj,
-      answerByTheme : swipeReducer.answerByTheme 
+      answeredList : Object.keys(swipeTypeObj), 
+      swipeObj : swipeTypeObj,
+      answerByTheme : answerByTheme 
     };
 
-    const ranking = generateRanking(swipe, cards, schoolIdObj, 
-      swipeReducer.minSwipeForRanking, themeObj, 
-      swipeReducer.swipeSettings);
+    const ranking = generateRanking(swipe, cards, schoolIdObj, minSwipeForRanking, themeObj, swipeSettings);
+      console.log("[generateRanking ----------------]", ranking);
 
       if (ranking?.sortedSchoolList){
-        dispatch(getRankSuccess(ranking.sortedSchoolList));
+        dispatch(calculNewRankSuccess({sortedSchoolList: ranking.sortedSchoolList}));
+        // dispatch();
       } else if (ranking?.message) {
-        dispatch(getRankSuccess(ranking.message));
+        dispatch(calculNewRankSuccess({message: ranking.message}));
       } else if (ranking?.error) {
         alertProvider(ranking?.error);
-        dispatch(getRankFailure(ranking.error));
+        dispatch(calculNewRankFailure(ranking.error));
       } else {
         alertProvider();
-        dispatch(getRankFailure());
+        dispatch(calculNewRankFailure());
       }
   }
 
@@ -72,8 +77,10 @@ function SchoolRanking({ navigation, route }) {
   async function loadSchoolRank() {
     setReadyToDisplayRank(false);
     const {cards, schoolIdObj } = store.getState().forRankingReducer;
+    let doesCardsExist = cards instanceof Object;
+    doesCardsExist ? doesCardsExist = Object.keys(cards)>0 : null;
 
-    if (Object.keys(cards)>0) {
+    if (doesCardsExist) {
       calculateNewRank(cards, schoolIdObj);
     } else {
 
@@ -110,7 +117,8 @@ function SchoolRanking({ navigation, route }) {
 
   async function loadMissingSchoolData(rankIdList) {
     const schoolsData = store.getState().schoolReducer.schoolsData;
-    const notMissingSchoolId = Object.keys(schoolsData);
+    const notMissingSchoolId = Object.keys(schoolsData).filter((item)=> schoolsData[item].nomEcole);
+    // console.log("[notMissingSchoolId]", notMissingSchoolId);
     const missingSchoolId = rankIdList.filter((item)=>!notMissingSchoolId.includes(item));
     if (missingSchoolId.length>0) {
       const data = await getBannerData(missingSchoolId, dispatch);
@@ -144,6 +152,7 @@ function SchoolRanking({ navigation, route }) {
         setComponentToShow(
           <FlatList
             data={schoolReducer.rankIdList}
+            // data={schoolReducer.rankIdList.slice(0, 40)}
             // extraData={} 
             keyExtractor={(item) => item}
             showsVerticalScrollIndicator={false}

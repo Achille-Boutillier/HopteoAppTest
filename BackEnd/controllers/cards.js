@@ -44,8 +44,8 @@ export async function nextPile(nextIdCardList) {
 
 export async function swipeHandler(idCard, swipeType) {
   const authData = await getAuthData();
-  console.log("[authData]", authData);
-  console.log("[id]", idCard);
+  // console.log("[authData]", authData);
+  // console.log("[id]", idCard);
   console.log("[swipeType]", swipeType);
 
   const {cursustype, filiere} = getUserSettingStatus();

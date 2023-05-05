@@ -16,9 +16,10 @@ import MainNumberComponent from "../component/schoolPageComponent/MainNumberComp
 import OptionComponent from "../component/schoolPageComponent/OptionComponent";
 import ProfessionalOpportunities from "../component/schoolPageComponent/ProfessionalOpportunities";
 import { useSelector, useDispatch } from "react-redux";
-import {setSchoolLikeFailure, setSchoolLikeSuccess, getSchoolPageRequest, getSchoolPageSuccess, getSchoolPageFailure, } from "../core/reducers/schoolReducer";
+import {setSchoolLikeFailure, setSchoolLike, getSchoolPageRequest, getSchoolPageSuccess, getSchoolPageFailure, } from "../core/reducers/schoolReducer";
 import { getPageData } from "../BackEnd/controllers/school";
 import RibbonComponent from "../component/RibbonComponent";
+import { BrandComponent } from "../component/TopBar";
 
 export default function SchoolPage({ navigation, route }) {
   const schoolId = route.params.schoolId;
@@ -68,10 +69,8 @@ export default function SchoolPage({ navigation, route }) {
   
   async function handleLikePress() {
     const newLike = !singleSchoolData.like;
-    dispatch(setSchoolLikeSuccess({schoolId, newLike}));
-    const success = await modifyLike(schoolId, newLike);
+    const success = modifyLike(schoolId, newLike, dispatch);
     if (!success) {
-      dispatch(setSchoolLikeFailure({schoolId, newLike}));
       alertProvider("Un problème est survenu... Le like n'a pas été pris en compte.");
     }
 
@@ -91,6 +90,7 @@ export default function SchoolPage({ navigation, route }) {
             size={28}
             color={Colors.orange500}
           />
+          <BrandComponent logoSize={30} fontSize={17}/>
           <PrimaryButton
             onPress={handleLikePress}
             name={singleSchoolData.like ? "heart" : "heart-outline"}
@@ -102,29 +102,22 @@ export default function SchoolPage({ navigation, route }) {
         <ScrollView
           style={styles.bodyContainer}
           showsVerticalScrollIndicator={false}
-        >
-          {/* <View style={styles.bodyContainer} showsVerticalScrollIndicator={false}> */}
-  
+        >  
           <View style={styles.imageContainer} />
           <View style={styles.schoolHeadInfo}>
-            <View style={{flexDirection: "row", justifyContent: "center", alignItems: "center",}} >
-              <RibbonComponent rank={singleSchoolData.rank} size={35} />
-  
-              <Text style={{ fontSize: 20, fontWeight: "500", color: Colors.grey }}>
-                {singleSchoolData.nomEcole}
-              </Text>
-              
-            </View>
-            <Text style={{ fontSize: 14, fontWeight: "600", color: Colors.grey }}>
-              {singleSchoolData.typeFormation}
+            <RibbonComponent rank={singleSchoolData.rank} size={35} />
+
+            <Text style={{ fontSize: 20, fontWeight: "500", color: Colors.grey, marginLeft: 10 }}>
+              {singleSchoolData.nomEcole}
             </Text>
+              
           </View>
   
           <View style={styles.ContestAndLocation}>
             <BlueContainer
-              // text={singleSchoolData.concours}
-              text="--x--"
-              name="newspaper-sharp"
+              text={singleSchoolData.typeFormation}
+              name="school"
+              // name="newspaper-sharp"
             />
             <BlueContainer text={singleSchoolData.ville} name="location-sharp" />
           </View>
@@ -213,23 +206,26 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     backgroundColor: Colors.backgroundColor,
+
   },
   headerContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    height: 40,
+    width: "100%",
+    // height: 60,
     paddingHorizontal: "6%",
     // borderWidth: 1,
   },
 
   bodyContainer: {
     // flex: 1,
+    // alignItems: "center",
   },
   imageContainer: {
     height: 60,
     width: "100%",
-    backgroundColor: Colors.orange100,
+    backgroundColor: Colors.orange500,
   },
   rankContainer: {
     marginRight: 5,
@@ -245,13 +241,15 @@ const styles = StyleSheet.create({
   },
   schoolHeadInfo: {
     alignItems: "center",
-    marginTop: 7,
+    alignSelf: "center",
+    marginTop: 20,
+    flexDirection: "row", 
   },
   ContestAndLocation: {
     flexDirection: "row",
     justifyContent: "space-evenly",
     height: 48,
-    marginTop: 15,
+    marginTop: 25,
   },
 
   mainNumbersContainer: {

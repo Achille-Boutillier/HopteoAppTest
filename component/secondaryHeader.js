@@ -14,11 +14,11 @@ export default SecondaryHeader;
 const styles = StyleSheet.create({
   mainStyle: {
     marginLeft: "6%",
-    marginTop: 15,
-    marginBottom: 10,
+    marginTop: 25,
+    marginBottom: 15,
   },
   TextStyle: {
-    fontSize: 13,
+    fontSize: 16,
     fontWeight: "700",
     color: Colors.grey,
   },

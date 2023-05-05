@@ -8,6 +8,7 @@ import ScoreBar from "./ScoreBar";
 import PrimaryButton from "./PrimaryButton";
 import { useNavigation } from "@react-navigation/native";
 import SecondaryButton from "./SecondaryButton";
+import TerciaryButton from "./TerciaryButton";
 
 
 export default function SwipeLevel({absoluteIndex, minSwipeForRanking, progressBarColor, borderColor, mainBarColor}) {
@@ -64,7 +65,8 @@ export default function SwipeLevel({absoluteIndex, minSwipeForRanking, progressB
             <Text style={{fontSize:20, textAlign: 'center', width: "80%", marginTop: -20}}>Félicitation, un nouveau classement est disponible !!</Text>
             {/* <Text style={{fontSize:20, textAlign: 'center', marginHorizontal: 10, marginVertical: 20}}>Cliquez Ici pour découvrir votre classement d'école :</Text> */}
             {/* <PrimaryButton onPress={goToRanking} name="ribbon" size={60} color={Colors.orange500} /> */}
-            <SecondaryButton onPress={goToRanking} fontSize={20} buttonText="Voir le classement" preSized={false} />
+            <TerciaryButton title="Voir le classement" onPress={goToRanking} color={Colors.orange500} isFullColor={true} fontSize={20} />
+            {/* <SecondaryButton onPress={goToRanking} fontSize={20} buttonText="Voir le classement" preSized={false} /> */}
             </View>
           </View>
       </Modal>
@@ -116,15 +118,13 @@ const styles = StyleSheet.create({
 
 
   modal: {
-    // flex: 1,
     height: "60%",
     width: "90%",
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.backgroundColor,
     alignSelf: "center",
     borderRadius: 20,
   },
   modalCross: {
-    // flex: 0.1,
     alignItems: "flex-end",
   },
   modalBody: {
