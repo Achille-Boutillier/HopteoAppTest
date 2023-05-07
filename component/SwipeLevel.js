@@ -11,7 +11,7 @@ import SecondaryButton from "./SecondaryButton";
 import TerciaryButton from "./TerciaryButton";
 
 
-export default function SwipeLevel({absoluteIndex, minSwipeForRanking, progressBarColor, borderColor, mainBarColor}) {
+export default function SwipeLevel({absoluteIndex, minSwipeForRanking, progressBarColor, mainBarColor, onPressUndo}) {
   const navigation = useNavigation();
 
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -24,7 +24,7 @@ export default function SwipeLevel({absoluteIndex, minSwipeForRanking, progressB
   function calculNewScore() {
     const newLevel = parseInt(absoluteIndex/minSwipeForRanking) + 1;
     const newScore = parseInt( (absoluteIndex/minSwipeForRanking + 1 - newLevel) *100 );  // on tronque la valeur car on veut atteindre 100% que si on dépasse 99.99999....% 
-    if (newLevel>levelNumber) {
+    if (newLevel>levelNumber && newLevel===2) {
       handleLevelModal();
     }
     setLevelNumber(newLevel);
@@ -49,12 +49,17 @@ export default function SwipeLevel({absoluteIndex, minSwipeForRanking, progressB
   return (
     <View style={styles.mainContainer}>
       
-      <View style={styles.mainScoreContainer}>
-        <View style={[styles.levelNumberContainer, { backgroundColor: progressBarColor, borderColor: borderColor}]}>
-          <Text style={[styles.levelNumberText, {color: Colors.white,}]}>{levelNumber}</Text>
-        </View>
-        <ScoreBar score={score} mainBarColor={mainBarColor} progressBarColor={progressBarColor} hideScoreNumber={true} borderColor={borderColor} /> 
+      <View style={[styles.levelNumberContainer, { backgroundColor: progressBarColor}]}>
+        <Text style={[styles.levelNumberText, {color: Colors.white,}]}>{levelNumber}</Text>
       </View>
+      <ScoreBar score={score} mainBarColor={mainBarColor} progressBarColor={progressBarColor} hideScoreNumber={true} /> 
+        <PrimaryButton
+          onPress={onPressUndo}
+          // onPress={()=>{}}
+          name="arrow-undo-circle"
+          size={30}
+          color={Colors.orange500}
+        />
 
       <Modal isVisible={isModalVisible}>
           <View style={styles.modal}>
@@ -71,7 +76,6 @@ export default function SwipeLevel({absoluteIndex, minSwipeForRanking, progressB
           </View>
       </Modal>
 
-      
     </View>
   );
 }
@@ -79,43 +83,43 @@ export default function SwipeLevel({absoluteIndex, minSwipeForRanking, progressB
 
 const styles = StyleSheet.create({
   mainContainer: {
-    height: "10%",
-    width: "80%",
-    flexDirection: "column",
-    marginRight: "2%",
-    marginLeft: "2%",
+    // borderWidth:1,
+    // flex: 0,
+    height: 35,
+    width: "90%",
+    flexDirection: "row",
     marginTop: "8%",
     alignItems: "center",
-    justifyContent: "center",
+    // justifyContent: "space-between",
     alignSelf: "center",
   },
 
-  mainScoreContainer: {
-    width: "80%",
-    height: "45%",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: "2%",
-  },
+  // mainScoreContainer: {
+  //   width: "100%",
+  //   // flex: 1,
+  //   height: 28,
+  //   flexDirection: "row",
+  //   alignItems: "center",
+  //   borderWidth: 1,
+  // },
   levelNumberContainer: {
-    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 10,
-    width: "15%",
-    height: "100%",
-    marginRight: "1%",
+    height: "80%",
+    // marginRight: "1%",
+
+    paddingHorizontal: 10,
     // elevation: 3,
     // borderWidth: 0.7,
   },
 
   levelNumberText: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: "800",
     textAlign: "center",
+    verticalAlign: "center",
   },
-
 
   modal: {
     height: "60%",

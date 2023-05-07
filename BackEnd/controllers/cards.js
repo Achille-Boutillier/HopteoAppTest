@@ -1,5 +1,7 @@
 // Controller de l'accueil de l'application
 
+import store from "../../core";
+import { removeSwipe, storeNewSwipe } from "../../core/reducers/swipeReducer";
 import { mainUrl, getAuthData, getUserSettingStatus } from "./userData";
 const route = mainUrl + "/cards";
 
@@ -7,33 +9,32 @@ const route = mainUrl + "/cards";
 // Obtenir 2 propositions pour initialiser la pile tinde
 
 export async function nextPile(nextIdCardList) {
-  const authData = await getAuthData();
-  const nextIdCardString = nextIdCardList.join(",");
-  console.log("[nextIdCardsString]", nextIdCardString);
-
-  const {cursustype, filiere} = getUserSettingStatus();
-  
-  
-
-  const requestOptions = {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      authorization: "Bearer " + authData.token,
-      cursustype: cursustype,
-      filiere: filiere,
-      
-    },
-  };
-
   try {
+
+    const authData = await getAuthData();
+    const nextIdCardString = nextIdCardList.join(",");
+    console.log("[nextIdCardsString]", nextIdCardString);
+
+    const {cursustype, filiere} = getUserSettingStatus();
+    
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: "Bearer " + authData.token,
+        cursustype: cursustype,
+        filiere: filiere,
+        
+      },
+    };
+
     const response = await fetch(route + `/nextPile/${nextIdCardString}`, requestOptions);
     console.log(response.status);
     const data = await response.json();
     if (response.status===200) {
       return data;
     } else {
-      return {error: "Un problème est survenu avec le serveur" }
+      throw data.error 
     }
   } catch (error) {
     console.log("echec du bloc try :");
@@ -43,28 +44,27 @@ export async function nextPile(nextIdCardList) {
 }
 
 export async function swipeHandler(idCard, swipeType) {
-  const authData = await getAuthData();
-  // console.log("[authData]", authData);
-  // console.log("[id]", idCard);
-  console.log("[swipeType]", swipeType);
-
-  const {cursustype, filiere} = getUserSettingStatus();
-
-  const requestOptions = {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      authorization: "Bearer " + authData.token,
-      cursustype: cursustype,
-      filiere: filiere,
-    },
-    body: JSON.stringify({
-      idCard: idCard,
-      swipeType: swipeType,
-    }),
-  };
-
   try {
+    const authData = await getAuthData();
+    // console.log("[authData]", authData);
+    // console.log("[id]", idCard);
+    console.log("[swipeType]", swipeType);
+
+    const {cursustype, filiere} = getUserSettingStatus();
+
+    const requestOptions = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: "Bearer " + authData.token,
+        cursustype: cursustype,
+        filiere: filiere,
+      },
+      body: JSON.stringify({
+        idCard: idCard,
+        swipeType: swipeType,
+      }),
+    };
     const response = await fetch(route + "/onSwipe", requestOptions);
     console.log(response.status);
     
@@ -110,24 +110,34 @@ export async function getDetails(idCard) {
 }
 
 // Revenir en arrière pour annuler un swipe
-export async function unDoSwipe() {
-  const authData = await getAuthData();
-
-  const requestOptions = {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      authorization: "Bearer " + authData.token,
-    },
-  };
-
+export async function undoSwipe(id, idTheme, dispatch) {
+  const swipeType = store.getState().swipeReducer.swipeTypeObj[id];
   try {
-    const response = await fetch(route + "/unDoSwipe", requestOptions);
+    dispatch(removeSwipe({id, idTheme}));
+    const authData = await getAuthData();
+    const {cursustype, filiere} = getUserSettingStatus();
+
+    const requestOptions = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: "Bearer " + authData.token,
+        cursustype,
+        filiere
+      },
+    };
+
+    const response = await fetch(route + "/undoSwipe", requestOptions);
     console.log(response.status);
     const data = await response.json();
-    console.log(data);
-    return data;
+    // console.log(data);
+    if (response.status===200) {
+      return true;
+    } else {
+      throw data;
+    }
   } catch (error) {
+    dispatch(storeNewSwipe({id, swipeType, idTheme}));
     console.log("bloc try failed :");
     console.log(error);
     return false;

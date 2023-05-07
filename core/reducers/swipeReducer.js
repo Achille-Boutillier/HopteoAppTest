@@ -11,10 +11,10 @@ export const swipeSlice = createSlice({
     },
     splashSwipeSuccess: (state, action) => {
       const {answeredCardList, idCardsList, minSwipeForRanking, swipeTypeObj, answerByTheme, swipeSettings } = action.payload
-      // state.answeredCardList = answeredCardList;
       state.idCardsList = idCardsList;
       state.minSwipeForRanking = minSwipeForRanking;
       state.swipeTypeObj = swipeTypeObj;
+      // state.answeredCardList = answeredCardList;   
       state.sentToBackAnswers = answeredCardList;
       state.answerByTheme = answerByTheme;
       state.swipeSettings = swipeSettings;
@@ -27,19 +27,24 @@ export const swipeSlice = createSlice({
     },
 
 
-    
+
     storeNewSwipe: (state, action) => {
       const {id, swipeType, idTheme} = action.payload;
       state.swipeTypeObj[id] = swipeType;
-      state.answerByTheme[idTheme] += 1 
+      state.answerByTheme[idTheme] += 1 ;
+      state.notSentToBackAnswers.push(id);
     },
     removeSwipe: (state, action) => {
       const {id, idTheme} = action.payload;
       delete state.swipeTypeObj[id] ;
       state.answerByTheme[idTheme]>0 ? state.answerByTheme[idTheme] -= 1 : null ;
+      if (state.notSentToBackAnswers.length===0) {
+        state.sentToBackAnswers.pop();
+      } else {
+        state.notSentToBackAnswers.pop();
+      }
     },
     
-
     storeRankingAbsoluteIndex : (state, action) => {
       state.rankingAbsoluteIndex = action.payload;
     }

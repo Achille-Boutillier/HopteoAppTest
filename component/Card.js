@@ -43,9 +43,10 @@ export default function Card({ cardValue, currentTheme }) {
         styles.card,
         {
           backgroundColor: currentTheme?.color,
-          height: isCardDetailVisible ? "73%" : "59%",
+          height: isCardDetailVisible ? "80%" : "59%",
           marginTop: isCardDetailVisible ? "-44%" : "-17%",
-          borderColor: currentTheme?.color,
+          width: isCardDetailVisible ? "110%" : "95%",
+          // borderColor: currentTheme?.color,
         },
       ]}
     >
@@ -58,7 +59,7 @@ export default function Card({ cardValue, currentTheme }) {
       <View style={[styles.cardTextContainer]}>
         <Text
           style={[styles.cardText, { fontSize: isCardDetailVisible ? 20 : 24 }]}
-          numberOfLines={isCardDetailVisible ? 2 : 5}
+          numberOfLines={isCardDetailVisible ? 3 : 5}
           adjustsFontSizeToFit={isCardDetailVisible ? true : false}
         >
           {cardValue.titre}
@@ -88,7 +89,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignSelf: "center",
     borderRadius: 40,
-    width: "95%",
     // elevation: 10,
     // borderWidth: 0.8,
     // borderWidth: 3,
@@ -96,13 +96,14 @@ const styles = StyleSheet.create({
   },
   themeContainer: {
     width: "60%",
-    height: "9%",
+    // height: 30,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 15,
     backgroundColor: Colors.white,
     position: "absolute",
     top: "5%",
+    paddingVertical: 5,
   },
   themeText: {
     fontWeight: "700",
@@ -136,5 +137,7 @@ const styles = StyleSheet.create({
   },
   infoButton: {
     alignSelf: "center",
+    marginTop: 3,
+    // borderWidth: 1
   },
 });

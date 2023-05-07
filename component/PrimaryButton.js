@@ -6,12 +6,14 @@ import { Colors } from "../constant/Colors";
 const orange500 = Colors.orange500;
 
 function PrimaryButton({onPress, name, size, color = { orange500 }, bigButton, style,}) {
-  const buttonHeight = bigButton ? size + 25 : size + 15; // size + 20 pour une meilleure cliquabilité
+  const verticalHitSlop = bigButton ? 25 : 15; // size + 20 pour une meilleure cliquabilité
 
   return (
     <TouchableOpacity 
-      style={[ styles.buttonContainer, { width: size + 15, height: buttonHeight }, style,]} 
+      style={[ styles.buttonContainer, style]} 
       onPress={onPress}
+      hitSlop={{top: verticalHitSlop, bottom: verticalHitSlop, left: 15, right: 15}}
+
     >
       <Ionicons name={name} size={size} color={color} />
     </TouchableOpacity>

@@ -19,33 +19,11 @@ export function BrandComponent({marginLeft="4%", logoSize=52, fontSize=25}) {
   );
 }
 
-export function HeaderButton({
-  onSettingsPress,
-  onUndoPress,
-}) {
-  // const manageButton = onManageSwipeButtonPressed ? (
-  //   <PrimaryButton
-  //     onPress={onManageSwipeButtonPressed}
-  //     name="ellipsis-horizontal-outline"
-  //     size={buttonSize}
-  //     color={Colors.orange500}
-  //   />
-  // ) : null;
-
-  const unDoButton = onUndoPress ? (
-    <PrimaryButton
-      onPress={onUndoPress}
-      name="arrow-undo-circle"
-      size={buttonSize}
-      color={Colors.orange500}
-    />
-  ) : null;
-
+export function HeaderButton({onSettingsPress}) {
+  
   return (
     <View style={styles.rightHeaderContainer}>
-      {/* <View style={styles.buttonStyle}>{manageButton}</View> */}
 
-      <View style={styles.undoContainer}>{unDoButton}</View>
       <View style={styles.settingsContainer}>
         <PrimaryButton
           onPress={onSettingsPress}
@@ -70,26 +48,26 @@ const styles = StyleSheet.create({
   text: {
     color: Colors.orange500,
     marginLeft: 10,
-    // paddingLeft: 10,
     fontWeight: "bold",
   },
+
+  // --------------------------------------
+
   rightHeaderContainer: {
+    // borderWidth: 1,
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-start",
-    width: (Dimensions.get("window").width + buttonSize) / 2, // centrer le bouton manageButton : largeur totale/2 à laquelle on ajoute la moitié de la taille du bouton (30/2)
+    // width: (Dimensions.get("window").width + buttonSize) / 2, // centrer le bouton manageButton : 
+    width: (Dimensions.get("window").width ) / 2, 
   },
 
-  // buttonStyle: {
-  //   position: "absolute",
-  // },
-  undoContainer: {
-    position: "absolute",
-    marginLeft: "35%",
-  },
+  
   settingsContainer: {
     position: "absolute",
-    marginLeft: "68%",
+    right: 30,
+    // marginLeft: "68%",
+
   },
 });

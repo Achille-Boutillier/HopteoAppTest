@@ -10,12 +10,13 @@ import Card from "../../component/Card";
 // import PrimaryButton from "../../component/PrimaryButton";
 import { Colors } from "../../constant/Colors";
 import { HeaderButton } from "../../component/TopBar";
-import {nextPile, unDoSwipe, swipeHandler, } from "../../BackEnd/controllers/cards";
+import {nextPile, undoSwipe, swipeHandler, } from "../../BackEnd/controllers/cards";
 import SwipeLevel from "../../component/SwipeLevel";
 import { alertProvider } from "../../BackEnd/errorHandler";
 import MessageContainer from "../../component/MessageContainer";
 import { storeNewSwipe, removeSwipe } from "../../core/reducers/swipeReducer";
 import SwipeButton from "../../component/SwipeButton";
+import store from "../../core";
 const swiperRef = createRef();
 
 
@@ -59,22 +60,22 @@ export default function Home({ navigation, route }) {
   async function getCards(nextIdCardList) {
     setIsPileOver(false);
     if (nextIdCardList.length===0) {
-      setCardList("Tu as swipé toutes les cartes disponibles \n Nos équipes travaillent pour t'en proposer d'autres");
+      setCardList("Tu as swipé toutes les cartes disponibles. \n Nos équipes travaillent pour t'en proposer d'autres");
       setIsCardListLoaded(true);
       return
     }
     console.log("[idCardList]", nextIdCardList)
     unableCard();
-    const response = await nextPile(nextIdCardList);
+    const data = await nextPile(nextIdCardList);
     console.log("Je passe dans getCards");
-    console.log( "[cardsObject]" ,response);
-    if (response.cardsPile) {
+    console.log( "[cardsObject]" ,data);
+    if (data.cardsPile) {
       setListIndex(0);
-      setCardList(response.cardsPile);
+      setCardList(data.cardsPile);
       setIsCardListLoaded(true);  
     } else {
-      alertProvider();
-    }
+      alertProvider(data.error);
+    } 
   }
  
   useEffect(() => {
@@ -83,29 +84,73 @@ export default function Home({ navigation, route }) {
       const answeredCards = Object.keys(swipeReducer.swipeTypeObj);
       const notAnsweredCards = swipeReducer.idCardsList.filter(item => !(answeredCards.includes(item)));
       const nextIdCardList = notAnsweredCards.slice(0,10);
+      // console.log("[nextIdCardList]")
       getCards(nextIdCardList);
     }
   }, [isPileOver]);
 
-  // ================== fin gestion cartes swipe ==============================
 
-  //================= gestion header buttons =======================================
+
+  //================= handle header buttons =======================================
 
   function onSettingsPress() {
     navigation.navigate("Settings");
   }
 
-  async function onUndoPress() {
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (<HeaderButton onSettingsPress={onSettingsPress} />),
+    });
+  }, [navigation]);
+
+  //================== handle undo ==========================================================
+
+
+  async function getPreviousCard(){
+    const {notSentToBackAnswers, sentToBackAnswers} = swipeReducer;
+    console.log("[notSentToBackAnswers]", notSentToBackAnswers);
+    console.log("[sentToBackAnswers]", sentToBackAnswers);
+    let previousCardId;
+    if (notSentToBackAnswers.length===0){
+      previousCardId = sentToBackAnswers[sentToBackAnswers.length-1];
+    } else {
+      previousCardId = notSentToBackAnswers[notSentToBackAnswers.length-1];
+    }
+
+    const {cardsPile, error} = await nextPile([previousCardId]);
+    if (cardsPile) {
+      const {id, idTheme} = cardsPile[0];
+      // const newCardList = cardList;
+      // newCardList.unshift(cardsPile[0]);      // add an element to the biginning of newCardList (return length de la nouvelle liste)
+      const undoSuccess = await undoSwipe(id, idTheme, dispatch);
+      (undoSuccess)
+        ? setCardList((previousList) => [cardsPile[0], ...previousList]) 
+        : alertProvider("Impossible de revenir en arrière pour le moment");
+        
+    } else {
+      alertProvider(error);
+    }
+  }
+
+  async function gotToPreviousCard() {
+    const index = listIndex;
+    const {id, idTheme} = cardList[index-1];
+    swiperRef.current.jumpToCardIndex(index - 1); 
+    setListIndex(index - 1);
+    const undoSuccess = await undoSwipe(id, idTheme, dispatch);
+    if (!undoSuccess) {
+      swiperRef.current.jumpToCardIndex(index), 
+      setListIndex(index),
+      alertProvider("Impossible de revenir en arrière pour le moment")
+    }
+      
+  }
+
+
+  async function onPressUndo() {
     setIsUndoPress(true);
   }
 
-  function displayUndoError() {
-    Alert.alert(
-      "Erreur...",
-      "Impossible de revenir en arrière pour le moment",
-      [{ text: "Ok", style: "cancel" }]
-    );
-  }
 
   async function handleUndoPress() {
     console.log("je passe dans handleUndoPress");
@@ -114,23 +159,13 @@ export default function Home({ navigation, route }) {
         { text: "Ok", style: "cancel" },
       ]);
     } else {
+
       if (listIndex === 0) {
-        const undoSuccess = await unDoSwipe();
-        !!undoSuccess && !undoSuccess?.error ? getCards() : displayUndoError(); // getCard() si pas d'erreur
+        getPreviousCard();
       } else {
-        const index = listIndex;
-        swiperRef.current.jumpToCardIndex(listIndex - 1); // set l'index de la carte
-        setListIndex((i) => i - 1);
-        const undoSuccess = await unDoSwipe();
-        !!undoSuccess && !undoSuccess?.error
-          ? null
-          : (() => {
-              // si erreur :
-              swiperRef.current.jumpToCardIndex(index); // set l'index de la carte
-              setListIndex(index);
-              displayUndoError();
-            })(); // callback directement executée
+        gotToPreviousCard();
       }
+
     }
   }
 
@@ -141,19 +176,12 @@ export default function Home({ navigation, route }) {
     }
   }, [isUndoPress]);
 
-  // Créer les boutons
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => ( <HeaderButton onSettingsPress={onSettingsPress} onUndoPress={onUndoPress} />),
-    });
-  }, [navigation]);
 
-  //================== fin header button ==========================================================
-
-
+  // ============= handle Swipe =======================================================
 
   async function onSwiped(index, swipeType) {
-    console.log(`swiper index : ${index}`);
+    console.log(`[swiper index] ${index}`);
+    // console.log("[current Card] ", cardList[index]);
     const idTheme = cardList[index].idTheme
     const id = cardList[index].id;         // todo: remplacer "_id" par "id"
     console.log( "[id swipe ]" ,id);
@@ -209,11 +237,12 @@ function onSwiping(x, y){
         <SwipeLevel
           absoluteIndex={absoluteIndex}
           minSwipeForRanking={swipeReducer.minSwipeForRanking} // 'pas' des levels
-          // progressBarColor={"#ebd226"}
           progressBarColor={"#70DDFF"}
-          borderColor={null}
-          // mainBarColor={"#efe9bd"}
+          // borderColor={null}
           mainBarColor={"#BFF0FF"}
+          onPressUndo={onPressUndo}
+          // progressBarColor={"#ebd226"}
+          // mainBarColor={"#efe9bd"}
         />
 
         <View style={[styles.bottomContainer, 
@@ -366,6 +395,7 @@ const styles = StyleSheet.create({
   cardContainer: {
     height: "60%",
     marginTop: "8%",
+    // borderWidth: 1,
   },
   bottomContainer: {
     bottom: "6%",

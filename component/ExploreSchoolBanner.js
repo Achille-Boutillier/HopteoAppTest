@@ -74,8 +74,6 @@ export default function ExploreSchoolBanner({ schoolId }) {
             color={bannerColor ? bannerColor : Colors.orange500} 
           />
         </Pressable>
-          
-        
       </View>
       
 
