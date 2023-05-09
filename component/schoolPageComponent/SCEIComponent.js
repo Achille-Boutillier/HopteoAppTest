@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textTransform: "capitalize",
     textAlign: "center",
-    verticalAlign: "center",
+    verticalAlign: "middle",
   },
 
   swipeableContainer: {
@@ -291,7 +291,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     fontSize: 14,
     // textAlign: "center",
-    verticalAlign: "center",
+    verticalAlign: "middle",
   },
   currentConcoursComponent: {
     backgroundColor: Colors.white,

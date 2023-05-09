@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "800",
     textAlign: "center",
-    verticalAlign: "center",
+    verticalAlign: "middle",
   },
 
   modal: {

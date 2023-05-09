@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   numberNameStyle: {
     fontSize: 8,
     textAlign: "center",
-    verticalAlign: "center",
+    verticalAlign: "middle",
     color: Colors.grey,
     fontWeight: "600",
   },

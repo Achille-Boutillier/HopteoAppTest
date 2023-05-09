@@ -105,7 +105,7 @@ export default function SchoolPage({ navigation, route }) {
         >  
           <View style={styles.imageContainer} />
           <View style={styles.schoolHeadInfo}>
-            <RibbonComponent rank={singleSchoolData.rank} size={35} />
+            <RibbonComponent rank={singleSchoolData.rank} size={35} setBannerColor={()=> {}}/>
 
             <Text style={{ fontSize: 20, fontWeight: "500", color: Colors.grey, marginLeft: 10 }}>
               {singleSchoolData.nomEcole}

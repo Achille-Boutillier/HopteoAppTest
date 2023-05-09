@@ -452,7 +452,7 @@ const styles = StyleSheet.create({
   modalBodyText: {
     fontSize: 18,
     textAlign: "left",
-    selectable: true,
+    // selectable: true,
     // marginVertical: 30,
   },
   modalPasswordContainer: {

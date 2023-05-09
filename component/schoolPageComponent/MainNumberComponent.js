@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     fontSize: 14,
     // textAlign: "center",
-    verticalAlign: "center",
+    verticalAlign: "middle",
   },
 
 
