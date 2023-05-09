@@ -3,6 +3,8 @@ import * as SecureStore from "expo-secure-store"; // voir doc expo pour ios (peu
 import { mainUrl } from "./userData";
 const route = mainUrl + "/setting";
 import { getAuthData } from "./userData";
+import { resetRank } from "../../core/reducers/schoolReducer";
+import { removeAllSwipe } from "../../core/reducers/swipeReducer";
 
 export async function getUserInfo() {
   let authData = await getAuthData();
@@ -171,34 +173,37 @@ export async function disconnect() {
   }
 }
 
-// export async function modifyMail(newMail, password) {
 
-//     let authData = await getAuthData();
+export async function resetSwipe(password, dispatch) {
+  try {
 
-//     const requestOptions = {
-//         method: 'PUT',
-//         headers: {
-//             'Content-Type': 'application/json',
-//             'authorization': 'Bearer ' + authData.token
-//         },
-//         body: JSON.stringify({
-//             newMail: "a@b.fr",
-//             // newEmail: newMail,
-//             password: "a",
-//         })
-//     };
+    let authData = await getAuthData();
 
-//     try {
-//         let response = await fetch(route + "/modifyMail", requestOptions) ;
-//         console.log(response.status);
-//         const data = await response.json();
-//         console.log(data);
-//         return data;
-
-//     } catch (error) {
-//         console.log("bloc try failed :");
-//         console.log(error);
-//         return false;
-//     }
-
-// }
+    const requestOptions = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: "Bearer " + authData.token,
+      },
+      body: JSON.stringify({
+          password: password
+      })
+    };
+  
+    let response = await fetch(route + "/resetSwipe", requestOptions);
+    console.log(response.status);
+    const data = await response.json();
+    console.log(data);
+    if (response.status === 200) {
+      dispatch(removeAllSwipe());
+      dispatch(resetRank());
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.log("bloc try failed :");
+    console.log(error);
+    return false;
+  }
+}

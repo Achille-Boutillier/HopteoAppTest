@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View, ActivityIndicator, TouchableOpacity, Button, Alert, } from "react-native";
+import {StyleSheet, Text, View, ActivityIndicator, TouchableOpacity, Button, Alert, Dimensions } from "react-native";
 // import Modal from "react-native-modal";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -19,8 +19,12 @@ import SwipeButton from "../../component/SwipeButton";
 import store from "../../core";
 const swiperRef = createRef();
 
+const deviceHeight = Dimensions.get("window").height;
+const swipeCardHeigth = 0.52*deviceHeight;
+
 
 export default function Home({ navigation, route }) {
+  // const screenParams = route.params;
   const themeState = useSelector((state) => state.themeReducer.themeObj);
   const swipeReducer = useSelector((state) => state.swipeReducer);
 
@@ -36,11 +40,18 @@ export default function Home({ navigation, route }) {
   const [cardList, setCardList] = useState([]);
   
 
-  // const [swipeButtonZIndex, setSwipeButtonZIndex] = useState(2);
+  const [swipeButtonZIndex, setSwipeButtonZIndex] = useState(2);
   const [swipeDir, setSwipeDir] = useState(null);
   const [isUndoPress, setIsUndoPress] = useState(false);
 
-  
+  useEffect(() => {
+    // console.log("[params]" , route.params);
+    if (route.params?.jumpToFirstCard) {
+      console.log("[reset card ?]" , route.params?.jumpToFirstCard);
+      const nextIdCardList = calculNextCardsToAsk();
+      getCards(nextIdCardList);
+    }
+  }, [route.params]);
   
 
   useEffect(() => {
@@ -77,14 +88,17 @@ export default function Home({ navigation, route }) {
       alertProvider(data.error);
     } 
   }
+
+
+  function calculNextCardsToAsk() {
+    const answeredCards = Object.keys(swipeReducer.swipeTypeObj);
+    const notAnsweredCards = swipeReducer.idCardsList.filter(item => !(answeredCards.includes(item)));
+    return notAnsweredCards.slice(0,12);
+  }
  
   useEffect(() => {
     if (isPileOver) {
-      // console.log("[swipeReducer]", swipeReducer);
-      const answeredCards = Object.keys(swipeReducer.swipeTypeObj);
-      const notAnsweredCards = swipeReducer.idCardsList.filter(item => !(answeredCards.includes(item)));
-      const nextIdCardList = notAnsweredCards.slice(0,10);
-      // console.log("[nextIdCardList]")
+      const nextIdCardList = calculNextCardsToAsk();
       getCards(nextIdCardList);
     }
   }, [isPileOver]);
@@ -245,14 +259,14 @@ function onSwiping(x, y){
           // mainBarColor={"#efe9bd"}
         />
 
-        <View style={[styles.bottomContainer, 
-          // { zIndex: swipeButtonZIndex },
-          { zIndex: 2 },
+        {/* <View style={[styles.bottomContainer, 
+          { zIndex: swipeButtonZIndex },
+          // { zIndex: 2 },
           ]}>
           <SwipeButton swiperRef={swiperRef} swipeDir={swipeDir}/>
-        </View>
+        </View> */}
 
-        <View style={styles.cardContainer}>
+        <View style={[styles.swipeContainer, { zIndex: swipeButtonZIndex===2 ? 0 : 2 }]}>
           <Swiper
             ref={swiperRef}
             cards={cardList}
@@ -263,6 +277,8 @@ function onSwiping(x, y){
               <Card
                 cardValue={currentCard}
                 currentTheme={theme[currentCard.idTheme]}
+                setSwipeButtonZIndex={setSwipeButtonZIndex}
+                swipeCardHeigth={swipeCardHeigth}
               />
             )}
             stackSize={2} // Nombre de cartes supperpopsées visibles
@@ -369,6 +385,14 @@ function onSwiping(x, y){
             }}
           />
         </View>
+
+        <View style={[styles.bottomContainer, 
+          { zIndex: swipeButtonZIndex },
+          // { zIndex: 2 },
+          ]}>
+          <SwipeButton swiperRef={swiperRef} swipeDir={swipeDir}/>
+        </View>
+
       </View>
     );
   } else if (isCardListLoaded && typeof cardList === "string") {
@@ -391,16 +415,17 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.backgroundColor,
     flexDirection: "column",
+    justifyContent: "space-evenly"
   },
-  cardContainer: {
-    height: "60%",
-    marginTop: "8%",
+  swipeContainer: {
+    height: swipeCardHeigth,
+    // marginTop: "8%",
     // borderWidth: 1,
   },
   bottomContainer: {
-    bottom: "6%",
-    position: "absolute",
-    alignSelf: "center",
+    // bottom: "6%",
+    // position: "absolute",
+    // alignSelf: "center",
     // borderWidth: 1,
     height: "10%",
     width: "100%",

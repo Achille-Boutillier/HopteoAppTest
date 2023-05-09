@@ -18,6 +18,13 @@ export const themeSlice = createSlice({
       state.loading = false;
       state.error = action.payload; // payload contient l'argument passé au dispatch
     },
+
+
+    reinitialiseThemeReducer: (state) => {
+      state.themeObj={};
+      state.loading= false;
+      state.error = null;
+    }
   },
 });
 

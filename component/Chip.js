@@ -3,11 +3,16 @@ import { StyleSheet, Text, View} from 'react-native';
 import { Colors } from '../constant/Colors';
 
 export default function Chip({children}) {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>{children}</Text>
-    </View>
-  );
+  if (children) {     // empecher les bulles vides
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>{children}</Text>
+      </View>
+    );
+  } else {
+    return null;
+  }
+  
 };
 
 const styles = StyleSheet.create({

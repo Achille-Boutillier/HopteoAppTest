@@ -7,7 +7,7 @@ import { getDetails } from "../BackEnd/controllers/cards";
 import { Colors } from "../constant/Colors";
 import PrimaryButton from "./PrimaryButton";
 
-export default function Card({ cardValue, currentTheme }) {
+export default function Card({ cardValue, currentTheme, setSwipeButtonZIndex, swipeCardHeigth }) {
   const [isCardDetailVisible, setIsCardDetailVisible] = useState(false);
   const [cardDetail, setCardDetail] = useState(null);
 
@@ -29,6 +29,7 @@ export default function Card({ cardValue, currentTheme }) {
 
 
   useEffect(()=> {
+    setSwipeButtonZIndex(isCardDetailVisible ? 0 : 2);
     if (isCardDetailVisible && !cardDetail) {
       getCardDetail();
     }
@@ -43,8 +44,8 @@ export default function Card({ cardValue, currentTheme }) {
         styles.card,
         {
           backgroundColor: currentTheme?.color,
-          height: isCardDetailVisible ? "80%" : "59%",
-          marginTop: isCardDetailVisible ? "-44%" : "-17%",
+          height: isCardDetailVisible ? "80%" : swipeCardHeigth,
+          marginTop: isCardDetailVisible ? "-44%" : "-19%",
           width: isCardDetailVisible ? "110%" : "95%",
           // borderColor: currentTheme?.color,
         },
@@ -112,9 +113,10 @@ const styles = StyleSheet.create({
   },
 
   cardTextContainer: {
-    height: "60%",
+    height: "73%",
     width: "90%",
-    justifyContent: "center",
+    justifyContent: "space-evenly",
+    marginTop: 10,
     // borderRadius: 24,
     // borderWidth: 1,
   },

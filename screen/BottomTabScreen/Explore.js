@@ -172,7 +172,10 @@ const styles = StyleSheet.create({
     flex: 1,
     position: "absolute",
     top: 50,
-    borderWidth: 1,
+    bottom: 0,
+    right: 0,
+    left: 0,
+    // borderWidth: 1,
     backgroundColor: Colors.backgroundColor,
   },
 });

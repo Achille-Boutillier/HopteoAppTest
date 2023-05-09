@@ -20,6 +20,14 @@ export const forRankingSlice = createSlice({
       state.loading = false;
       state.error = true; // payload contient l'argument passé au dispatch
     },
+
+
+    reinitialiseForRankingReducer: (state) => {
+      state.cards = {} ;
+      state.schoolIdObj = {} ;
+      state.loading = null;
+      state.error = false;
+    },
   },
 });
 
@@ -27,6 +35,7 @@ export const {
   getForRankingRequest,
   getForRankingSuccess,
   getForRankingFailure,
+  reinitialiseForRankingReducer,
 } = forRankingSlice.actions;
 
 export default forRankingSlice.reducer;

@@ -21,6 +21,15 @@ export const userSettingSlice = createSlice({
       state.loading = false;
       state.error = action.payload; // payload contient l'argument passé au dispatch
     },
+
+
+    reinitialiseUserSettingReducer: (state) => {
+      state.filiere = "";
+      state.secondYearFiliere = [];
+      state.cursustype = "";
+      state.loading = false;
+      state.error = null;
+    }
   },
 });
 
@@ -28,6 +37,7 @@ export const {
   getUserSettingRequest,
   getUserSettingSuccess,
   getUserSettingFailure,
+  reinitialiseUserSettingReducer,
 } = userSettingSlice.actions;
 
 export default userSettingSlice.reducer;

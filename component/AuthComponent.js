@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import {FlatList, StyleSheet, View, ActivityIndicator, Text } from "react-native";
 import { Colors } from "../constant/Colors";
-import InputComponent from "./InputContainer";
+import InputComponent from "./InputComponent";
 import { BrandComponent } from "./TopBar";
 import TerciaryButton from "./TerciaryButton";
 
@@ -40,31 +40,37 @@ export default function AuthComponent({typeScreen ,onSubmit, onChangeTypeScreen,
   return (
     <View style={styles.mainContainer}>
      
-      {!isEditing 
+     <View style={styles.headerContainer}>
+        <Text style={styles.pageTitle}>{pageTitle}</Text>
+      </View>
+      {/* {!isEditing 
         ? (
           <View style={styles.headerContainer}>
             <Text style={styles.pageTitle}>{pageTitle}</Text>
           </View>
         ) : null
-      }
+      } */}
 
 
-      <View style={[styles.bodyContainer, headerReadius, isEditing ? styles.bodyOnEditing : styles.bodyNotEditing]}>
+      <View style={[styles.bodyContainer, headerReadius, 
+        // isEditing ? styles.bodyOnEditing : 
+        styles.bodyNotEditing]}>
 
         <Text style={styles.catchPhrase}>{catchPhrase}</Text>
 
         <Text style={styles.errorMessage} >{errorMessage}</Text>
 
         <View style={styles.formContainer}>
-          <InputComponent title="Email" input={email} setInput={setEmail} setIsEditing={setIsEditing}/>
-          <InputComponent title="Mot de passe" input={password} setInput={setPassword} onSubmitEditing={()=> onSubmit(email, password)} setIsEditing={setIsEditing}/>
+          <InputComponent title="Email" inputType="email" input={email} setInput={setEmail} setIsEditing={setIsEditing}/>
+          <InputComponent title="Mot de passe" inputType="password" input={password} setInput={setPassword} onSubmitEditing={()=> onSubmit(email, password)} setIsEditing={setIsEditing}/>
         </View>
 
           
         <TerciaryButton title={firstButtonTitle} onPress={()=> onSubmit(email, password)} color={Colors.orange500} isFullColor={true}/>
-        {!isEditing ? <TerciaryButton title={secondButtonTitle} onPress={onChangeTypeScreen} color={Colors.orange500} /> : null}
-        
-        {!isEditing ? <BrandComponent marginLeft={0} logoSize={60} fontSize={30}/> : null}
+        {/* {!isEditing ? <TerciaryButton title={secondButtonTitle} onPress={onChangeTypeScreen} color={Colors.orange500} /> : null}
+        {!isEditing ? <BrandComponent marginLeft={0} logoSize={60} fontSize={30}/> : null} */}
+        <TerciaryButton title={secondButtonTitle} onPress={onChangeTypeScreen} color={Colors.orange500} />
+        <BrandComponent marginLeft={0} logoSize={60} fontSize={30}/>
 
       </View>
       
@@ -84,7 +90,6 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     justifyContent: "center",
     // borderWidth: 1,
-
   },
   pageTitle: {
     // verticalAlign: "center",
@@ -108,9 +113,8 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     // borderTopLeftRadius: 80,
-    justifyContent: "center",
+    justifyContent: "flex-start",
     // borderWidth: 1
-
   },
 
   bodyOnEditing: {
@@ -139,10 +143,11 @@ const styles = StyleSheet.create({
     width: "75%",
   },
   formContainer: {
-    height: 170,
+    height: 190,
     width: "80%",
     alignItems: "center",
     justifyContent: "space-between",
+    // borderWidth: 1,
   },
   
 

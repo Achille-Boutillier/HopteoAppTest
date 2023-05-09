@@ -15,6 +15,7 @@ export const swipeSlice = createSlice({
       state.minSwipeForRanking = minSwipeForRanking;
       state.swipeTypeObj = swipeTypeObj;
       // state.answeredCardList = answeredCardList;   
+      // console.log("[answerByTheme]" , answerByTheme);
       state.sentToBackAnswers = answeredCardList;
       state.answerByTheme = answerByTheme;
       state.swipeSettings = swipeSettings;
@@ -31,8 +32,10 @@ export const swipeSlice = createSlice({
     storeNewSwipe: (state, action) => {
       const {id, swipeType, idTheme} = action.payload;
       state.swipeTypeObj[id] = swipeType;
-      state.answerByTheme[idTheme] += 1 ;
+      state.answerByTheme[idTheme] ? state.answerByTheme[idTheme]  += 1 : state.answerByTheme[idTheme] = 1 ;
       state.notSentToBackAnswers.push(id);
+      // console.log("[answerByTheme]" , answerByTheme);
+
     },
     removeSwipe: (state, action) => {
       const {id, idTheme} = action.payload;
@@ -47,11 +50,33 @@ export const swipeSlice = createSlice({
     
     storeRankingAbsoluteIndex : (state, action) => {
       state.rankingAbsoluteIndex = action.payload;
+    },
+
+    removeAllSwipe: (state) => {
+      state.swipeTypeObj = {};
+      state.sentToBackAnswers = [];
+      state.notSentToBackAnswers = [];
+      state.answerByTheme = {};
+      state.rankingAbsoluteIndex = -1;
+    },
+
+    reinitialiseSwipeReducer: (state) => {
+      state.swipeTypeObj = {};         // {ingeCard1: "like", ingeCard2: "dislike", ingeCard3: "dontKnow"}
+      state.idCardsList= [];          // [ingeCard1, ingeCard2, ingeCard3, ingeCard4, ingeCard5, ...]
+      state.sentToBackAnswers= [];    // [ingeCard1, ingeCard2]
+      state.notSentToBackAnswers= []; // [ingeCard3]
+      state.minSwipeForRanking= null;
+      state.swipeSettings= {};        // {"superlike": {"bonus": 5,"nbAnswer": 5}, "like": {"bonus": 1,"nbAnswer": 1 }, ... },
+      state.answerByTheme= {};        // "answerByTheme": {"theme1": 19, "theme3": 10, "theme2": 1}
+      state.rankingAbsoluteIndex= -1;  
+      state.loading= null;
+      state.error= null;
     }
   },
 });
 
-export const { splashSwipeRequest, splashSwipeSuccess, splashSwipeFailure, storeNewSwipe, removeSwipe, storeRankingAbsoluteIndex } =
+export const { splashSwipeRequest, splashSwipeSuccess, splashSwipeFailure, storeNewSwipe, removeSwipe, 
+  storeRankingAbsoluteIndex, removeAllSwipe, reinitialiseSwipeReducer } =
   swipeSlice.actions;
 
 export default swipeSlice.reducer;

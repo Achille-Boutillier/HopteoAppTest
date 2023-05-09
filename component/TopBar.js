@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
   text: {
     color: Colors.orange500,
     marginLeft: 10,
+    // marginRight: 10, //cause logo has margin => help to center the brand component
     fontWeight: "bold",
   },
 

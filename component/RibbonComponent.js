@@ -35,6 +35,7 @@ export default function RibbonComponent({rank, circleSize=22, fontSize=14, iconS
         setRibbonIcon(<ThirdMedal width={iconSize} height={iconSize} fill={color} />);
         break;
       default : 
+        setBannerColor(null);
         setRibbonIcon(
           <View style={{ alignItems: "center", justifyContent:"center"}}>
             <View style={[styles.rankContainer, {borderRadius: circleSize, width: circleSize, height: circleSize, }]}>

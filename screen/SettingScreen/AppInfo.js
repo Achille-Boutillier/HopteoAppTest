@@ -9,45 +9,16 @@ import SecondaryButton from "../../component/SecondaryButton";
 import {Colors} from "../../constant/Colors";
 import { getPrivacyPolicy } from "../../BackEnd/controllers/setting";
 import { alertProvider } from "../../BackEnd/errorHandler";
+import TerciaryButton from "../../component/TerciaryButton";
 
 
 
 export default function AppInfo({navigation, route}) {
-  const appInfo = route.params.appInfo
-  console.log(appInfo);
-  const [isPolicyPressed, setIsPolicyPressed] = useState(false);
-  const [policyHtml, setPolicyHtml] = useState();
-  
-  function loginScreenNavigation() {
-    navigation.navigate("Login Screen");
-  }
-
-  function policyNavigation() {
-    navigation.navigate('Privacy Policy', {policyHtml: policyHtml})
-  }
+  const appInfo = route.params?.appInfo
 
   async function onPressPolicy() {
-    if (policyHtml) {
-      policyNavigation()
-    } else {
-      const html = await getPrivacyPolicy();
-      console.log("requete d'obtention html")
-      // console.log(html);
-      if (html && !html?.error) {
-        setIsPolicyPressed(true);
-        setPolicyHtml(html) ;
-      } else {
-        alertProvider(loginScreenNavigation);
-      } 
-    }
+    navigation.navigate('Privacy Policy');
   }
-
-  useEffect(() => {
-    if (isPolicyPressed) {
-      policyNavigation();
-      setIsPolicyPressed(false);
-    }
-  }, [policyHtml])
 
   return (
     <View style={styles.mainContainer}>
@@ -60,30 +31,40 @@ export default function AppInfo({navigation, route}) {
         />
         {/* <Text style={{}}>A propos d'Hopteo</Text> */}
       </View>
-      <View style={styles.bodyContainer}>
-        <Text style={styles.titleText}>A propos d'Hopteo :</Text> 
-        {appInfo?.errorMessage 
-          ?  <Text style={[styles.infoText, {color: Colors.orange500}]}>{appInfo.errorMessage}</Text>
-          :  <Text style={styles.infoText}>{appInfo?.description}</Text>
+        { appInfo ? (
+          <View style={styles.bodyContainer}>
+            <Text style={styles.titleText}>A propos d'Hopteo :</Text> 
+            <Text style={styles.infoText}>{appInfo?.description}</Text>
+            
+            <View style={styles.websiteContainer}>
+              <Text style={styles.titleText}>Site web :</Text>
+              <TouchableOpacity onPress={() => Linking.openURL(appInfo.webSite)}>
+                <Text style={styles.websiteText}>hopteo.com</Text>
+              </TouchableOpacity>
+              
+            </View>
+    
+            <View style={{width: "80%", alignSelf: "center"}} >
+              {/* <SecondaryButton
+                onPress={onPressPolicy}
+                buttonText = "Politique de Confidentialité"
+                fontSize={15}
+                preSized={false}
+              /> */}
+              <TerciaryButton
+              title = "Politique de Confidentialité"
+              onPress={onPressPolicy}
+              color={Colors.orange500}
+              isFullColor={true}
+              fontSize={15}
+              />
+            </View>
+          </View>
+
+        ) : <Text style={[styles.infoText]}>{"Erreur de chargement..."}</Text>
+
         }
         
-        <View style={styles.websiteContainer}>
-          <Text style={styles.titleText}>Site web :</Text>
-          <TouchableOpacity onPress={() => Linking.openURL(appInfo.webSite)}>
-            <Text style={styles.websiteText}>hopteo.com</Text>
-          </TouchableOpacity>
-          
-        </View>
-
-        <View style={{width: "80%", alignSelf: "center"}} >
-          <SecondaryButton
-            onPress={onPressPolicy}
-            buttonText = "Politique de Confidentialité"
-            fontSize={15}
-            preSized={false}
-          />
-        </View>
-      </View>
 
     </View>
   );

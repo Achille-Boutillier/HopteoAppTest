@@ -2,19 +2,22 @@ import { useState, useEffect } from "react";
 import { View, StyleSheet, TextInput, Text } from "react-native";
 import { Colors } from "../constant/Colors";
 
+import { Dimensions } from "react-native";
 
-export default function InputComponent({title, setInput, input, onSubmitEditing, setIsEditing }) {
+const deviceHeight = Dimensions.get("screen").height
+
+export default function InputComponent({title, inputType, setInput, input, onSubmitEditing, setIsEditing }) {
   const [textInputSetting, setTextInputSetting] = useState({});
 
 
   function onPressIn() {
-    setIsEditing(true);
+    setIsEditing ? setIsEditing(true) : null ;
     console.log("in")
   }
 
   function onBlur(){
     console.log("dismissed")
-    setIsEditing(false);
+    setIsEditing ? setIsEditing(false) : null;
   }
 
 
@@ -23,13 +26,13 @@ export default function InputComponent({title, setInput, input, onSubmitEditing,
     let autoComplete;
     let keyboardType;
     let secureTextEntry 
-    if (title==="Email") {
+    if (inputType==="email") {
       placeholder = "example@mail.com";
       autoComplete="email";
       keyboardType="email-address";
       secureTextEntry = false;
-    } else if (title==="Mot de passe") {
-      placeholder="************";
+    } else if (inputType==="password") {
+      placeholder="*****";
       autoComplete=null;
       keyboardType=null;
       secureTextEntry=true;
@@ -65,9 +68,11 @@ export default function InputComponent({title, setInput, input, onSubmitEditing,
 const styles = StyleSheet.create({
   mainContainer: {
     backgroundColor: Colors.backgroundColor,
-    justifyContent: "space-between",
+    justifyContent: "space-around",
     // borderWidth: 1,
-    height: "42%",
+    // height: "42%",
+    // height: deviceHeight*0.1,
+    height: 90,
     width: "100%",
     paddingHorizontal: 10,
     paddingVertical: 5,
@@ -85,6 +90,7 @@ const styles = StyleSheet.create({
     marginBottom: "3%",
     borderRadius: 10,
     paddingLeft: 15,
+    paddingVertical: 1,
     backgroundColor: Colors.white,
   },
   

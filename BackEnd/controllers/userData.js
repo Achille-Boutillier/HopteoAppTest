@@ -8,7 +8,7 @@ import { splashSwipeSuccess } from "../../core/reducers/swipeReducer";
 
 
 
-export const mainUrl = "https://app.hopteo.fr/api/v0";
+export const mainUrl = "https://app.hopteo.com/api/v0";
 const route = mainUrl + "/user";
 
 export async function getAuthData() {
@@ -236,33 +236,4 @@ export async function storeUserSetting(cursustype, field, moyBac) {
 }
 
 // Reset les userData de l'utilisateur
-export async function reset(password) {
-  let authData = await getAuthData();
 
-  const requestOptions = {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      authorization: "Bearer " + authData.token,
-    },
-    // body: JSON.stringify({
-    //     password: password
-    // })
-  };
-
-  try {
-    let response = await fetch(route + "/reset", requestOptions);
-    console.log(response.status);
-    const data = await response.json();
-    console.log(data);
-    if (response.status === 200) {
-      return true;
-    } else {
-      return false;
-    }
-  } catch (error) {
-    console.log("bloc try failed :");
-    console.log(error);
-    return false;
-  }
-}

@@ -70,7 +70,7 @@ export const schoolSlice = createSlice({
       console.log("storing new rank -----------------")  ;
       const {sortedSchoolList, message} = action.payload;  
       if (Array.isArray(sortedSchoolList)) {
-        const idList = [];
+        let idList = [];
         sortedSchoolList.map((item) => {
           idList.push(item.id);
           if (state.schoolsData[item.id]) {   // si ecole déjà storée
@@ -97,6 +97,14 @@ export const schoolSlice = createSlice({
     },
 
 
+    resetRank: (state) => {
+      state.rankIdList = null;
+      Object.keys(state.schoolsData).map((item) => {
+        state.schoolsData[item].rank = null;
+      })
+    },
+
+
 
     // -------------------- Explore ----------------------------------
 
@@ -120,14 +128,25 @@ export const schoolSlice = createSlice({
       state.error = true; 
     },
 
+
+
+    reinitialiseSchoolReducer: (state) => {
+      state.rankIdList= null;     // lite d'id ordonnés pour classement
+      state.schoolByArea= null;   // {schoolPack: null, listFormation: null},
+      state.schoolsData= {};      
+      state.loading= null;
+      state.error= false;
+    }
+
   },
 });
 
 export const {
-  calculNewRank, calculNewRankSuccess, calculNewRankFailure, 
+  calculNewRank, calculNewRankSuccess, calculNewRankFailure, resetRank, 
   setSchoolLike, setSchoolLikeFailure, 
   getSchoolBannerRequest, getSchoolBannerSuccess, getSchoolBannerFailure, 
   getSchoolPageRequest, getSchoolPageSuccess, getSchoolPageFailure,
   getSchoolByAreaRequest, getSchoolByAreaSuccess, getSchoolByAreaFailure,
+  reinitialiseSchoolReducer,
 } = schoolSlice.actions;
 export default schoolSlice.reducer;

@@ -12,20 +12,6 @@ const figureSize = { width: 0.6 * width, height: 50 };
 function DotComponent({ list, currentNumber }) {
   const [dotContent, setDotContent] = useState(null); ;
 
-  // let dotContent;
-  // if (list.length > 1) {
-  //   dotContent = list.map((item, index) => (
-  //     // <View key={item} style={{}} >
-  //       <Text key={item} style={currentNumber == index ? styles.ActivatedDot : styles.dot}>
-  //         {"\u2022"}{" "}
-  //       </Text>
-  //       // <Text style={styles.dot}>{" "}</Text>
-  //     // </View>
-  //   ));
-  // } else {
-  //   dotContent = null;
-  // }
-
   useEffect(()=> {
     let newDotContent = null;
     if (list.length > 1) {
@@ -51,16 +37,15 @@ function DotComponent({ list, currentNumber }) {
 }
 
 export default function SCEIComponent({ parcoursChoix, admission }) {
+  //todo: implementer un currentField
   const parcoursChoixKeys = Object.keys(parcoursChoix);
   const filiereList = Object.keys(admission).filter(
     (key) => Object.keys(admission[key]).length !== 0
   );
-  console.log(filiereList);
+  // console.log(filiereList);
 
   const [parcoursSlide, setParcoursSlide] = useState(0);
-  const [currentParcours, setCurrentParcours] = useState(
-    parcoursChoixKeys[parcoursSlide]
-  ); // == parcoursChoixKeys[0]
+  const [currentParcours, setCurrentParcours] = useState(parcoursChoixKeys[parcoursSlide]); // == parcoursChoixKeys[0]
   const [figureSlide, setFigureSlide] = useState(0);
 
   useEffect(() => {
@@ -166,10 +151,13 @@ export default function SCEIComponent({ parcoursChoix, admission }) {
       </View>
 
       <View style={styles.currentConcoursComponent}>
-       <Text style={styles.subTitle}>Concours</Text>
+        <Text style={styles.subTitle}>
+          {admission[filiereList[figureSlide]][currentParcours]?.concours 
+          ? admission[filiereList[figureSlide]][currentParcours].concours
+          : "-"}
+        </Text>
+       {/* par exemple admission["MP"]["parcours1"].concours */}
       </View>
-
-
 
     </View>
   );

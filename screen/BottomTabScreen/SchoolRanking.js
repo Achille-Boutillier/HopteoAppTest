@@ -61,16 +61,25 @@ function SchoolRanking({ navigation, route }) {
 
       if (ranking?.sortedSchoolList){
         dispatch(calculNewRankSuccess({sortedSchoolList: ranking.sortedSchoolList}));
+        let rankIdList = [];
+        ranking.sortedSchoolList.map((item) => rankIdList.push(item.id));
+        loadMissingSchoolData(rankIdList);
         // dispatch();
       } else if (ranking?.message) {
         dispatch(calculNewRankSuccess({message: ranking.message}));
+        setReadyToDisplayRank(true);
+
       } else if (ranking?.error) {
         alertProvider(ranking?.error);
         dispatch(calculNewRankFailure(ranking.error));
+        setReadyToDisplayRank(true);
+        return
       } else {
         alertProvider();
         dispatch(calculNewRankFailure());
+        return
       }
+
   }
 
   
@@ -115,10 +124,19 @@ function SchoolRanking({ navigation, route }) {
   }, [navigation]);
 
 
+  // function handleIfMissingData(rankIdList) {
+  //   // const rankIdList = schoolReducer.rankIdList;
+  //   if (Array.isArray(rankIdList)) {
+  //     loadMissingSchoolData(rankIdList);
+  //   } else {
+  //     setReadyToDisplayRank(true);
+  //   }
+  // }
+
   async function loadMissingSchoolData(rankIdList) {
     const schoolsData = store.getState().schoolReducer.schoolsData;
     const notMissingSchoolId = Object.keys(schoolsData).filter((item)=> schoolsData[item].nomEcole);
-    // console.log("[notMissingSchoolId]", notMissingSchoolId);
+    console.log("[notMissingSchoolId]", notMissingSchoolId);
     const missingSchoolId = rankIdList.filter((item)=>!notMissingSchoolId.includes(item));
     if (missingSchoolId.length>0) {
       const data = await getBannerData(missingSchoolId, dispatch);
@@ -128,19 +146,19 @@ function SchoolRanking({ navigation, route }) {
         alertProvider();
       }
     } else {
-      setReadyToDisplayRank(true)
+      setReadyToDisplayRank(true);
     }
     
   }
 
-  useEffect(()=> {
-    const rankIdList = schoolReducer.rankIdList;
-    if (Array.isArray(rankIdList)) {
-      loadMissingSchoolData(rankIdList);
-    } else {
-      setReadyToDisplayRank(true);
-    }
-  }, [schoolReducer.rankIdList])
+  // useEffect(()=> {
+  //   const rankIdList = schoolReducer.rankIdList;
+  //   if (Array.isArray(rankIdList)) {
+  //     loadMissingSchoolData(rankIdList);
+  //   } else {
+  //     setReadyToDisplayRank(true);
+  //   }
+  // }, [schoolReducer.rankIdList])
 
 
 

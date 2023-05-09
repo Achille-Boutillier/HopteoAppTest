@@ -1,26 +1,32 @@
-import { View, StyleSheet, Image, Text, ActivityIndicator } from "react-native";
+import { View, StyleSheet, Image, Text, ActivityIndicator, Dimensions } from "react-native";
 import { useEffect, useState } from "react";
 import { Colors } from "../constant/Colors";
+
+const screenHeigth = Dimensions.get('window').height;
+
 
 export default function CardDetail({ cardDetail }) {
   const [isDetailLoaded, setIsDetailLoaded] = useState(false);
   const [heigth, setHeigth] = useState("60%");
   useEffect(() => {
     if (cardDetail) {
-      setHeigth(cardDetail.length> 250 ? "90%" : "60%") ;
+      setHeigth(cardDetail.length> 200 ? "75%" : "60%") ;
       setIsDetailLoaded(true)
     }
   }, [cardDetail])
 
   return (
-    <View style={[styles.mainContainer, {height:heigth }]} >
+    <View style={[styles.mainContainer, 
+    {height:heigth }
+      // {maxHeight: coef*screenHeigth,}
+    ]} >
       <View style={styles.titleContainer}>
         <Text style={styles.titleText}>Explications :</Text>
       </View>
 
       <View style={styles.infoTextContainer}>
         {isDetailLoaded ? (
-          <Text style={styles.infoText} adjustsFontSizeToFit={true} numberOfLines={18}> {cardDetail} </Text>
+          <Text style={styles.infoText} adjustsFontSizeToFit={true} numberOfLines={12}> {cardDetail} </Text>
         ) : (
           <ActivityIndicator size="large" color={Colors.smoothBlack} />
         )}
@@ -36,6 +42,9 @@ const styles = StyleSheet.create({
     marginHorizontal: "5%",
     marginTop: "5%",
     borderRadius: 10,
+    // maxHeight: 0.4*screenHeigth,
+    // flex: 1,
+    // padding: 2,
     // borderTopLeftRadius: 10,
     paddingTop: "3%",
     backgroundColor: Colors.white,
@@ -65,6 +74,7 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     justifyContent: "center",
     alignItems: "center",
+    // fontSize: 16,
   },
 
   infoText: {
@@ -73,7 +83,7 @@ const styles = StyleSheet.create({
     // width: "100%",
     textAlign: "left",
     // alignSelf: "flex-start",
-    fontSize: 14,
+    fontSize: 16,
     // marginHorizontal: 10,
   },
 });

@@ -7,7 +7,8 @@ import { alertProvider } from "../../BackEnd/errorHandler";
 import PrimaryButton from "../../component/PrimaryButton";
 
 import {Colors} from "../../constant/Colors";
-
+import InputComponent from "../../component/InputComponent";
+import TerciaryButton from "../../component/TerciaryButton";
 
 
 export default function ModifyPassword({navigation}) {
@@ -15,7 +16,7 @@ export default function ModifyPassword({navigation}) {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [modifyPressed, setModifyPressed] = useState(false);
-  const [message, setMessage] = useState();
+  const [errorMessage, setErrorMessage] = useState();
 
   function onModifyPressed() {
     setModifyPressed(true);
@@ -36,13 +37,13 @@ export default function ModifyPassword({navigation}) {
           [{ text: "Ok", style: "cancel", onPress: () => navigation.goBack()}]
         ); 
       } else if (!!data?.message) {
-        setMessage(data.message);
+        setErrorMessage(data.message);
       } else {
         alertProvider(loginScreenNavigation);
       }
     
     } else {
-      setMessage("Les champs doivent être remplis");
+      setErrorMessage("Les champs doivent être remplis");
     }
     
     setCurrentPassword("");
@@ -73,33 +74,43 @@ export default function ModifyPassword({navigation}) {
             textAlign: "center",
             color: Colors.orange500,
             marginBottom: "3%",
-            marginTop: "10%",
+            marginTop: "3%",
           }}
         >
-          {message}
+          {errorMessage}
         </Text>
 
         <View style={styles.formContainer}>
-          <TextInput
-            style={styles.inputContainer}
-            placeholder="Mot de passe actuel"
-            onChangeText={setCurrentPassword}
-            value={currentPassword}
-            secureTextEntry
-            autoCapitalize="none"
+          <InputComponent
+            title="Mot de passe actuel"
+            inputType="password"
+            setInput={setCurrentPassword}
+            input={currentPassword}
+            onSubmitEditing={()=> {}}
+            setIsEditing={()=> {}}
           />
-          <TextInput
-            style={styles.inputContainer}
-            placeholder="Nouveau mot de passe"
-            onChangeText={setNewPassword}
-            value={newPassword}
-            secureTextEntry
-            autoCapitalize="none"
+          <InputComponent
+            // style={styles.inputContainer}
+            title="Nouveau mot de passe"
+            inputType="password"
+            setInput={setNewPassword}
+            input={newPassword}
+            onSubmitEditing={()=> {}}
+            setIsEditing={()=> {}}
           />
-          <TouchableOpacity style={styles.button} onPress={onModifyPressed}>
-            <Text>Modifier le Mot de Passe</Text>
-          </TouchableOpacity>
+          
         </View>
+
+        <TerciaryButton
+          title="Modifier le Mot de Passe"
+          onPress={onModifyPressed}
+          color={Colors.orange500}
+          isFullColor={true}
+          fontSize={15}
+        />
+        {/* <TouchableOpacity style={styles.button} onPress={onModifyPressed}>
+            <Text>Modifier le Mot de Passe</Text>
+          </TouchableOpacity> */}
       </View>
     </View>
   );
@@ -110,15 +121,13 @@ export default function ModifyPassword({navigation}) {
 const styles = StyleSheet.create({
   mainContainer:{
     flex: 1,
-    backgroundColor: Colors.backgroundColor,
+    backgroundColor: Colors.white,
   },
   headerContainer: {
     // flexDirection: "row",
     alignItems: "flex-start",
     justifyContent: "flex-start",
     height: 40,
-    // borderWidth: 1,
-
     paddingLeft: "6%",
     marginTop: "1%",
   },
@@ -130,13 +139,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   formContainer: {
-    // height: "40%",
-    height: 220,
+    height: 170,
     width: "80%",
     alignItems: "center",
-    justifyContent:"center",
-    backgroundColor: Colors.blue400,
-    borderRadius: 20,
+    justifyContent: "space-between",
+    // borderWidth: 1,
   },
   inputContainer: {
     height: "22%",

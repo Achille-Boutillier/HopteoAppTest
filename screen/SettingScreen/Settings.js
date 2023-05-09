@@ -1,49 +1,48 @@
-import {
-  View,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  Linking,
-} from "react-native";
+import {View, StyleSheet, Text, TouchableOpacity, TextInput, Linking, ScrollView, Dimensions} from "react-native";
 import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import Modal from "react-native-modal";
 
 import PrimaryButton from "../../component/PrimaryButton";
 import { Colors } from "../../constant/Colors";
-import { reset } from "../../BackEnd/controllers/userData";
-import {
-  deleteUser,
-  disconnect,
-  getUserInfo,
-  getAppContact,
-  getAppInfo,
-} from "../../BackEnd/controllers/setting";
+// import { reset } from "../../BackEnd/controllers/userData";
+import {deleteUser, disconnect, getUserInfo, getAppContact, getAppInfo, resetSwipe } from "../../BackEnd/controllers/setting";
 import { alertProvider } from "../../BackEnd/errorHandler.js";
-import SecondaryButton from "../../component/SecondaryButton";
+// import SecondaryButton from "../../component/SecondaryButton";
+
+import ConfirmPasswordModal from "../../component/ConfirmPasswordModal";
+import { useDispatch } from "react-redux";
+import { reinitialiseSchoolReducer } from "../../core/reducers/schoolReducer";
+import { reinitialiseForRankingReducer } from "../../core/reducers/forRankingReducer";
+import { reinitialiseSwipeReducer } from "../../core/reducers/swipeReducer";
+import { reinitialiseUserSettingReducer } from "../../core/reducers/userSettingReducer";
+
+
+const deviceHeight = Dimensions.get("window").height;
 
 function SettingsSection({ onPress, iconName, optionTitle }) {
   return (
     <TouchableOpacity onPress={onPress} style={styles.sectionContainer}>
       <Ionicons name={iconName} size={30} color={Colors.orange500} />
-      <Text style={{ marginLeft: "3%" }}>{optionTitle}</Text>
+      <Text style={{ marginLeft: "6%", fontSize: 16 }}>{optionTitle}</Text>
     </TouchableOpacity>
   );
 }
 
 export default function Settings({ navigation }) {
-  const [appMail, setAppMail] = useState();
+const dispatch = useDispatch();
+
+  const [appMail, setAppMail] = useState(null);
   const [isContactUsModalVisible, setIsContactUsModalVisible] = useState(false);
 
   const [isPasswordModalVisible, setIsPasswordModalVisible] = useState(false);
-  const [password, setPassword] = useState();
+  // const [password, setPassword] = useState();
   const [modalErrorMessage, setModalErrorMessage] = useState();
   const [modalButtonName, setModalButtonName] = useState();
   const [modalBodyText, setModalBodyText] = useState();
   const [userInfo, setUserInfo] = useState();
   const [appInfo, setAppInfo] = useState();
-  const [isAppInfoPressed, setIsAppInfoPressed] = useState();
+  // const [isAppInfoPressed, setIsAppInfoPressed] = useState();
 
   async function getUserData() {
     console.log("je passe dans getData");
@@ -63,15 +62,30 @@ export default function Settings({ navigation }) {
 
   // ** Signaler un Beug ---------------------------
 
-  const [isFeedbackModalVisible, setIsFeedbackModalVisible] = useState(false);
 
   function handleFeedbackModal() {
-    setIsFeedbackModalVisible((bool) => !bool);
+    return Linking.openURL("https://docs.google.com/forms/d/e/1FAIpQLSfecyioNQwyYGtMLdIVB4_ovEm_tRbAd0Tpyqixnlh0MpRkzQ/viewform?usp=sf_link");
   }
 
   // ** Fin Beug ---------------------
 
   // ** ---------- Contact Us --------------------
+
+  async function getHopteoContact() {
+    console.log("je passe dans getHopteoData");
+    const mail = await getAppContact(); // todo : store rédux
+    // setUserInfo(data);
+    if (mail?.email) {
+      setAppMail(mail.email); 
+    } else {
+      alertProvider();
+    }
+  }
+
+  useEffect(() => {
+    (isContactUsModalVisible && !appMail) ? getHopteoContact() : null ;
+  }, [isContactUsModalVisible]);
+
   function handleContactUsmodal() {
     setIsContactUsModalVisible((bool) => !bool);
   }
@@ -80,51 +94,62 @@ export default function Settings({ navigation }) {
 
   // ** ------------ App info ----------------------------------
   function onPressAppInfo() {
-    handleAppInfo();
-  }
-
-  function appInfoNavigation(data) {
-    navigation.navigate("App Info", { appInfo: data });
-  }
-
-  async function handleAppInfo() {
     if (!!appInfo) {
-      appInfoNavigation(appInfo);
+      appInfoNavigation();
     } else {
-      const data = await getAppInfo();
-      console.log(data);
-      if (!!data && !data.error) {
-        setAppInfo(data);
-        appInfoNavigation(data);
-      } else {
-        appInfoNavigation({
-          errorMessage:
-            "Une erreur est survenue dans le chargement des données...",
-        });
-      }
+      handleAppInfo();
+      // console.log("[appInfo]", appInfo);
     }
   }
 
-  // useEffect(() => {
-  //   if (isAppInfoPressed) {
-  //     handleAppInfo();
-  //     setIsAppInfoPressed(false);
-  //   }
-  // }, [isAppInfoPressed])
+  function appInfoNavigation() {
+    navigation.navigate("App Info", { appInfo: appInfo });
+  }
+
+  async function handleAppInfo() {
+    const data = await getAppInfo();
+    console.log(data);
+    if (!!data && !data.error) {
+      setAppInfo(data);
+      return;
+    } else {
+      appInfoNavigation();
+      return;
+    }  
+  }
+
+  useEffect(() => {
+    if (appInfo) {
+      appInfoNavigation();
+    }
+  }, [appInfo])
 
   // ** ------------- Fin App Info ---------------------------
+
+
+  // ** ------------- politiques confidentialités ---------------------------
+
+  async function onPressPolicy() {
+    navigation.navigate('Privacy Policy');
+  }
+
+
+
+  // ** ------------- fin politiques confidentialités ---------------------------
+
+
 
   function onPressModifyPassword() {
     navigation.navigate("Modify Password");
   }
 
   // ** ---------- reset ------------------------
-  async function reinitialise() {
-    const resetSuccess = await reset(password);
+  async function reinitialise(password) {
+    const resetSuccess = await resetSwipe(password, dispatch);
     if (resetSuccess) {
-      navigation.navigate("First Questions Screen");
+      navigation.navigate("Home", {jumpToFirstCard: true});
     } else {
-      alertProvider(loginScreenNavigation);
+      alertProvider();
     }
   }
 
@@ -138,7 +163,7 @@ export default function Settings({ navigation }) {
   // ** ---------- fin reset ------------------------
 
   // **-------------------- delete ---------------------------------
-  async function deleteAccount() {
+  async function deleteAccount(password) {
     const data = await deleteUser(password);
     console.log(data);
     if (data?.message === "Compte supprimé avec succès !") {
@@ -146,10 +171,10 @@ export default function Settings({ navigation }) {
       navigation.navigate("Login Screen");
     } else if (data?.message) {
       setModalErrorMessage(data.message);
-      setPassword();
+      // setPassword();
     } else {
       setModalErrorMessage("Une erreur est survenue");
-      setPassword();
+      // setPassword();
     }
   }
 
@@ -165,17 +190,16 @@ export default function Settings({ navigation }) {
   // ** -------- password Modal ----------------------------
   function handlePasswordModal() {
     setIsPasswordModalVisible((bool) => !bool);
-    setPassword();
+    // setPassword();
     setModalErrorMessage();
   }
 
-  function passwordModalFunction() {
-    if (!!password) {
-      // si le user a renseigné son password
+  function onSubmitPasswordModal(password) {
+    if (!!password) {  // si le user a renseigné son password
       if (modalButtonName === "Réinitialiser") {
-        reinitialise();
+        reinitialise(password);
       } else if (modalButtonName === "Supprimer mon Compte") {
-        deleteAccount();
+        deleteAccount(password);
       }
     } else {
       setModalErrorMessage("Le champs 'Mot de passe' doit être rempli");
@@ -186,13 +210,13 @@ export default function Settings({ navigation }) {
 
   // -----------------------------------------------------------------------------------------------------
 
-  async function onPressDisconnect() {
-    const success = disconnect();
-    if (success) {
-      loginScreenNavigation();
-    } else {
-      alertProvider(loginScreenNavigation);
-    }
+  function onPressDisconnect() {
+    disconnect();
+    navigation.navigate("Login Screen"); 
+    dispatch(reinitialiseSchoolReducer());
+    dispatch(reinitialiseForRankingReducer());
+    dispatch(reinitialiseSwipeReducer());
+    dispatch(reinitialiseUserSettingReducer());
   }
 
   return (
@@ -206,15 +230,16 @@ export default function Settings({ navigation }) {
         />
         <Text style={styles.title}>Paramètres</Text>
       </View>
-      <View style={styles.bodyContainer}>
+      <ScrollView contentContainerStyle={styles.bodyContainer} showsVerticalScrollIndicator={false}>
         <View style={styles.UserInfoContainer}>
-          <Text style={styles.UserInfoText}>Email : {userInfo?.email}</Text>
-          <Text style={styles.UserInfoText}>Filière : {userInfo?.filiere}</Text>
+          <Text style={styles.userInfoTitle}>Ton profil :</Text>
+          <Text style={styles.userInfoText}>Email : {userInfo?.email}</Text>
+          <Text style={styles.userInfoText}>Filière : {userInfo?.filiere}</Text>
         </View>
 
         <SettingsSection
           iconName={"bug-outline"}
-          optionTitle={"Signaler un Beug"}
+          optionTitle={"Signaler un Bug"}
           onPress={handleFeedbackModal}
         />
         <SettingsSection
@@ -226,6 +251,11 @@ export default function Settings({ navigation }) {
           iconName={"information-circle-outline"}
           optionTitle={"A propos de l'application"}
           onPress={onPressAppInfo}
+        />
+        <SettingsSection
+          iconName={"newspaper-outline"}
+          optionTitle={"Politique de confidentialité"}
+          onPress={onPressPolicy}
         />
         <SettingsSection
           iconName={"lock-closed-outline"}
@@ -248,9 +278,18 @@ export default function Settings({ navigation }) {
           onPress={onPressDisconnect}
         />
         {/* <SettingsSection iconName={"help-circle-outline"} optionTitle={"Aide"} /> */}
-      </View>
+      </ScrollView>
 
-      <Modal isVisible={isPasswordModalVisible}>
+      <ConfirmPasswordModal
+        isVisible={isPasswordModalVisible}
+        handlePasswordModal={handlePasswordModal}
+        modalBodyText={modalBodyText}
+        modalErrorMessage={modalErrorMessage}
+        modalButtonName={modalButtonName}
+        submitButtonName={modalButtonName}
+        onSubmitPassword={onSubmitPasswordModal}
+      />
+      {/* <Modal isVisible={isPasswordModalVisible}>
         <View style={styles.modal}>
           <View style={styles.modalHeader}>
             <Text style={styles.modalHeaderText}> Attention !</Text>
@@ -283,7 +322,7 @@ export default function Settings({ navigation }) {
             </View>
           </View>
         </View>
-      </Modal>
+      </Modal> */}
 
       <Modal isVisible={isContactUsModalVisible}>
         <View style={styles.modal}>
@@ -302,16 +341,10 @@ export default function Settings({ navigation }) {
               suivante :
             </Text>
             <TouchableOpacity
-              onPress={() => Linking.openURL(`mailto:${appMail}`)}
+              onPress={appMail ? () => Linking.openURL(`mailto:${appMail}`) : () => {}}
             >
-              <Text
-                style={{
-                  color: Colors.orange500,
-                  textDecorationLine: "underline",
-                  fontSize: 18,
-                }}
-              >
-                {appMail}
+              <Text style={appMail ? {color: Colors.orange500, textDecorationLine: "underline", fontSize: 18,} : null} >
+                {appMail ? appMail : "Erreur de chargement..."}
               </Text>
             </TouchableOpacity>
             {/* <Text selectable={true} style={styles.modalBodyText}>{appMail}</Text> */}
@@ -319,43 +352,7 @@ export default function Settings({ navigation }) {
         </View>
       </Modal>
 
-      <Modal isVisible={isFeedbackModalVisible}>
-        <View style={styles.modal}>
-          <View style={styles.modalHeader}>
-            <Text style={styles.modalHeaderText}> Beug </Text>
-            <PrimaryButton
-              onPress={handleFeedbackModal}
-              name="close-outline"
-              size={40}
-              color={Colors.orange500}
-            />
-          </View>
-          <View style={styles.modalBody}>
-            <Text style={styles.modalBodyText}>
-              Un beug ? Tu souhaites le signaler ?
-            </Text>
-            <TouchableOpacity
-              onPress={() =>
-                Linking.openURL(
-                  "https://docs.google.com/forms/d/e/1FAIpQLSfecyioNQwyYGtMLdIVB4_ovEm_tRbAd0Tpyqixnlh0MpRkzQ/viewform?usp=sf_link"
-                )
-              }
-            >
-              <Text
-                style={{
-                  color: Colors.orange500,
-                  textDecorationLine: "underline",
-                  fontSize: 18,
-                }}
-              >
-                {" "}
-                click ici{" "}
-              </Text>
-            </TouchableOpacity>
-            {/* <Text selectable={true} style={styles.modalBodyText}>{appMail}</Text> */}
-          </View>
-        </View>
-      </Modal>
+      
     </View>
   );
 }
@@ -363,7 +360,7 @@ export default function Settings({ navigation }) {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    marginTop: 10,
+    // marginTop: 10,
     // padding: "10%",
     backgroundColor: Colors.backgroundColor,
     // alignItems: "center",
@@ -377,37 +374,49 @@ const styles = StyleSheet.create({
     paddingLeft: "4%",
   },
   title: {
+    // position: "absolute",
+    // alignSelf: "center",
     fontWeight: "bold",
-    marginLeft: "3%",
+    marginLeft: "5%",
   },
 
   bodyContainer: {
-    flex: 1,
-    marginTop: "8%",
+    // flex: 1,
+    // paddingTop: deviceHeight*0.04,
+    paddingHorizontal: "5%",
     alignItems: "center",
+    // borderWidth: 1,
   },
 
   UserInfoContainer: {
     borderRadius: 15,
-    height: "15%",
-    width: "90%",
+    // height: "15%",
+    width: "100%",
     padding: 20,
-    marginBottom: 20,
-    backgroundColor: Colors.blue400,
-    justifyContent: "space-evenly",
+    marginVertical: deviceHeight*0.04,
+    // marginBottom: 20,
+    backgroundColor: Colors.grey300,
+    // justifyContent: "space-evenly",
   },
-  UserInfoText: {
+  userInfoTitle: {
     fontSize: 16,
+    fontWeight: "500",
+    marginBottom: 10,
+  },
+  userInfoText: {
+    fontSize: 16,
+    marginLeft: 30,
   },
 
   sectionContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: "3%",
-    height: "9%",
-    width: "90%",
+    marginBottom: deviceHeight*0.02,
+    // height: "9%",
+    width: "100%",
     borderRadius: 5,
     paddingLeft: "8%",
+    paddingVertical: 15,
     backgroundColor: Colors.white,
   },
 
@@ -449,7 +458,7 @@ const styles = StyleSheet.create({
   modalPasswordContainer: {
     height: "55%",
     width: "100%",
-    backgroundColor: Colors.blue400,
+    backgroundColor: Colors.grey,
     borderRadius: 10,
     alignItems: "center",
     justifyContent: "space-evenly",
