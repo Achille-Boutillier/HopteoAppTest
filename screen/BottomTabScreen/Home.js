@@ -39,10 +39,19 @@ export default function Home({ navigation, route }) {
   const [isCardListLoaded, setIsCardListLoaded] = useState(false);
   const [cardList, setCardList] = useState([]);
   
-
+  // const [isDetailVisible, setIsDetailVisible] = useState(false);
   const [swipeButtonZIndex, setSwipeButtonZIndex] = useState(2);
   const [swipeDir, setSwipeDir] = useState(null);
   const [isUndoPress, setIsUndoPress] = useState(false);
+
+  // useEffect(()=> {
+  //   console.log(isDetailVisible)
+  // }, [isDetailVisible])
+
+  // useEffect(()=> {
+  //   console.log(cardList);
+
+  // }, [cardList])
 
   useEffect(() => {
     // console.log("[params]" , route.params);
@@ -82,6 +91,7 @@ export default function Home({ navigation, route }) {
     console.log( "[cardsObject]" ,data);
     if (data.cardsPile) {
       setListIndex(0);
+      console.log("[cardList]", data.cardsPile);
       setCardList(data.cardsPile);
       setIsCardListLoaded(true);  
     } else {
@@ -272,13 +282,17 @@ function onSwiping(x, y){
             cards={cardList}
             extraData={cardList}
             cardIndex={0} // 0 si premier elem tt le temps
-            keyExtractor={(item) => item.id}     // todo: rechanger _id par id
+            keyExtractor={(item)=>item.id}
+            // keyExtractor2={(item)=> `${item}-2`}
             renderCard={(currentCard) => (
               <Card
+                key = {currentCard.id}
                 cardValue={currentCard}
                 currentTheme={theme[currentCard.idTheme]}
                 setSwipeButtonZIndex={setSwipeButtonZIndex}
                 swipeCardHeigth={swipeCardHeigth}
+                // isCardDetailVisible={bool}
+                // setIsDetailVisible={setIsDetailVisible}
               />
             )}
             stackSize={2} // Nombre de cartes supperpopsées visibles

@@ -22,11 +22,6 @@ export default function ModifyPassword({navigation}) {
     setModifyPressed(true);
   }
 
-  function loginScreenNavigation() {
-    navigation.navigate("Login Screen");
-  }
-
-
   async function handleModification() {
     if (!!currentPassword && !!newPassword) {
       const data = await modifyPassword(currentPassword, newPassword);
@@ -39,7 +34,7 @@ export default function ModifyPassword({navigation}) {
       } else if (!!data?.message) {
         setErrorMessage(data.message);
       } else {
-        alertProvider(loginScreenNavigation);
+        alertProvider();
       }
     
     } else {

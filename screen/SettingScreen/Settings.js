@@ -56,9 +56,9 @@ const dispatch = useDispatch();
     getUserData();
   }, []);
 
-  function loginScreenNavigation() {
-    navigation.navigate("Login Screen");
-  }
+  // function loginScreenNavigation() {
+  //   navigation.navigate("Login Screen");
+  // }
 
   // ** Signaler un Beug ---------------------------
 
@@ -168,7 +168,11 @@ const dispatch = useDispatch();
     console.log(data);
     if (data?.message === "Compte supprimé avec succès !") {
       handlePasswordModal(); //supprimer la modal
-      navigation.navigate("Login Screen");
+      // navigation.navigate("Login Screen");
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Login Screen' }],
+      });
     } else if (data?.message) {
       setModalErrorMessage(data.message);
       // setPassword();
@@ -212,7 +216,11 @@ const dispatch = useDispatch();
 
   function onPressDisconnect() {
     disconnect();
-    navigation.navigate("Login Screen"); 
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Login Screen' }],
+    });
+    // navigation.navigate("Login Screen"); 
     dispatch(reinitialiseSchoolReducer());
     dispatch(reinitialiseForRankingReducer());
     dispatch(reinitialiseSwipeReducer());

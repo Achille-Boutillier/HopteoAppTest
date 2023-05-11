@@ -2,12 +2,14 @@ import { useEffect, useState } from "react";
 import { StyleSheet, View, Text, TouchableOpacity, } from "react-native";
 import { Colors } from "../../constant/Colors";
 import Chip from "../Chip";
+import TerciaryButton from "../TerciaryButton";
 // import SecondaryButton from "../SecondaryButton";
 
 export default function OptionComponent({optionSynthese, optionDetail}) {
   const [isPressed, setIsPressed ] = useState(false);
   const [optionToSchow, setOptionToSchow] = useState([]);
   const [buttonName, setButtonName] = useState();
+  const [title, setTitle] = useState("");
 
   function onPress(){
     setIsPressed(bool => !bool)
@@ -19,19 +21,21 @@ export default function OptionComponent({optionSynthese, optionDetail}) {
       setOptionToSchow(optionDetail);
       // setOptionToSchow(["test1", "test2"]); //todo: request optionDetail
       setButtonName("Voir la synthèse");
+      setTitle("Détail")
 
     } else {
       setOptionToSchow(optionSynthese);
       // setOptionToSchow(optionSynthese);
       setButtonName("Voir le détail");
+      setTitle("Synthèse")
       console.log(optionSynthese);
 
     } 
   }, [isPressed])
 
   return (
-    <TouchableOpacity style={styles.mainContainer} onPress={onPress}> 
-      {/* <Text style={styles.textStyle} >{optionToSchow}</Text> */}
+    <View style={styles.mainContainer} > 
+      <Text style={styles.textStyle} >{title}</Text>
       <View style={styles.chipContainer}>
         {optionToSchow.map((item, index)=>
           <Chip key={index} >{item}</Chip>
@@ -39,14 +43,10 @@ export default function OptionComponent({optionSynthese, optionDetail}) {
         }
       </View>
 
-      <View style={styles.buttonContainer} >
-        <Text style={styles.textStyle}>{buttonName}</Text>
-      </View>
+      <TerciaryButton title = {buttonName} onPress={onPress} color ={Colors.orange500} isFullColor={!isPressed} fontSize={15} />
 
-    </TouchableOpacity>
+    </View>
   );
-
-return 
 };
 
 const styles = StyleSheet.create({
@@ -70,25 +70,16 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     justifyContent: "center",
     alignItems: "center",
+    marginTop: "2%",
   },
 
   textStyle: {
     // textAlign: "center", 
-    color: Colors.blackTextColor, 
-    // color: Colors.white, 
-    // color: Colors.blackTextColor, 
+    // color: Colors.blackTextColor,  
+    textDecorationLine: 'underline' ,
+    color: Colors.grey,  
     fontWeight: "600",
-  },
-  buttonContainer: {
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 10,
-    paddingHorizontal: 25,
-    paddingVertical: 5,
-    backgroundColor: Colors.orange500,
-    marginTop: 10,
-    // borderWidth: 1,
-    
+    fontSize: 15,
   },
 
 });

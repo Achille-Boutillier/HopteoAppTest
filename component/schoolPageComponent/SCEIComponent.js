@@ -1,6 +1,7 @@
 import { StyleSheet, View, Text, ScrollView, Dimensions } from "react-native";
 import { useEffect, useState } from "react";
 import { Colors } from "../../constant/Colors";
+import { getUserSettingStatus } from "../../BackEnd/controllers/userData";
 // import { SwipeListView } from "react-native-swipe-list-view";
 // import { Swipeable } from "react-native-gesture-handler";
 
@@ -39,14 +40,36 @@ function DotComponent({ list, currentNumber }) {
 export default function SCEIComponent({ parcoursChoix, admission }) {
   //todo: implementer un currentField
   const parcoursChoixKeys = Object.keys(parcoursChoix);
-  const filiereList = Object.keys(admission).filter(
-    (key) => Object.keys(admission[key]).length !== 0
-  );
-  // console.log(filiereList);
+
 
   const [parcoursSlide, setParcoursSlide] = useState(0);
   const [currentParcours, setCurrentParcours] = useState(parcoursChoixKeys[parcoursSlide]); // == parcoursChoixKeys[0]
   const [figureSlide, setFigureSlide] = useState(0);
+
+  // console.log(Object.keys(admission));
+  const sortedFiliereList = getSortedList();
+
+
+  function getSortedList() {
+    let filiereList = Object.keys(admission).filter(
+      (key) => Object.keys(admission[key]).length !== 0
+    );
+    console.log(1, filiereList); //
+    const userFiliere = getUserSettingStatus().filiere;
+    console.log(userFiliere);
+    const isUserFieliereIncluded = filiereList.includes(userFiliere)
+    isUserFieliereIncluded ? filiereList = filiereList.filter((item)=> item !== userFiliere) : null;
+    console.log(2, filiereList); //
+    alphabeticOrderedList = filiereList.sort((a, b)=> a.localeCompare(b));
+    console.log(3, alphabeticOrderedList); //
+    const sortedList = isUserFieliereIncluded ? [userFiliere, ...alphabeticOrderedList] : alphabeticOrderedList ;
+    console.log(4, sortedList); //
+    return sortedList;
+  }
+
+  //todo : renomer filiereList en sortedFiliereList (en bas)
+
+
 
   useEffect(() => {
     setCurrentParcours(parcoursChoixKeys[parcoursSlide]); // == parcoursChoixKeys[1] == "parcours1"  (ou 2 ou 3...)
@@ -112,7 +135,7 @@ export default function SCEIComponent({ parcoursChoix, admission }) {
             horizontal
             style={figureSize}
           >
-            {filiereList.map((item, index) => (
+            {sortedFiliereList.map((item, index) => (
               <View key={item} style={styles.figureContainer}>
                 <View style={styles.leftContainer}>
                   <View style={styles.fieldContainer}>
@@ -147,13 +170,13 @@ export default function SCEIComponent({ parcoursChoix, admission }) {
           </ScrollView>
         </View>
 
-        <DotComponent list={filiereList} currentNumber={figureSlide} />
+        <DotComponent list={sortedFiliereList} currentNumber={figureSlide} />
       </View>
 
       <View style={styles.currentConcoursComponent}>
         <Text style={styles.subTitle}>
-          {admission[filiereList[figureSlide]][currentParcours]?.concours 
-          ? admission[filiereList[figureSlide]][currentParcours].concours
+          {admission[sortedFiliereList[figureSlide]][currentParcours]?.concours 
+          ? admission[sortedFiliereList[figureSlide]][currentParcours].concours
           : "-"}
         </Text>
        {/* par exemple admission["MP"]["parcours1"].concours */}

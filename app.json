@@ -22,7 +22,7 @@
     },
     "android": {
       "package": "com.hopteo.hopteoApp",
-      "versionCode": 9,
+      "versionCode": 10,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/squareIcon512x512px.png",
         "backgroundColor": "#FFFFFF"

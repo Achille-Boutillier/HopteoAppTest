@@ -18,6 +18,12 @@ export default function SplashScreen({ navigation }) {
 
   const dispatch = useDispatch();
 
+  function ResetAndGoToScreen(screen) {
+    navigation.reset({
+      index: 0,
+      routes: [{ name: screen }],
+    });
+  }
   
   //todo: mettre les fonctions de store dans le frontEnd
 
@@ -28,13 +34,16 @@ export default function SplashScreen({ navigation }) {
       await storeNewAuthData(data.authData);
       if (data.userSettingStatus) {
         storeSplashData(data.splashData, dispatch);
-        navigation.navigate("Main Screens");
+        ResetAndGoToScreen('Main Screens')
+        // navigation.navigate("Main Screens");
 
       } else {
-      navigation.navigate("First Questions Screen");
+        ResetAndGoToScreen("First Questions Screen")
+        // navigation.navigate("First Questions Screen");
       }
     } else {
-      navigation.navigate("Login Screen");
+      // navigation.navigate("Login Screen");
+      ResetAndGoToScreen("Login Screen");
     }
   }
 
@@ -43,9 +52,11 @@ export default function SplashScreen({ navigation }) {
     if (data.success) {
       if (data.userSettingStatus) {
         storeSplashData(data.splashData, dispatch);
-        navigation.navigate("Main Screens");
+        ResetAndGoToScreen("Main Screens")
+        // navigation.navigate("Main Screens");
       } else {
-        navigation.navigate("First Questions Screen");
+        ResetAndGoToScreen("First Questions Screen")
+        // navigation.navigate("First Questions Screen");
       }
     } else {
       tryRefreshToken(authData)
@@ -59,7 +70,8 @@ export default function SplashScreen({ navigation }) {
     if (authData?.token) {
       tryToken(authData);
     } else {
-      navigation.navigate("Signup Screen");
+      // navigation.navigate("Signup Screen");
+      ResetAndGoToScreen("Signup Screen")
     }
   }
 
@@ -73,8 +85,6 @@ export default function SplashScreen({ navigation }) {
   }
 
   useEffect(() => {
-    // dispatch(getThemeRequest());
-
     splashHandler();
     // tester();
   }, []);

@@ -19,7 +19,7 @@ export default function SchoolBanner({schoolId}) {    //id, rank, nomEcole, type
   const [bannerColor, setBannerColor] = useState(null);
 
   useEffect(()=>{
-    if (singleSchoolData.rank<3) {
+    if (singleSchoolData?.rank<3) {
     console.log( "[singleSchoolData]" , singleSchoolData);
 
     }
@@ -52,7 +52,7 @@ export default function SchoolBanner({schoolId}) {    //id, rank, nomEcole, type
       style={[styles.bannerContainer, bannerColor ? {borderWidth: 2, borderColor: bannerColor} : null]}
       onPress={onPressSchool.bind(this, schoolId)}
     >
-      <RibbonComponent rank={singleSchoolData.rank} size={35} setBannerColor={setBannerColor}/>
+      <RibbonComponent rank={singleSchoolData?.rank} size={35} setBannerColor={setBannerColor}/>
       
       <View style={styles.writtenInfo}>
         <Text style={{ fontWeight: "500" }}>{singleSchoolData.nomEcole}</Text>

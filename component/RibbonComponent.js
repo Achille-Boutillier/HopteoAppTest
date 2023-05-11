@@ -34,6 +34,11 @@ export default function RibbonComponent({rank, circleSize=22, fontSize=14, iconS
         setBannerColor ? setBannerColor(color) : null;
         setRibbonIcon(<ThirdMedal width={iconSize} height={iconSize} fill={color} />);
         break;
+
+      case undefined || null :
+        setBannerColor(null);
+        setRibbonIcon(null);
+        break;
       default : 
         setBannerColor(null);
         setRibbonIcon(

@@ -24,6 +24,13 @@ function FirstQuestionsScreen({ navigation }) {
 
   const dispatch = useDispatch();
 
+  function ResetAndGoToScreen(screen) {
+    navigation.reset({
+      index: 0,
+      routes: [{ name: screen }],
+    });
+  }
+
   useEffect(()=> {
     switch (currentQuestion) {
       case "studyField" :
@@ -69,7 +76,8 @@ function FirstQuestionsScreen({ navigation }) {
       setCurrentQuestion(previousQuestion);
     } else {
       disconnect();
-      navigation.navigate("Login Screen");
+      ResetAndGoToScreen("Login Screen")
+      // navigation.navigate("Login Screen");
     }
   }
 
@@ -115,7 +123,9 @@ function FirstQuestionsScreen({ navigation }) {
       if (data.success) {
         storeSplashData(data.splashData, dispatch);
         navigation.setOptions({ initialRouteName: "Main Screens" }); //todo Verifier que ça fonctionne pour pas pouvoir revenir en arrière vers firstQuestions
-        navigation.navigate("Main Screens");
+        // navigation.navigate("Main Screens");
+        ResetAndGoToScreen("Main Screens");
+
       } else {
         alertProvider();
       }

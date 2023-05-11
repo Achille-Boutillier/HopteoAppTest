@@ -1,23 +1,47 @@
-import { useState, useEffect } from "react";
-import { View, StyleSheet, TextInput, Text } from "react-native";
+import { useState, useEffect, useRef } from "react";
+import { 
+  Keyboard,
+  View, StyleSheet, TextInput, Text,
+} from "react-native";
 import { Colors } from "../constant/Colors";
 
-import { Dimensions } from "react-native";
 
-const deviceHeight = Dimensions.get("screen").height
+// import { Dimensions } from "react-native";
+
+// const deviceHeight = Dimensions.get("screen").height
 
 export default function InputComponent({title, inputType, setInput, input, onSubmitEditing, setIsEditing }) {
   const [textInputSetting, setTextInputSetting] = useState({});
 
+  const inputRef = useRef(null);
 
-  function onPressIn() {
+// ---- handle android/ios back button --------------------------
+
+  // const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',                  // 'keyboardDidShow' existe aussi
+      () => inputRef.current.blur(),
+      // () => setIsKeyboardVisible(false)
+    );
+
+    return () => {
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
+
+
+  function onFocus() {
     setIsEditing ? setIsEditing(true) : null ;
+    // setIsEditing(true);
     console.log("in")
   }
 
   function onBlur(){
     console.log("dismissed")
-    setIsEditing ? setIsEditing(false) : null;
+    setIsEditing ? setIsEditing(false) : null ;
   }
 
 
@@ -45,6 +69,7 @@ export default function InputComponent({title, inputType, setInput, input, onSub
     <View style={styles.mainContainer} >
       <Text style={styles.titleText}>{title}</Text>
       <TextInput
+        ref={inputRef}
         style={styles.textInput}
         onChangeText={(text) => setInput(text.trim())}
         autoCapitalize="none"
@@ -55,7 +80,7 @@ export default function InputComponent({title, inputType, setInput, input, onSub
         secureTextEntry={textInputSetting.secureTextEntry}
         onSubmitEditing={onSubmitEditing ? onSubmitEditing : null}
         selectionColor={Colors.orange500}
-        onPressIn={onPressIn}
+        onFocus={onFocus}
         // onEndEditing={onEndEditing}
         onBlur={onBlur}
       />

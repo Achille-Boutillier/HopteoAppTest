@@ -10,12 +10,13 @@ export default function TerciaryButton({title, onPress, color, isFullColor, font
   useEffect(()=> {
     setBackgroundColor(isFullColor ? color : Colors.white) ;
     setTitleColor(isFullColor ? Colors.white : color) ;
-  }, [])
+  }, [isFullColor])
 
   return (
     <TouchableOpacity 
     style={[styles.mainContainer, {backgroundColor: backgroundColor}, isFullColor ? null : {borderWidth: 1.5, borderColor: titleColor}]} 
     onPress={onPress}
+    hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
     >
       <Text style={[styles.textStyle, {color: titleColor, fontSize: fontSize}]}>{title}</Text>
     </TouchableOpacity>

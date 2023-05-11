@@ -13,6 +13,13 @@ export default function Login({ navigation }) {
 
   const dispatch = useDispatch();
 
+  function ResetAndGoToScreen(screen) {
+    navigation.reset({
+      index: 0,
+      routes: [{ name: screen }],
+    });
+  }
+
   async function tryLogin(email, password) {
     // setLoginButtonPressed(false); // reset l'etat du bouton au cas où l'authentification echoue
     const loginAnswer = await login(email, password);
@@ -26,7 +33,8 @@ export default function Login({ navigation }) {
         nextScreen = "First Questions Screen";
       }
       setErrorMessage();
-      navigation.navigate(nextScreen);
+      ResetAndGoToScreen(nextScreen);
+      // navigation.navigate(nextScreen);
     } else {
       if (loginAnswer?.message) {
         // console.log("je passe dans else if");

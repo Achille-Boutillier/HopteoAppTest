@@ -21,6 +21,10 @@ export default function AuthComponent({typeScreen ,onSubmit, onChangeTypeScreen,
 
 
   useEffect(()=> {
+    console.log("[isEditing]", isEditing);
+  }, [isEditing])
+
+  useEffect(()=> {
     if (typeScreen==="signup") {
       setPageTitle("Inscription");
       setCatchPhrase("Crée ton compte gratuitement pour continuer sur Hopteo !");
@@ -40,20 +44,20 @@ export default function AuthComponent({typeScreen ,onSubmit, onChangeTypeScreen,
   return (
     <View style={styles.mainContainer}>
      
-     <View style={styles.headerContainer}>
+     {/* <View style={styles.headerContainer}>
         <Text style={styles.pageTitle}>{pageTitle}</Text>
-      </View>
-      {/* {!isEditing 
+      </View> */}
+      {!isEditing 
         ? (
           <View style={styles.headerContainer}>
             <Text style={styles.pageTitle}>{pageTitle}</Text>
           </View>
         ) : null
-      } */}
+      }
 
 
       <View style={[styles.bodyContainer, headerReadius, 
-        // isEditing ? styles.bodyOnEditing : 
+        isEditing ? styles.bodyOnEditing : 
         styles.bodyNotEditing]}>
 
         <Text style={styles.catchPhrase}>{catchPhrase}</Text>
@@ -67,10 +71,10 @@ export default function AuthComponent({typeScreen ,onSubmit, onChangeTypeScreen,
 
           
         <TerciaryButton title={firstButtonTitle} onPress={()=> onSubmit(email, password)} color={Colors.orange500} isFullColor={true}/>
-        {/* {!isEditing ? <TerciaryButton title={secondButtonTitle} onPress={onChangeTypeScreen} color={Colors.orange500} /> : null}
-        {!isEditing ? <BrandComponent marginLeft={0} logoSize={60} fontSize={30}/> : null} */}
-        <TerciaryButton title={secondButtonTitle} onPress={onChangeTypeScreen} color={Colors.orange500} />
-        <BrandComponent marginLeft={0} logoSize={60} fontSize={30}/>
+        {!isEditing ? <TerciaryButton title={secondButtonTitle} onPress={onChangeTypeScreen} color={Colors.orange500} /> : null}
+        {!isEditing ? <BrandComponent marginLeft={0} logoSize={60} fontSize={30}/> : null}
+        {/* <TerciaryButton title={secondButtonTitle} onPress={onChangeTypeScreen} color={Colors.orange500} />
+        <BrandComponent marginLeft={0} logoSize={60} fontSize={30}/> */}
 
       </View>
       
@@ -113,7 +117,7 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     // borderTopLeftRadius: 80,
-    justifyContent: "flex-start",
+    justifyContent: "center",
     // borderWidth: 1
   },
 

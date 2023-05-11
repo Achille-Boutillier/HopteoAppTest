@@ -29,10 +29,14 @@ export default function Card({ cardValue, currentTheme, setSwipeButtonZIndex, sw
 
 
   useEffect(()=> {
-    setSwipeButtonZIndex(isCardDetailVisible ? 0 : 2);
-    if (isCardDetailVisible && !cardDetail) {
+    console.log("----------------- changement de taille ------------")
+    if (isCardDetailVisible) {
+      setSwipeButtonZIndex(isCardDetailVisible ? 0 : 2);
+    if (!cardDetail) {
       getCardDetail();
     }
+    }
+    
   }, [isCardDetailVisible])
 
   // ------------------ si couleur clair en backGround -----------------

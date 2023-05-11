@@ -52,6 +52,7 @@ export default function SwipeLevel({absoluteIndex, minSwipeForRanking, progressB
       <View style={[styles.levelNumberContainer, { backgroundColor: progressBarColor}]}>
         <Text style={[styles.levelNumberText, {color: Colors.white,}]}>{levelNumber}</Text>
       </View>
+
       <ScoreBar score={score} mainBarColor={mainBarColor} progressBarColor={progressBarColor} hideScoreNumber={true} /> 
         <PrimaryButton
           onPress={onPressUndo}
