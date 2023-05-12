@@ -43,43 +43,43 @@ export async function nextPile(nextIdCardList) {
   }
 }
 
-export async function swipeHandler(idCard, swipeType) {
-  try {
-    const authData = await getAuthData();
-    // console.log("[authData]", authData);
-    // console.log("[id]", idCard);
-    console.log("[swipeType]", swipeType);
+// export async function swipeHandler(idCard, swipeType) {
+//   try {
+//     const authData = await getAuthData();
+//     // console.log("[authData]", authData);
+//     // console.log("[id]", idCard);
+//     console.log("[swipeType]", swipeType);
 
-    const {cursustype, filiere} = getUserSettingStatus();
+//     const {cursustype, filiere} = getUserSettingStatus();
 
-    const requestOptions = {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: "Bearer " + authData.token,
-        cursustype: cursustype,
-        filiere: filiere,
-      },
-      body: JSON.stringify({
-        idCard: idCard,
-        swipeType: swipeType,
-      }),
-    };
-    const response = await fetch(route + "/onSwipe", requestOptions);
-    console.log(response.status);
+//     const requestOptions = {
+//       method: "PUT",
+//       headers: {
+//         "Content-Type": "application/json",
+//         authorization: "Bearer " + authData.token,
+//         cursustype: cursustype,
+//         filiere: filiere,
+//       },
+//       body: JSON.stringify({
+//         idCard: idCard,
+//         swipeType: swipeType,
+//       }),
+//     };
+//     const response = await fetch(route + "/onSwipe", requestOptions);
+//     console.log(response.status);
     
-    const data = await response.json();
-    if (response.status===200) {
-      return true;
-    } else {
-      return false
-    }
-  } catch (error) {
-    console.log("bloc try failed :");
-    console.log(error);
-    return false;
-  }
-}
+//     const data = await response.json();
+//     if (response.status===200) {
+//       return true;
+//     } else {
+//       return false
+//     }
+//   } catch (error) {
+//     console.log("bloc try failed :");
+//     console.log(error);
+//     return false;
+//   }
+// }
 
 export async function getDetails(idCard) {
   const authData = await getAuthData();
@@ -108,6 +108,46 @@ export async function getDetails(idCard) {
     return false;
   }
 }
+
+// updateSwipe
+
+export async function updateSwipe(idCardList, swipeTypeObj, removedIdStillInBackEnd) {
+  try {
+    const authData = await getAuthData();
+    const {cursustype, filiere} = getUserSettingStatus();
+
+    const requestOptions = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: "Bearer " + authData.token,
+        cursustype,
+        filiere
+      },
+      body: JSON.stringify({
+        idCardList, 
+        swipeTypeObj,
+        // removedIdStillInBackEnd      // todo: omer handles removed cards
+      }),
+    };
+
+    const response = await fetch(route + "/addSwipes", requestOptions);
+    console.log(response.status);
+    const data = await response.json();
+    console.log(data);
+    if (response.status===200) {
+      return true;
+    } else {
+      throw data;
+    }
+  } catch (error) {
+    console.log("bloc try failed :");
+    console.log(error);
+    return false;
+  }
+}
+
+
 
 // Revenir en arrière pour annuler un swipe
 export async function undoSwipe(id, idTheme, dispatch) {

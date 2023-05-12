@@ -1,8 +1,8 @@
-import {StyleSheet, Text, View, ActivityIndicator, TouchableOpacity, Button, Alert, Dimensions } from "react-native";
+import {StyleSheet, Text, View, ActivityIndicator, TouchableOpacity, Button, Alert, Dimensions, AppState } from "react-native";
 // import Modal from "react-native-modal";
 import { useSelector, useDispatch } from "react-redux";
 
-import { useState, useEffect, useLayoutEffect, createRef,  } from "react";
+import { useState, useEffect, useLayoutEffect, createRef, useRef  } from "react";
 
 import Swiper from "react-native-deck-swiper";
 
@@ -10,11 +10,11 @@ import Card from "../../component/Card";
 // import PrimaryButton from "../../component/PrimaryButton";
 import { Colors } from "../../constant/Colors";
 import { HeaderButton } from "../../component/TopBar";
-import {nextPile, undoSwipe, swipeHandler, } from "../../BackEnd/controllers/cards";
+import {nextPile, undoSwipe, swipeHandler, updateSwipe} from "../../BackEnd/controllers/cards";
 import SwipeLevel from "../../component/SwipeLevel";
 import { alertProvider } from "../../BackEnd/errorHandler";
 import MessageContainer from "../../component/MessageContainer";
-import { storeNewSwipe, removeSwipe } from "../../core/reducers/swipeReducer";
+import { storeNewSwipe, removeSwipe, handleAllSwipeSent } from "../../core/reducers/swipeReducer";
 import SwipeButton from "../../component/SwipeButton";
 import store from "../../core";
 const swiperRef = createRef();
@@ -26,8 +26,14 @@ const swipeCardHeigth = 0.52*deviceHeight;
 export default function Home({ navigation, route }) {
   // const screenParams = route.params;
   const themeState = useSelector((state) => state.themeReducer.themeObj);
-  const swipeReducer = useSelector((state) => state.swipeReducer);
+  const swipeReducer = useSelector(state => state.swipeReducer);
+  const [latestSwipeReducer, setLatestSwipeReducer] = useState(swipeReducer);
 
+  useEffect(()=> {
+    setLatestSwipeReducer(swipeReducer);
+  }, [swipeReducer])
+
+ 
   const dispatch = useDispatch();
 
   const [theme, setTheme] = useState();
@@ -44,14 +50,62 @@ export default function Home({ navigation, route }) {
   const [swipeDir, setSwipeDir] = useState(null);
   const [isUndoPress, setIsUndoPress] = useState(false);
 
-  // useEffect(()=> {
-  //   console.log(isDetailVisible)
-  // }, [isDetailVisible])
+  
 
-  // useEffect(()=> {
-  //   console.log(cardList);
+  // ------------ upgrade backEnd Data if app goes on background -----------------------
 
-  // }, [cardList])
+  const [appState, setAppState] = useState("active");
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      setAppState(nextAppState);
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+
+  
+  async function upgradeBackData() {
+    const {notSentToBackAnswers, sentToBackAnswers, swipeTypeObj, removedIdStillInBackEnd} = latestSwipeReducer;
+    // console.log("[removedIdStillInBackEnd]", removedIdStillInBackEnd);
+    if (notSentToBackAnswers.length>0 || removedIdStillInBackEnd.length>0) {   //todo: revoir la logique
+      console.log("it needs to be upgraded ===================");
+      console.log("[removedIdStillInBackEnd]", removedIdStillInBackEnd);
+      const filteredSwipeTypeObj = notSentToBackAnswers.reduce((obj, key) => {
+        if (key in swipeTypeObj) {
+          obj[key] = swipeTypeObj[key];
+        }
+        return obj;
+      }, {});
+
+      const success = await updateSwipe(notSentToBackAnswers, filteredSwipeTypeObj, removedIdStillInBackEnd);
+      //todo : handle les removedIdStillInBackEnd
+
+      if (success) {
+        dispatch(handleAllSwipeSent());
+      } else {
+        console.log("couldn't update backEnd swipe answers");
+      }
+      
+    } else {
+      console.log("backEnd swipe answers update is not needed")
+    }
+  }
+ 
+ 
+   useEffect(()=> {
+     if (appState!=="active") {
+       upgradeBackData(); 
+     }
+   }, [appState])
+ 
+   // ----------- fin upgrade backEnd Data -------------------------
+
+
+
 
   useEffect(() => {
     // console.log("[params]" , route.params);
@@ -65,8 +119,6 @@ export default function Home({ navigation, route }) {
 
   useEffect(() => {
     setTheme(themeState);
-    // console.log("[themeState]", themeState);
-    // console.log("[swipeReducer]", swipeReducer);
 
   }, [themeState]);
 
@@ -207,21 +259,17 @@ export default function Home({ navigation, route }) {
     console.log(`[swiper index] ${index}`);
     // console.log("[current Card] ", cardList[index]);
     const idTheme = cardList[index].idTheme
-    const id = cardList[index].id;         // todo: remplacer "_id" par "id"
+    const id = cardList[index].id;         
     console.log( "[id swipe ]" ,id);
     setListIndex(index + 1);
     dispatch(storeNewSwipe({id, swipeType, idTheme}))
-    // todo: maj les reducers avec réponse question
-    const isSuccessfull = await swipeHandler(id, swipeType);
-    if (!isSuccessfull) {
-      dispatch(removeSwipe({id, idTheme}));
-      alertProvider("Le swipe n'a pas été pris en compte")
-    }
+    // const isSuccessfull = await swipeHandler(id, swipeType);
+    // if (!isSuccessfull) {
+    //   dispatch(removeSwipe({id, idTheme}));
+    //   alertProvider("Le swipe n'a pas été pris en compte")
+    // }
   }
 
-  // useEffect(() => {
-  //   setAbsoluteIndex(listIndex + initialLength);
-  // }, [listIndex, initialLength]);
 
   useEffect(() => {
     // console.log("[swipeReducer]", swipeReducer);

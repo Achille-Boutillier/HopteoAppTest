@@ -57,7 +57,7 @@ export default function Login({ navigation }) {
   // }, [loginButtonPressed]);
 
   return (
-    <AuthComponent  typeScreen="login" onSubmit={tryLogin} onChangeTypeScreen={goToSignup} errorMessage={errorMessage}/>
+    <AuthComponent typeScreen="login" onSubmit={tryLogin} onChangeTypeScreen={goToSignup} errorMessage={errorMessage}/>
   );
 }
 

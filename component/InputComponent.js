@@ -10,7 +10,7 @@ import { Colors } from "../constant/Colors";
 
 // const deviceHeight = Dimensions.get("screen").height
 
-export default function InputComponent({title, inputType, setInput, input, onSubmitEditing, setIsEditing }) {
+export default function InputComponent({title, inputType, setInput, input, onSubmitEditing, setIsEditing,}) {
   const [textInputSetting, setTextInputSetting] = useState({});
 
   const inputRef = useRef(null);
@@ -49,7 +49,7 @@ export default function InputComponent({title, inputType, setInput, input, onSub
     let placeholder;
     let autoComplete;
     let keyboardType;
-    let secureTextEntry 
+    let secureTextEntry;
     if (inputType==="email") {
       placeholder = "example@mail.com";
       autoComplete="email";
@@ -59,10 +59,15 @@ export default function InputComponent({title, inputType, setInput, input, onSub
       placeholder="*****";
       autoComplete=null;
       keyboardType=null;
-      secureTextEntry=true;
+      secureTextEntry=true; 
+    } else if (inputType==="numeric") {
+      placeholder="123456";
+      autoComplete=null;
+      keyboardType="numeric";
+      secureTextEntry=false;
     }
     setTextInputSetting({placeholder, autoComplete, keyboardType, secureTextEntry })
-  }, [])
+  }, [inputType])
 
 
   return (
@@ -97,7 +102,7 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     // height: "42%",
     // height: deviceHeight*0.1,
-    height: 90,
+    height: 80,
     width: "100%",
     paddingHorizontal: 10,
     paddingVertical: 5,

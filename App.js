@@ -3,8 +3,10 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { SafeAreaView, StatusBar } from "react-native";
-import { useState, useEffect } from "react";
+import { SafeAreaView, StatusBar, 
+  // AppState
+ } from "react-native";
+import { useState, useEffect,  } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import CardsIcon from "./assets/icons/cardsIcon.svg";
 
@@ -24,6 +26,7 @@ import PrivacyPolicy from "./screen/SettingScreen/PrivacyPolicy";
 import Explore from "./screen/BottomTabScreen/Explore";
 import { Provider } from "react-redux";
 import store from "./core";
+import RecoveryCode from "./screen/AuthScreen/RecoveryCode";
 
 const BottomTab = createBottomTabNavigator();
 const NativeStack = createNativeStackNavigator();
@@ -91,6 +94,7 @@ function ScreensWithBottomTab() {
 export default function App() {
   // const [isScreenCharged, setIsScreenCharged] = useState(false);
   const [initialRouteName, setInitialRouteName] = useState("Splash Screen");
+  
 
   // useEffect(() => {
   //   setInitialRouteName("Login Screen");
@@ -114,6 +118,8 @@ export default function App() {
 
             <NativeStack.Screen name="Signup Screen" component={SignUp} />
             <NativeStack.Screen name="Login Screen" component={Login} />
+            <NativeStack.Screen name="RecoveryCode" component={RecoveryCode} />
+
             <NativeStack.Screen
               name="First Questions Screen"
               component={FirstQuestionsScreen}

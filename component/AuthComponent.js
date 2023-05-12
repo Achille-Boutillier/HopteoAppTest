@@ -5,6 +5,8 @@ import { Colors } from "../constant/Colors";
 import InputComponent from "./InputComponent";
 import { BrandComponent } from "./TopBar";
 import TerciaryButton from "./TerciaryButton";
+import QuaternaryButton from "./QuaternaryButton";
+import { useNavigation } from "@react-navigation/native";
 
 
 export default function AuthComponent({typeScreen ,onSubmit, onChangeTypeScreen, errorMessage }) {
@@ -15,10 +17,12 @@ export default function AuthComponent({typeScreen ,onSubmit, onChangeTypeScreen,
   const [secondButtonTitle, setSecondButtonTitle] = useState("");
   const [headerReadius, setHeaderRadius ] = useState({});
   const [isEditing, setIsEditing] = useState(false);
+  const [isForgetVisible, setIsForgetVisible] = useState(false);
 
   const [pageTitle, setPageTitle ] = useState("");
   const [catchPhrase, setCatchPhrase] = useState("");
 
+  const navigation = useNavigation();
 
   useEffect(()=> {
     console.log("[isEditing]", isEditing);
@@ -37,9 +41,14 @@ export default function AuthComponent({typeScreen ,onSubmit, onChangeTypeScreen,
       setFirstButtonTitle("Connexion");
       setSecondButtonTitle("Créer un compte");
       setHeaderRadius({borderTopRightRadius: 80});
+      setIsForgetVisible(true);
     }
   }, [typeScreen])
 
+
+  function onPressForgetCode() {
+    navigation.navigate("RecoveryCode");
+  }
 
   return (
     <View style={styles.mainContainer}>
@@ -64,9 +73,32 @@ export default function AuthComponent({typeScreen ,onSubmit, onChangeTypeScreen,
 
         <Text style={styles.errorMessage} >{errorMessage}</Text>
 
-        <View style={styles.formContainer}>
-          <InputComponent title="Email" inputType="email" input={email} setInput={setEmail} setIsEditing={setIsEditing}/>
-          <InputComponent title="Mot de passe" inputType="password" input={password} setInput={setPassword} onSubmitEditing={()=> onSubmit(email, password)} setIsEditing={setIsEditing}/>
+        <View style={[styles.formContainer, {height: isForgetVisible ? 200 : 190}]}>
+          <InputComponent title="Email" inputType="email" input={email} setInput={setEmail} setIsEditing={setIsEditing} />
+          <View style={{width: "100%"}} > 
+            <InputComponent 
+              title="Mot de passe" 
+              inputType="password" 
+              input={password} 
+              setInput={setPassword} 
+              onSubmitEditing={()=> onSubmit(email, password)} 
+              setIsEditing={setIsEditing}
+              
+            />
+
+            {isForgetVisible 
+              ? <View style={styles.forgetContainer}>
+                  <QuaternaryButton 
+                    title="Mot de passe oublié ?" 
+                    onPress={onPressForgetCode} 
+                    textColor={Colors.orange500}
+                    fontSize={12}
+                  /> 
+                </View>
+              : null
+            }
+          </View>
+
         </View>
 
           
@@ -117,7 +149,7 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     // borderTopLeftRadius: 80,
-    justifyContent: "center",
+    justifyContent: "space-evenly",
     // borderWidth: 1
   },
 
@@ -132,7 +164,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     height: "87%",
     bottom: 0,
-    paddingTop: 50,
+    // paddingTop: 50,
     // justifyContent: "center",
 
   },
@@ -147,13 +179,17 @@ const styles = StyleSheet.create({
     width: "75%",
   },
   formContainer: {
-    height: 190,
+    // height: 190,
     width: "80%",
     alignItems: "center",
     justifyContent: "space-between",
     // borderWidth: 1,
   },
   
+  forgetContainer: {
+    marginLeft: 10,
+    alignSelf: "flex-start",
+  },
 
   button: {
     width: "60%",
