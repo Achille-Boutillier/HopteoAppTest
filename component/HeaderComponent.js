@@ -1,6 +1,6 @@
 import { View } from "react-native";
 import { StyleSheet } from "react-native";
-import PrimaryButton from "./PrimaryButton";
+import PrimaryButton from "./buttons/PrimaryButton";
 import { useNavigation } from "@react-navigation/native";
 import { Colors } from "../constant/Colors";
 

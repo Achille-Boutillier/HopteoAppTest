@@ -1,4 +1,4 @@
-import { useState } from "react";
+// import { useState } from "react";
 import {
   StyleSheet,
   Button,
@@ -9,7 +9,6 @@ import {
 } from "react-native";
 
 import { Colors } from "../../constant/Colors";
-import SecondaryButton from "../SecondaryButton";
 
 export default function UserBacMean({bacMeanInputHandler, bacMean, nextPressed,}) {
   return (

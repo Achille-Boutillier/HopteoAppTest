@@ -5,7 +5,7 @@ import CardDetail from "./CardDetail";
 import { getDetails } from "../BackEnd/controllers/cards";
 
 import { Colors } from "../constant/Colors";
-import PrimaryButton from "./PrimaryButton";
+import PrimaryButton from "./buttons/PrimaryButton";
 
 export default function Card({ cardValue, currentTheme, setSwipeButtonZIndex, swipeCardHeigth }) {
   const [isCardDetailVisible, setIsCardDetailVisible] = useState(false);

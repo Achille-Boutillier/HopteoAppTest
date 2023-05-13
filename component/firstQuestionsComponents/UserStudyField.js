@@ -2,7 +2,7 @@ import { View, StyleSheet, Text, Button, TextInput } from "react-native";
 // import { useState, useEffect } from "react";
 
 import { Colors } from "../../constant/Colors";
-import SecondaryButton from "../SecondaryButton";
+import SecondaryButton from "../buttons/SecondaryButton";
 
 export default function UserStudyField({ onPressField }) {
   return (

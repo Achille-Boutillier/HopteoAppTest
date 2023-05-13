@@ -10,7 +10,7 @@ import { alertProvider } from "../BackEnd/errorHandler";
 import {BrandComponent} from "../component/TopBar";
 import NotCoveredField from "../component/firstQuestionsComponents/NotCoveredField";
 import { disconnect } from "../BackEnd/controllers/setting";
-import PrimaryButton from "../component/PrimaryButton";
+import PrimaryButton from "../component/buttons/PrimaryButton";
 
 
 function FirstQuestionsScreen({ navigation }) {

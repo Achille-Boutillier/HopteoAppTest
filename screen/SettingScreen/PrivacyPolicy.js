@@ -3,7 +3,7 @@ import {useWindowDimensions, ScrollView, StyleSheet, View, Text, ActivityIndicat
 // import WebView from "react-native-webview";          // NOT WORKING
 import RenderHTML from "react-native-render-html";
 
-import PrimaryButton from "../../component/PrimaryButton";
+import PrimaryButton from "../../component/buttons/PrimaryButton";
 import {Colors} from "../../constant/Colors";
 import { useEffect, useState } from "react";
 import { getPrivacyPolicy } from "../../BackEnd/controllers/setting";

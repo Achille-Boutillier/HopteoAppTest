@@ -7,7 +7,6 @@ import { useState, useEffect, useLayoutEffect, createRef, useRef  } from "react"
 import Swiper from "react-native-deck-swiper";
 
 import Card from "../../component/Card";
-// import PrimaryButton from "../../component/PrimaryButton";
 import { Colors } from "../../constant/Colors";
 import { HeaderButton } from "../../component/TopBar";
 import {nextPile, undoSwipe, swipeHandler, updateSwipe} from "../../BackEnd/controllers/cards";
@@ -15,7 +14,7 @@ import SwipeLevel from "../../component/SwipeLevel";
 import { alertProvider } from "../../BackEnd/errorHandler";
 import MessageContainer from "../../component/MessageContainer";
 import { storeNewSwipe, removeSwipe, handleAllSwipeSent } from "../../core/reducers/swipeReducer";
-import SwipeButton from "../../component/SwipeButton";
+import SwipeButton from "../../component/buttons/SwipeButton";
 import store from "../../core";
 const swiperRef = createRef();
 

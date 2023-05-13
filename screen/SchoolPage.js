@@ -1,7 +1,7 @@
 import { View, StyleSheet, Text, ScrollView, ActivityIndicator } from "react-native";
 // import EStyleSheet from "react-native-extended-stylesheet";    // fonctionne pas
 
-import PrimaryButton from "../component/PrimaryButton";
+import PrimaryButton from "../component/buttons/PrimaryButton";
 import { Colors } from "../constant/Colors";
 import BlueContainer from "../component/BlueContainer";
 import SecondaryHeader from "../component/secondaryHeader";

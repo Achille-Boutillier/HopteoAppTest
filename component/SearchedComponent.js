@@ -1,7 +1,7 @@
 import { View, StyleSheet, TextInput, ActivityIndicator, FlatList } from "react-native";
 import { useState, useRef, useEffect } from "react";
 import { Colors } from "../constant/Colors";
-import PrimaryButton from "./PrimaryButton";
+// import PrimaryButton from "./buttons/PrimaryButton";
 import store from "../core";
 import { getBannerData } from "../BackEnd/controllers/school";
 import { useDispatch } from "react-redux";

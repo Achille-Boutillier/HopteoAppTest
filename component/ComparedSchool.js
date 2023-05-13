@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 // import { Ionicons } from "@expo/vector-icons";
 
 import { Colors } from "../constant/Colors";
-import PrimaryButton from "./PrimaryButton";
+import PrimaryButton from "./buttons/PrimaryButton";
 
 
 

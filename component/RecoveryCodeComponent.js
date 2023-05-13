@@ -1,115 +1,188 @@
 import { View, Text } from "react-native";
-import TerciaryButton from "./TerciaryButton";
+import TerciaryButton from "./buttons/TerciaryButton";
 import InputComponent from "./InputComponent";
 import { useState, useEffect } from "react";
 import { StyleSheet } from "react-native";
 import { Colors } from "../constant/Colors";
 import { useNavigation } from "@react-navigation/native";
+import { recoverAccount, sendRecoveryCode, verifyRecoveryCode } from "../BackEnd/controllers/userData";
 
 
-export default function RecoveryCodeComponent({setIsEditing}) {
+export default function RecoveryCodeComponent({setIsEditing, isCharging, setIsCharging}) {
 
   const navigation = useNavigation();
   
-  // const [email, setEmail] = useState("");
   const [firstInput, setFirstInput] = useState("");
   const [secondInput, setSecondInput] = useState("");
-  const [buttonTitle, setButtonTitle] = useState("");
   const [errorMessage, setErrorMessage] = useState();
-  const [inputTitle1, setInputTitle1] = useState("");
-  const [inputTitle2, setInputTitle2] = useState("");
-  // const [inputData, setInputData] = useState();
   const [innerComponentType, setInnerComponentType] = useState("emailInput");
-  const [inputNumber, setInputNumber] = useState(1);
-  const [inputType, setInputType] = useState("");
-
+  const [recoveryData, setRecoveryData] = useState({});
+  const [dataToRemember, setDataToRemember] = useState({});
   
-  // const [isEditing, setIsEditing] = useState(false);
 
-  const [textInfo, setTextInfo] = useState("");
-
-
-  // useEffect(()=> {
-  //   console.log("[isEditing]", isEditing);
-  // }, [isEditing])
-
+ 
   useEffect(()=> {
+      let textInfo;
+      let buttonTitle;
+      let inputNumber;
+      let inputTitle1;
+      let inputTitle2;
+      let inputType;
     if (innerComponentType ==="emailInput") {
-      setTextInfo("Récupérer mon compte Hopteo.");
-      setButtonTitle("M'envoyer un code");
-      setInputNumber(1);
+      textInfo = "Récupérer mon compte Hopteo.";
+      buttonTitle = "M'envoyer un code" ;
+      inputNumber = 1;
 
-      setInputTitle1("Email");
-      setInputTitle2("");
-      setInputType("email");
+      inputTitle1 = "Email";
+      inputTitle2 = "" ;
+      inputType ="email" ;
     } else if (innerComponentType === "codeInput") {
-      setTextInfo("Un email contenant un code de vérification à usage unique a été envoyé à l'adresse que tu nous as indiqué.");
-      setButtonTitle("Vérifier le code");
-      setInputNumber(1);
+      textInfo = "Un code à usage unique a été envoyé à l'adresse mail indiquée. Renseigne-le ci-dessous pour continuer." ;
+      buttonTitle = "Vérifier le code" ;
+      inputNumber = 1 ;
 
-      setInputTitle1("Code");
-      setInputTitle2("");
-      setInputType("numeric");
+      inputTitle1 = "Code" ;
+      inputTitle2 = "" ;
+      inputType = "numeric" ;
     } else if (innerComponentType === "newPasswordInput") {
-      setTextInfo("Le code précédent a été vérifié avec succès.");
-      setButtonTitle("Changer le mot de passe");
-      setInputNumber(2);
+      textInfo = "Le code précédent a été vérifié avec succès." ;
+      buttonTitle = "Changer le mot de passe" ;
+      inputNumber = 2 ;
 
-      setInputTitle1("Nouveau mot de passe");
-      setInputTitle2("Confirmer mot de passe");
-      setInputType("password");
+      inputTitle1 = "Nouveau mot de passe" ;
+      inputTitle2 = "Confirmer mot de passe" ;
+      inputType = "password" ;
     } else if (innerComponentType === "modifSuccess") {
-      setTextInfo("Le mot de passe a été modifié avec succès.");
-      setButtonTitle("Retourner à la page de connexion");
-      setInputNumber(0);
+      textInfo = "Le mot de passe a été modifié avec succès." ;
+      buttonTitle = "Retourner à la page de connexion" ;
+      inputNumber = 0 ;
 
-      setInputTitle1();
-      setInputTitle2();
-      setInputType(null);
+      inputTitle1 = null;
+      inputTitle2 = null;
+      inputType = null ;
     } 
+    setRecoveryData({textInfo, buttonTitle, inputNumber, inputTitle1, inputTitle2, inputType})
+    setFirstInput("");
+    setSecondInput("");
   }, [innerComponentType])
 
+  function areAllAnswered() {
+    if (recoveryData.inputNumber === 0) {
+      return true;
+    } else if (recoveryData.inputNumber === 1) {
+      return firstInput ? true : false ;
+    } else if (recoveryData.inputNumber === 2) {
+      return (firstInput && secondInput) ? true : false ;
+    } 
+  }
 
   function onSubmit() {
     console.log(firstInput, secondInput);
-    switch (innerComponentType) {
-      case "emailInput" : 
-        setInnerComponentType("codeInput")
-      break;
-      case "codeInput" : 
-        setInnerComponentType("newPasswordInput")
-      break;
-      case "newPasswordInput" : 
-        setInnerComponentType("modifSuccess")
-      break;
-      case "modifSuccess" : 
-        navigation.reset({
-          index: 0,
-          routes: [{ name: "Login Screen" }],
-        });
-      break;
+    const answered = areAllAnswered();
+    if (answered) {
+      setErrorMessage();
+      setIsCharging(true);
+    } else {
+      setErrorMessage("Certains champs ne sont pas remplis");
     }
   }
+
+
+  useEffect(()=>{
+    if (isCharging) {
+      switch (innerComponentType) {
+        case "emailInput" : 
+          sendCodeByMail();
+        break;
+        case "codeInput" : 
+          verifyCode();
+        break;
+        case "newPasswordInput" : 
+          // setInnerComponentType("modifSuccess")
+          modifyPassword();
+        break;
+        case "modifSuccess" : 
+          navigation.reset({
+            index: 0,
+            routes: [{ name: "Login Screen" }],
+          });
+        break;
+      }
+    }
+  }, [isCharging])
+
+
+  async function sendCodeByMail() {
+    const data = await sendRecoveryCode(firstInput);
+    if (data.success) {
+      setInnerComponentType("codeInput");
+      setDataToRemember((state)=>({...state, email: firstInput}));
+    } else {
+      data.message ? setErrorMessage(data.message) : setErrorMessage("Une erreur s'est produite");
+    }
+    setIsCharging(false);
+  }
+
+// todo: s'assurer que les fonction suivantes fonctionnent : -----------------------------------------------
+
+  async function verifyCode() {
+    console.log(dataToRemember.email);
+    console.log(firstInput);
+    const data = await verifyRecoveryCode(dataToRemember.email, firstInput);
+    if (data.success) {
+      setInnerComponentType("newPasswordInput");
+      setDataToRemember((state)=>({...state, recoveryToken: data.recoveryToken }));
+    } else {
+      data.message ? setErrorMessage(data.message) : setErrorMessage("La vérification a échoué");
+    }
+    setIsCharging(false);
+  }
+
+  async function modifyPassword() {
+    console.log(dataToRemember.recoveryToken);
+    console.log(firstInput);
+    console.log(secondInput);
+    if (firstInput===secondInput) {
+      const data = await recoverAccount(dataToRemember.recoveryToken, firstInput);
+      if (data.success) {
+        setInnerComponentType("newPasswordInput");
+        setDataToRemember({});
+      } else {
+        data.message ? setErrorMessage(data.message) : setErrorMessage("La vérification a échoué");
+      }
+    } else {
+      setErrorMessage("Les 2 mots de passe ne sont pas identiques")
+    }
+    setIsCharging(false);
+  
+  }
+// todo -------------------------------------------------------------------------------------
+
+
+
 
   return (
     <View style={styles.mainContainer}>
       <View style={styles.textContainer}>
-        <Text style={styles.textInfo}>{textInfo}</Text>
+        <Text style={styles.textInfo}>{recoveryData.textInfo}</Text>
 
         <Text style={styles.errorMessage} >{errorMessage}</Text>
       </View>
-      <View style={[styles.formContainer, {height: 95*inputNumber, justifyContent: inputNumber===2 ? "space-between" : "center" }]}>
+      <View style={[
+        styles.formContainer, 
+        recoveryData.inputNumber ? {height: 95*recoveryData.inputNumber, justifyContent: recoveryData.inputNumber===2 ? "space-between" : "center" } : null
+      ]}>
 
-        {inputNumber!==0 
-          ? <InputComponent title={inputTitle1} inputType={inputType} input={firstInput} setInput={setFirstInput} setIsEditing={setIsEditing}/>
+        {recoveryData.inputNumber!==0 
+          ? <InputComponent title={recoveryData.inputTitle1} inputType={recoveryData.inputType} input={firstInput} setInput={setFirstInput} setIsEditing={setIsEditing}/>
           : null
         }
-        { inputNumber===2 
-          ? <InputComponent title={inputTitle2} inputType={inputType} input={secondInput} setInput={setSecondInput} onSubmitEditing={()=> onSubmit(firstInput, secondInput)} setIsEditing={setIsEditing}/>
+        { recoveryData.inputNumber===2 
+          ? <InputComponent title={recoveryData.inputTitle2} inputType={recoveryData.inputType} input={secondInput} setInput={setSecondInput} onSubmitEditing={onSubmit} setIsEditing={setIsEditing}/>
           : null
         }
       </View>
-      <TerciaryButton title={buttonTitle} onPress={()=> onSubmit(firstInput, secondInput)} color={Colors.orange500} isFullColor={true}/>
+      <TerciaryButton title={recoveryData.buttonTitle} onPress={onSubmit} color={Colors.orange500} isFullColor={true}/>
     </View>
   );
 }
@@ -124,6 +197,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   textContainer: {
+    alignItems: "center",
     width: "90%",
   },
   

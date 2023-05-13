@@ -1,8 +1,5 @@
-import { useState } from "react";
+// import { useState } from "react";
 import {View, Text, StyleSheet} from "react-native";
-
-import { Colors } from "../../constant/Colors";
-import SecondaryButton from "../SecondaryButton";
 
 export default function NotCoveredField({}) {
   return (

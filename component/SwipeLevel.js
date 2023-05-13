@@ -5,10 +5,10 @@ import Modal from "react-native-modal";
 
 import {Colors} from "../constant/Colors";
 import ScoreBar from "./ScoreBar";
-import PrimaryButton from "./PrimaryButton";
+import PrimaryButton from "./buttons/PrimaryButton";
 import { useNavigation } from "@react-navigation/native";
-import SecondaryButton from "./SecondaryButton";
-import TerciaryButton from "./TerciaryButton";
+// import SecondaryButton from "./buttons/SecondaryButton";
+import TerciaryButton from "./buttons/TerciaryButton";
 
 
 export default function SwipeLevel({absoluteIndex, minSwipeForRanking, progressBarColor, mainBarColor, onPressUndo}) {

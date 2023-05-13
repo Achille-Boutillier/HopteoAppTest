@@ -1,7 +1,7 @@
 import { View, StyleSheet, ActivityIndicator, FlatList, Text} from "react-native";
 import { useState, useRef, useEffect } from "react";
 import { Colors } from "../constant/Colors";
-import PrimaryButton from "./PrimaryButton";
+// import PrimaryButton from "./buttons/PrimaryButton";
 import { useSelector, useDispatch } from "react-redux";
 import HorizontalScroll from "./HorizontalScroll";
 import store from "../core";

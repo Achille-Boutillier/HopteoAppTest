@@ -1,7 +1,7 @@
 import {StyleSheet, View, Text, TouchableOpacity, Dimensions,} from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 
-import PrimaryButton from "./PrimaryButton";
+import PrimaryButton from "./buttons/PrimaryButton";
 import { Colors } from "../constant/Colors";
 import { useEffect, useState } from "react";
 

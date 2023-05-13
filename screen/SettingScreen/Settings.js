@@ -3,12 +3,10 @@ import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import Modal from "react-native-modal";
 
-import PrimaryButton from "../../component/PrimaryButton";
+import PrimaryButton from "../../component/buttons/PrimaryButton";
 import { Colors } from "../../constant/Colors";
-// import { reset } from "../../BackEnd/controllers/userData";
 import {deleteUser, disconnect, getUserInfo, getAppContact, getAppInfo, resetSwipe } from "../../BackEnd/controllers/setting";
 import { alertProvider } from "../../BackEnd/errorHandler.js";
-// import SecondaryButton from "../../component/SecondaryButton";
 
 import ConfirmPasswordModal from "../../component/ConfirmPasswordModal";
 import { useDispatch } from "react-redux";

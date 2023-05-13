@@ -1,7 +1,7 @@
 import { View, StyleSheet, TextInput } from "react-native";
 import { useState, useRef } from "react";
 import { Colors } from "../constant/Colors";
-import PrimaryButton from "./PrimaryButton";
+import PrimaryButton from "./buttons/PrimaryButton";
 
 export default function SearchBar({onSubmitResearch, handleStopResearch, onBeginResearch,}) {
   const [isResearching, setIsResearching] = useState(false);

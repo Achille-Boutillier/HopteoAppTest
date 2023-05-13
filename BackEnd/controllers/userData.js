@@ -224,7 +224,7 @@ export async function storeUserSetting(cursustype, field, moyBac) {
       return {...data, success: true};
     } else {
       console.error("[STORE_USER_SETTING]", data.error);
-      return {...data, success: true};
+      return {...data, success: false};
     }
   } catch (error) {
     console.error("[STORE_USER_SETTING]", error);
@@ -235,5 +235,108 @@ export async function storeUserSetting(cursustype, field, moyBac) {
   }
 }
 
-// Reset les userData de l'utilisateur
+// ==================== password forgotten ====================================
 
+
+export async function sendRecoveryCode(email) {
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email,
+    }),
+  };
+
+  try {
+    const response = await fetch(route + "/sendRecoveryCode", requestOptions);
+    console.log("[sendRcoveryCode]", response.status);
+    const data = await response.json();
+    console.log("[sendRecoveryCode]", data);
+    if (response.status===200) {
+      return {...data, success: true};
+    } else {
+      return {...data, success: false};
+    }
+  } catch (error) {
+    console.error("[sendRecoveryCode]", error);
+    return {
+      success: false,
+      message:
+        "L'envoit du code a échoué.",
+    };
+  }
+}
+
+
+
+
+
+
+export async function verifyRecoveryCode(email, code) {
+
+  const requestOptions = {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email,
+      code,
+    }),
+  };
+
+  try {
+    let response = await fetch(route + "/verifyRecoveryCode", requestOptions);
+    console.log("[verifyRecoveryCode]", response.status);
+    const data = await response.json();
+    console.log("[verifyRecoveryCode]", data);
+    if (response.status === 200) {
+      return {...data, success: true};
+    } else {
+      console.error("[verifyRecoveryCode]", data.error);
+      return {...data, success: false};
+    }
+  } catch (error) {
+    console.error("[verifyRecoveryCode]", error);
+    return {
+      success: false,
+      error: "La vérifification à échoué"
+    };
+  }
+}
+
+
+export async function recoverAccount(recoveryToken, newPassword) {
+
+  const requestOptions = {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: "Bearer " + recoveryToken,
+    },
+    body: JSON.stringify({
+      newPassword,
+    }),
+  };
+
+  try {
+    let response = await fetch(route + "/recoverAccount", requestOptions);
+    console.log("[recoverAccount]", response.status);
+    const data = await response.json();
+    console.log("[recoverAccount]", data);
+    if (response.status === 200) {
+      return {...data, success: true};
+    } else {
+      console.error("[recoverAccount]", data.error);
+      return {...data, success: false};
+    }
+  } catch (error) {
+    console.error("[recoverAccount]", error);
+    return {
+      success: false,
+      error: "La modification du mot de passe a échoué"
+    };
+  }
+}

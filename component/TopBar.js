@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { Dimensions, View, StyleSheet, Text, Image } from "react-native";
 import { Colors } from "../constant/Colors";
-import PrimaryButton from "./PrimaryButton";
+import PrimaryButton from "./buttons/PrimaryButton";
 import Logo from "../assets/icons/logo.svg";
 
 const buttonSize = 30;

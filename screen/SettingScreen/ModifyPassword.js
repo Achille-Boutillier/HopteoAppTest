@@ -4,11 +4,11 @@ import { Alert, TextInput, TouchableOpacity } from "react-native";
 import { StyleSheet, View, Text} from "react-native";
 import { modifyPassword } from "../../BackEnd/controllers/setting";
 import { alertProvider } from "../../BackEnd/errorHandler";
-import PrimaryButton from "../../component/PrimaryButton";
+import PrimaryButton from "../../component/buttons/PrimaryButton";
 
 import {Colors} from "../../constant/Colors";
 import InputComponent from "../../component/InputComponent";
-import TerciaryButton from "../../component/TerciaryButton";
+import TerciaryButton from "../../component/buttons/TerciaryButton";
 
 
 export default function ModifyPassword({navigation}) {

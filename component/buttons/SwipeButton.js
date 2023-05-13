@@ -1,13 +1,13 @@
 
 import {StyleSheet, Text, View, ActivityIndicator, TouchableOpacity, Button, Alert, } from "react-native";
 import { useState, useEffect, useLayoutEffect, createRef,  } from "react";
-import { Colors } from "../constant/Colors";
-import PrimaryButton from "./PrimaryButton";
-import SmileyDontKnow from "../assets/icons/swipeIcons/smileyDontKnow.svg";
-import SmileyDontKnowUncolored from "../assets/icons/swipeIcons/smileyDontKnowUncolored.svg";
-import Like from "../assets/icons/swipeIcons/like.svg";
-import Dislike from "../assets/icons/swipeIcons/dislike.svg";
-import Heart from "../assets/icons/swipeIcons/heart.svg";
+import { Colors } from "../../constant/Colors";
+// import PrimaryButton from "./buttons/PrimaryButton";
+import SmileyDontKnow from "../../assets/icons/swipeIcons/smileyDontKnow.svg";
+import SmileyDontKnowUncolored from "../../assets/icons/swipeIcons/smileyDontKnowUncolored.svg";
+import Like from "../../assets/icons/swipeIcons/like.svg";
+import Dislike from "../../assets/icons/swipeIcons/dislike.svg";
+import Heart from "../../assets/icons/swipeIcons/heart.svg";
 
 
 function SingleSwipeButton({currentSwipeButton, swiperRef, swipeDir, children}){

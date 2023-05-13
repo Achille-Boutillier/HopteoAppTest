@@ -1,32 +1,26 @@
 
 import { useEffect, useState } from "react";
 import {FlatList, StyleSheet, View, ActivityIndicator, Text } from "react-native";
-// import { Colors } from "../constant/Colors";
 import { Colors } from "../../constant/Colors";
-import InputComponent from "../../component/InputComponent";
 import { BrandComponent } from "../../component/TopBar";
-import TerciaryButton from "../../component/TerciaryButton";
 import RecoveryCodeComponent from "../../component/RecoveryCodeComponent";
-import PrimaryButton from "../../component/PrimaryButton";
 import HeaderComponent from "../../component/HeaderComponent";
+import { sendRecoveryCode } from "../../BackEnd/controllers/userData";
 
 
-export default function RecoveryCode({navigation}) {
+export default function RecoveryCode({}) {
 
   
   const [isEditing, setIsEditing] = useState(false);
+  const [isCharging, setIsCharging] = useState(false);
 
 
-  // const [textInfo, setTextInfo] = useState("");
-  // function onBackPress() {
-  //   navigation.goBack();
-  // }
 
   return (
     <View style={styles.mainContainer}>
       <HeaderComponent/>
 
-      <View style={styles.bodyContainer}>
+      <View style={[styles.bodyContainer, isCharging ? {opacity: 0.4} : null]}>
         
         {!isEditing 
           ? ((
@@ -35,9 +29,19 @@ export default function RecoveryCode({navigation}) {
           </View> 
           )): null}
 
-        <RecoveryCodeComponent setIsEditing={setIsEditing} />           
+        <RecoveryCodeComponent setIsEditing={setIsEditing} isCharging={isCharging} setIsCharging={setIsCharging} />     
 
       </View>
+
+      {isCharging 
+        ? ((
+          <View style = {styles.chargingContainer}>
+            <ActivityIndicator size={"large"} color={Colors.orange500} />
+          </View>
+        )): null
+      }      
+
+      
       
     </View>
   );
@@ -63,6 +67,16 @@ const styles = StyleSheet.create({
   brandContainer: {
     // borderWidth: 1,
     marginBottom: 30,
+  },
+  chargingContainer: {
+    position: "absolute",
+    top: 5,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    alignItems: "center",
+    justifyContent: "center",
+    // borderWidth: 1,
   },
   
 });

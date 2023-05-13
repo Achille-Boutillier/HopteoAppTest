@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import { Colors } from "../constant/Colors";
+import { Colors } from "../../constant/Colors";
 
 function SecondaryButton({onPress, buttonText, fontSize=25, preSized=true}) {
   

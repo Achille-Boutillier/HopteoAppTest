@@ -5,7 +5,7 @@ import { modifyLike } from "../BackEnd/controllers/school";
 import { useDispatch, useSelector } from "react-redux";
 import RibbonComponent from "./RibbonComponent";
 
-// import PrimaryButton from "./PrimaryButton";
+// import PrimaryButton from "./buttons/PrimaryButton";
 import { useEffect, useState} from "react";
 
 import { Colors } from "../constant/Colors";

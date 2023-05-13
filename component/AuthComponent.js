@@ -4,8 +4,8 @@ import {FlatList, StyleSheet, View, ActivityIndicator, Text } from "react-native
 import { Colors } from "../constant/Colors";
 import InputComponent from "./InputComponent";
 import { BrandComponent } from "./TopBar";
-import TerciaryButton from "./TerciaryButton";
-import QuaternaryButton from "./QuaternaryButton";
+import TerciaryButton from "./buttons/TerciaryButton";
+import QuaternaryButton from "./buttons/QuaternaryButton";
 import { useNavigation } from "@react-navigation/native";
 
 

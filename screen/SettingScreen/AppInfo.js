@@ -1,15 +1,15 @@
-import { useState, useEffect } from "react";
+// import { useState, useEffect } from "react";
 
 import { StyleSheet, View, Text, TouchableOpacity, Linking} from "react-native";
-import PrimaryButton from "../../component/PrimaryButton";
-import SecondaryButton from "../../component/SecondaryButton";
+import PrimaryButton from "../../component/buttons/PrimaryButton";
+// import SecondaryButton from "../../component/buttons/SecondaryButton";
 
 
 
 import {Colors} from "../../constant/Colors";
-import { getPrivacyPolicy } from "../../BackEnd/controllers/setting";
-import { alertProvider } from "../../BackEnd/errorHandler";
-import TerciaryButton from "../../component/TerciaryButton";
+// import { getPrivacyPolicy } from "../../BackEnd/controllers/setting";
+// import { alertProvider } from "../../BackEnd/errorHandler";
+import TerciaryButton from "../../component/buttons/TerciaryButton";
 
 
 
