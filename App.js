@@ -27,6 +27,7 @@ import Explore from "./screen/BottomTabScreen/Explore";
 import { Provider } from "react-redux";
 import store from "./core";
 import RecoveryCode from "./screen/AuthScreen/RecoveryCode";
+import OnBoardScreen from "./screen/OnBoardScreen";
 
 const BottomTab = createBottomTabNavigator();
 const NativeStack = createNativeStackNavigator();
@@ -115,7 +116,7 @@ export default function App() {
             initialRouteName={initialRouteName}
           >
             <NativeStack.Screen name="Splash Screen" component={SplashScreen} />
-
+            <NativeStack.Screen name="OnBoardScreen" component={OnBoardScreen} />
             <NativeStack.Screen name="Signup Screen" component={SignUp} />
             <NativeStack.Screen name="Login Screen" component={Login} />
             <NativeStack.Screen name="RecoveryCode" component={RecoveryCode} />

@@ -15,7 +15,7 @@ import { Colors } from "../constant/Colors";
 
 export default function HorizontalScroll({ children, scrollViewSize }) {
   // const scrollViewSize = { width: percentWidth * width, height: height };
-
+  // console.log(scrollViewSize);
   return (
     <View style={[scrollViewSize, styles.mainContainer]}>
       <ScrollView
@@ -24,6 +24,9 @@ export default function HorizontalScroll({ children, scrollViewSize }) {
         // pagingEnabled // scroll de page en page au lieu de continuellement
         horizontal
         style={scrollViewSize}
+        // indicatorStyle={{backgroundColor: Colors.orange100, }}   //marche pas
+        // scrollIndicatorInsets={{tintColor: Colors.orange100}}     // marche pas
+
       >
         {children}
       </ScrollView>
@@ -36,5 +39,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     borderRadius: 10,
     overflow: "hidden",
+    // borderWidth: 1,
+    // paddingHorizontal:8
   },
 });

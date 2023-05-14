@@ -25,7 +25,7 @@ const width = Dimensions.get("window").width;
 
 export default function Explore({ navigation, route }) {
 
-  const scrollWidth = 0.95 * width;
+  const scrollWidth = width;
   const scrollHeight = 120;
   const dispatch = useDispatch();
 
@@ -131,13 +131,13 @@ export default function Explore({ navigation, route }) {
   return (
     <View style={styles.mainContainer}>
 
-      <View style={{ width: "100%", marginTop: "2%" }}>
+      {/* <View style={{ width: "100%", marginTop: "2%" }}>
         <SearchBar
           onSubmitResearch={onSubmitResearch}
           handleStopResearch={handleStopResearch}
           onBeginResearch={onBeginResearch}
         />
-      </View>
+      </View> */}
 
       <ExploreByArea scrollWidth={scrollWidth} scrollHeight={scrollHeight}/>
       {isResearching
@@ -157,7 +157,9 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     mainContainerColor: Colors.backgroundColor,
-    alignItems: "center",
+    // alignItems: "center",
+    paddingTop: "6%",
+    // borderWidth:1
   },
 
   innerScrollViewContainer: {

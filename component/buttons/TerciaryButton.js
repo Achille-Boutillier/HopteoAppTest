@@ -3,18 +3,19 @@ import { Colors } from "../../constant/Colors";
 import { useEffect } from "react";
 import { useState } from "react";
 
-export default function TerciaryButton({title, onPress, color, isFullColor, fontSize=18}) {
+
+export default function TerciaryButton({title, onPress, color, isFullColor, fontSize=18, style, secondColor=Colors.white}) {
   const [backgroundColor, setBackgroundColor] = useState();
   const [titleColor, setTitleColor] = useState();
 
   useEffect(()=> {
-    setBackgroundColor(isFullColor ? color : Colors.white) ;
-    setTitleColor(isFullColor ? Colors.white : color) ;
+    setBackgroundColor(isFullColor ? color : secondColor) ;
+    setTitleColor(isFullColor ? secondColor : color) ;
   }, [isFullColor])
 
   return (
     <TouchableOpacity 
-    style={[styles.mainContainer, {backgroundColor: backgroundColor}, isFullColor ? null : {borderWidth: 1.5, borderColor: titleColor}]} 
+    style={[styles.mainContainer, {backgroundColor: backgroundColor}, isFullColor ? null : {borderWidth: 1.5, borderColor: titleColor}, style]} 
     onPress={onPress}
     hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
     >

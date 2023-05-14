@@ -18,7 +18,7 @@ export default function SplashScreen({ navigation }) {
 
   const dispatch = useDispatch();
 
-  function ResetAndGoToScreen(screen) {
+  function resetNavigationScreen(screen) {
     navigation.reset({
       index: 0,
       routes: [{ name: screen }],
@@ -34,16 +34,16 @@ export default function SplashScreen({ navigation }) {
       await storeNewAuthData(data.authData);
       if (data.userSettingStatus) {
         storeSplashData(data.splashData, dispatch);
-        ResetAndGoToScreen('Main Screens')
+        resetNavigationScreen('Main Screens')
         // navigation.navigate("Main Screens");
 
       } else {
-        ResetAndGoToScreen("First Questions Screen")
+        resetNavigationScreen("First Questions Screen")
         // navigation.navigate("First Questions Screen");
       }
     } else {
       // navigation.navigate("Login Screen");
-      ResetAndGoToScreen("Login Screen");
+      resetNavigationScreen("Login Screen");
     }
   }
 
@@ -52,10 +52,10 @@ export default function SplashScreen({ navigation }) {
     if (data.success) {
       if (data.userSettingStatus) {
         storeSplashData(data.splashData, dispatch);
-        ResetAndGoToScreen("Main Screens")
+        resetNavigationScreen("Main Screens")
         // navigation.navigate("Main Screens");
       } else {
-        ResetAndGoToScreen("First Questions Screen")
+        resetNavigationScreen("First Questions Screen")
         // navigation.navigate("First Questions Screen");
       }
     } else {
@@ -71,7 +71,7 @@ export default function SplashScreen({ navigation }) {
       tryToken(authData);
     } else {
       // navigation.navigate("Signup Screen");
-      ResetAndGoToScreen("Signup Screen")
+      resetNavigationScreen("OnBoardScreen");
     }
   }
 

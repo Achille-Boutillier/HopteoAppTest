@@ -13,7 +13,7 @@ export default function Login({ navigation }) {
 
   const dispatch = useDispatch();
 
-  function ResetAndGoToScreen(screen) {
+  function resetNavigationScreen(screen) {
     navigation.reset({
       index: 0,
       routes: [{ name: screen }],
@@ -33,7 +33,7 @@ export default function Login({ navigation }) {
         nextScreen = "First Questions Screen";
       }
       setErrorMessage();
-      ResetAndGoToScreen(nextScreen);
+      resetNavigationScreen(nextScreen);
       // navigation.navigate(nextScreen);
     } else {
       if (loginAnswer?.message) {

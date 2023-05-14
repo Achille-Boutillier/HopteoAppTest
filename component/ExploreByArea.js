@@ -78,12 +78,14 @@ export default function ExploreByArea({scrollWidth, scrollHeight}) {
         extraData={schoolByAreaState}
         keyExtractor={(item) => item}
         showsVerticalScrollIndicator={false}
+        // style={{paddingLeft: 5}}
+        // contentContainerStyle={{ paddingHorizontal: 0, borderWidth: 1  }}
         renderItem={(section) => {
           // console.log(schoolByAreaState.schoolPack[section.item]);
 
           return (
-            <View style={{ marginBottom: 20 }}>
-              <View style={{ marginBottom: 5 }}><Text> {section.item} </Text></View>
+            <View style={{ marginBottom: 20, }}>
+              <View style={{ marginBottom: 5, marginLeft: 10 }}><Text> {section.item} </Text></View>
   
               { schoolByAreaState.schoolPack[section.item].length > 0 
                 ? <HorizontalAreaScroll areaIdList={schoolByAreaState.schoolPack[section.item]} scrollWidth={scrollWidth} scrollHeight={scrollHeight}  />
@@ -117,7 +119,7 @@ function HorizontalAreaScroll({areaIdList, scrollWidth, scrollHeight}) {
       {/* <Text>haha</Text> */}
       {areaIdList.map(
         (schoolId, index) => (
-          <View key={schoolId} style={[styles.innerScrollViewContainer, { width: scrollWidth / 2, height: scrollHeight },]}>
+          <View key={schoolId} style={[styles.innerScrollViewContainer, { width: scrollWidth / 2.3, height: scrollHeight },]}>
             {/* <View style={{width: 15, height: 15, backgroundColor: Colors.blue400}} ></View> */}
             <ExploreSchoolBanner schoolId={schoolId} />
           </View>
@@ -137,7 +139,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     // borderWidth: 1,
     flexWrap: "wrap",
-    padding: 6,
+    paddingVertical: 6,
+    paddingHorizontal: 5,
   },
 
   emptyAreaMessage : { 

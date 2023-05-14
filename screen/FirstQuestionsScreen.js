@@ -24,7 +24,7 @@ function FirstQuestionsScreen({ navigation }) {
 
   const dispatch = useDispatch();
 
-  function ResetAndGoToScreen(screen) {
+  function resetNavigationScreen(screen) {
     navigation.reset({
       index: 0,
       routes: [{ name: screen }],
@@ -76,7 +76,7 @@ function FirstQuestionsScreen({ navigation }) {
       setCurrentQuestion(previousQuestion);
     } else {
       disconnect();
-      ResetAndGoToScreen("Login Screen")
+      resetNavigationScreen("Login Screen")
       // navigation.navigate("Login Screen");
     }
   }
@@ -124,7 +124,7 @@ function FirstQuestionsScreen({ navigation }) {
         storeSplashData(data.splashData, dispatch);
         navigation.setOptions({ initialRouteName: "Main Screens" }); //todo Verifier que ça fonctionne pour pas pouvoir revenir en arrière vers firstQuestions
         // navigation.navigate("Main Screens");
-        ResetAndGoToScreen("Main Screens");
+        resetNavigationScreen("Main Screens");
 
       } else {
         alertProvider();
