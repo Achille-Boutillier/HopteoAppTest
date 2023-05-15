@@ -4,7 +4,8 @@ import { calculNewRank, calculNewRankSuccess, calculNewRankFailure, getSchoolBan
 
 import { Colors } from "../../constant/Colors";
 import {getRankingAlgoData} from "../../BackEnd/controllers/ranking";
-import { generateRanking } from "../../BackEnd/rankingFunction";
+import { generateRankin } from "../../BackEnd/rankingFunction1";
+// import { generateRanking } from "../../BackEnd/rankingFunction";
 import { getBannerData } from "../../BackEnd/controllers/school";
 import SchoolBanner from "../../component/SchoolBanner";
 import MessageContainer from "../../component/MessageContainer";

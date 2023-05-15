@@ -129,7 +129,7 @@ export default function SchoolPage({ navigation, route }) {
   
           <MainNumberComponent
             moyenneBac={singleSchoolData.moyenneBac}
-            salaireMoyen={singleSchoolData.salaireMoyen}
+            medianWageNoPrime={singleSchoolData.medianWageNoPrime}
             fraisScolarite={singleSchoolData.fraisScolarite}
           />
   

@@ -135,7 +135,7 @@ export async function deleteUser(password) {
   let authData = await getAuthData();
 
   const requestOptions = {
-    method: "POST",
+    method: "PUT",
     headers: {
       "Content-Type": "application/json",
       authorization: "Bearer " + authData.token,
@@ -146,20 +146,20 @@ export async function deleteUser(password) {
   };
 
   try {
-    let response = await fetch(route + "/delete", requestOptions);
+    let response = await fetch(route + "/deleteUser", requestOptions);
     console.log(response.status);
     const data = await response.json();
     // console.log(data);
-    return data;
-    // if (data?.message==="Compte supprimé avec succès !") {
-    //     return true;
-    // } else {
-    //     return false;
-    // }
+    // return data;
+    if (response.status===200) {
+        return {data, success: true};
+    } else {
+        return {data, success: false};
+    }
   } catch (error) {
     console.log("bloc try failed :");
     console.log(error);
-    return false;
+    return {success: false};
   }
 }
 

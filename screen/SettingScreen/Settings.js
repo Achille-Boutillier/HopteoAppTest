@@ -14,6 +14,7 @@ import { reinitialiseSchoolReducer } from "../../core/reducers/schoolReducer";
 import { reinitialiseForRankingReducer } from "../../core/reducers/forRankingReducer";
 import { reinitialiseSwipeReducer } from "../../core/reducers/swipeReducer";
 import { reinitialiseUserSettingReducer } from "../../core/reducers/userSettingReducer";
+import { resetAllStore, updateBackData } from "../../BackEnd/updateBackData";
 
 
 const deviceHeight = Dimensions.get("window").height;
@@ -34,6 +35,7 @@ const dispatch = useDispatch();
   const [isContactUsModalVisible, setIsContactUsModalVisible] = useState(false);
 
   const [isPasswordModalVisible, setIsPasswordModalVisible] = useState(false);
+  const [isPasswordModalCharging, setIsPasswordModalCharging] = useState(false);
   // const [password, setPassword] = useState();
   const [modalErrorMessage, setModalErrorMessage] = useState();
   const [modalButtonName, setModalButtonName] = useState();
@@ -141,43 +143,46 @@ const dispatch = useDispatch();
     navigation.navigate("Modify Password");
   }
 
-  // ** ---------- reset ------------------------
-  async function reinitialise(password) {
+  // ** ---------- reset swipe------------------------
+  async function reinitialiseSwipe(password) {
     const resetSuccess = await resetSwipe(password, dispatch);
     if (resetSuccess) {
+      togglePasswordModal();
       navigation.navigate("Home", {jumpToFirstCard: true});
     } else {
-      alertProvider();
+      setModalErrorMessage("la réinitialisation a échouée");
+      // alertProvider();
     }
+    setIsPasswordModalCharging(false);
   }
 
   function onPressReset() {
     setModalBodyText(
-      "Tu ne pourras plus revenir en arrière une fois ton compte réinitialisé ! Ton classement sera perdu..."
+      "Tu ne pourras plus revenir en arrière une fois tes swipes réinitialisés ! Ton classement sera perdu..."
     );
     setModalButtonName("Réinitialiser");
-    handlePasswordModal();
+    togglePasswordModal();
   }
-  // ** ---------- fin reset ------------------------
+  // ** ---------- fin reset swipe------------------------
 
   // **-------------------- delete ---------------------------------
   async function deleteAccount(password) {
+    updateBackData(dispatch);   // maj les info anvant de supprimer
     const data = await deleteUser(password);
-    console.log(data);
-    if (data?.message === "Compte supprimé avec succès !") {
-      handlePasswordModal(); //supprimer la modal
-      // navigation.navigate("Login Screen");
+    // console.log(data);
+    if (data?.success) {
+      togglePasswordModal(); 
       navigation.reset({
         index: 0,
         routes: [{ name: 'Login Screen' }],
       });
+      resetAllStore(dispatch);
     } else if (data?.message) {
       setModalErrorMessage(data.message);
-      // setPassword();
     } else {
       setModalErrorMessage("Une erreur est survenue");
-      // setPassword();
     }
+    setIsPasswordModalCharging(false);
   }
 
   function onPressDeleteAccount() {
@@ -185,26 +190,28 @@ const dispatch = useDispatch();
       "Tu ne pourras plus revenir en arrière un fois ton compte supprimé..."
     );
     setModalButtonName("Supprimer mon Compte");
-    handlePasswordModal();
+    togglePasswordModal();
   }
   // ** ----------- fin Delete ------------------
 
   // ** -------- password Modal ----------------------------
-  function handlePasswordModal() {
+  function togglePasswordModal() {
     setIsPasswordModalVisible((bool) => !bool);
     // setPassword();
     setModalErrorMessage();
   }
 
   function onSubmitPasswordModal(password) {
+    (()=>setIsPasswordModalCharging(true))();     //instantanément exécuté
     if (!!password) {  // si le user a renseigné son password
       if (modalButtonName === "Réinitialiser") {
-        reinitialise(password);
+        reinitialiseSwipe(password);
       } else if (modalButtonName === "Supprimer mon Compte") {
         deleteAccount(password);
       }
     } else {
       setModalErrorMessage("Le champs 'Mot de passe' doit être rempli");
+      setIsPasswordModalCharging(false);
     }
   }
 
@@ -218,11 +225,7 @@ const dispatch = useDispatch();
       index: 0,
       routes: [{ name: 'Login Screen' }],
     });
-    // navigation.navigate("Login Screen"); 
-    dispatch(reinitialiseSchoolReducer());
-    dispatch(reinitialiseForRankingReducer());
-    dispatch(reinitialiseSwipeReducer());
-    dispatch(reinitialiseUserSettingReducer());
+    resetAllStore(dispatch);
   }
 
   return (
@@ -288,47 +291,15 @@ const dispatch = useDispatch();
 
       <ConfirmPasswordModal
         isVisible={isPasswordModalVisible}
-        handlePasswordModal={handlePasswordModal}
+        togglePasswordModal={togglePasswordModal}
         modalBodyText={modalBodyText}
         modalErrorMessage={modalErrorMessage}
         modalButtonName={modalButtonName}
         submitButtonName={modalButtonName}
         onSubmitPassword={onSubmitPasswordModal}
+        isPasswordModalCharging={isPasswordModalCharging}
       />
-      {/* <Modal isVisible={isPasswordModalVisible}>
-        <View style={styles.modal}>
-          <View style={styles.modalHeader}>
-            <Text style={styles.modalHeaderText}> Attention !</Text>
-            <PrimaryButton
-              onPress={handlePasswordModal}
-              name="close-outline"
-              size={40}
-              color={Colors.orange500}
-            />
-          </View>
-          <View style={styles.modalBody}>
-            <Text style={styles.modalBodyText}>{modalBodyText}</Text>
-            <Text style={styles.errorMessageText}>{modalErrorMessage}</Text>
-            <View style={styles.modalPasswordContainer}>
-              <TextInput
-                style={styles.passwordInput}
-                autoCapitalize="none" //empêcher l'autocapitalisation ou autocorrection du phone
-                autoCorrect={false}
-                onChangeText={(enteredText) => setPassword(enteredText)}
-                secureTextEntry
-                value={password}
-                placeholder="Mot de passe"
-              />
-              <SecondaryButton
-                onPress={passwordModalFunction}
-                buttonText={modalButtonName}
-                fontSize={15}
-                preSized={false}
-              />
-            </View>
-          </View>
-        </View>
-      </Modal> */}
+      
 
       <Modal isVisible={isContactUsModalVisible}>
         <View style={styles.modal}>

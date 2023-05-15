@@ -18,7 +18,7 @@ export default function RecoveryCodeComponent({setIsEditing, isCharging, setIsCh
   const [innerComponentType, setInnerComponentType] = useState("emailInput");
   const [recoveryData, setRecoveryData] = useState({});
   const [dataToRemember, setDataToRemember] = useState({});
-  
+  const uselessFunction = ()=> {};
 
  
   useEffect(()=> {
@@ -145,10 +145,10 @@ export default function RecoveryCodeComponent({setIsEditing, isCharging, setIsCh
     if (firstInput===secondInput) {
       const data = await recoverAccount(dataToRemember.recoveryToken, firstInput);
       if (data.success) {
-        setInnerComponentType("newPasswordInput");
+        setInnerComponentType("modifSuccess");
         setDataToRemember({});
       } else {
-        data.message ? setErrorMessage(data.message) : setErrorMessage("La vérification a échoué");
+        data.message ? setErrorMessage(data.message) : setErrorMessage("La modification a échoué");
       }
     } else {
       setErrorMessage("Les 2 mots de passe ne sont pas identiques")
@@ -173,13 +173,17 @@ export default function RecoveryCodeComponent({setIsEditing, isCharging, setIsCh
         recoveryData.inputNumber ? {height: 95*recoveryData.inputNumber, justifyContent: recoveryData.inputNumber===2 ? "space-between" : "center" } : null
       ]}>
 
-        {recoveryData.inputNumber!==0 
-          ? <InputComponent title={recoveryData.inputTitle1} inputType={recoveryData.inputType} input={firstInput} setInput={setFirstInput} setIsEditing={setIsEditing}/>
+        {recoveryData.inputNumber===1
+          ? <InputComponent title={recoveryData.inputTitle1} inputType={recoveryData.inputType} input={firstInput} setInput={setFirstInput} setIsEditing={setIsEditing} onSubmitEditing={recoveryData.inputNumber === 1 ? onSubmit : uselessFunction }/>
           : null
         }
         { recoveryData.inputNumber===2 
-          ? <InputComponent title={recoveryData.inputTitle2} inputType={recoveryData.inputType} input={secondInput} setInput={setSecondInput} onSubmitEditing={onSubmit} setIsEditing={setIsEditing}/>
-          : null
+          ? ((
+            <>
+              <InputComponent title={recoveryData.inputTitle1} inputType={recoveryData.inputType} input={firstInput} setInput={setFirstInput} setIsEditing={setIsEditing} onSubmitEditing={recoveryData.inputNumber === 1 ? onSubmit : uselessFunction }/>
+              <InputComponent title={recoveryData.inputTitle2} inputType={recoveryData.inputType} input={secondInput} setInput={setSecondInput} onSubmitEditing={onSubmit} setIsEditing={setIsEditing}/>
+            </>
+          )): null
         }
       </View>
       <TerciaryButton title={recoveryData.buttonTitle} onPress={onSubmit} color={Colors.orange500} isFullColor={true}/>

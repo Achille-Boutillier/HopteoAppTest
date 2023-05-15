@@ -6,7 +6,7 @@
 //                                                swipeObj : {ingeCard1 : "like", ingeCard2 : "dislike"},
 //                                                answerByTheme : {theme1 : 2, theme2: 5}}
 // minSwipeForRanking envoyé via splashData
-export function generateRanking(swipe, cards, schools, minSwipeForRanking, themeDetail, swipeSettings) {
+export function generateRankin(swipe, cards, schools, minSwipeForRanking, themeDetail, swipeSettings) {
     try {
         if (swipe.answeredList.length>=minSwipeForRanking) {  // Si l'utilisateur a swipé un certain nb de proposition
             // Récupérer les écoles

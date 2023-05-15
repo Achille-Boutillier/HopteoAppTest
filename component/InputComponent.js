@@ -57,16 +57,17 @@ export default function InputComponent({title, inputType, setInput, input, onSub
       secureTextEntry = false;
     } else if (inputType==="password") {
       placeholder="*****";
-      autoComplete=null;
-      keyboardType=null;
+      autoComplete="off";
+      // keyboardType="default";
+      keyboardType="email-address"
       secureTextEntry=true; 
     } else if (inputType==="numeric") {
       placeholder="123456";
-      autoComplete=null;
+      autoComplete="off";
       keyboardType="numeric";
       secureTextEntry=false;
     }
-    setTextInputSetting({placeholder, autoComplete, keyboardType, secureTextEntry })
+    setTextInputSetting({placeholder, autoComplete, keyboardType, secureTextEntry, autoCapitalize: "none" })
   }, [inputType])
 
 
@@ -77,10 +78,11 @@ export default function InputComponent({title, inputType, setInput, input, onSub
         ref={inputRef}
         style={styles.textInput}
         onChangeText={(text) => setInput(text.trim())}
-        autoCapitalize="none"
+        // autoCapitalize="none"
+        autoCapitalize={textInputSetting.autoCapitalize}
         value={input}
         placeholder={textInputSetting.placeholder}
-        autoComplete={textInputSetting.autoComplete}
+        // autoComplete={textInputSetting.autoComplete}
         keyboardType={textInputSetting.keyboardType}
         secureTextEntry={textInputSetting.secureTextEntry}
         onSubmitEditing={onSubmitEditing ? onSubmitEditing : null}

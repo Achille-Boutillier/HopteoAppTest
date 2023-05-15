@@ -15,7 +15,8 @@ import { alertProvider } from "../../BackEnd/errorHandler";
 import MessageContainer from "../../component/MessageContainer";
 import { storeNewSwipe, removeSwipe, handleAllSwipeSent } from "../../core/reducers/swipeReducer";
 import SwipeButton from "../../component/buttons/SwipeButton";
-import store from "../../core";
+import { updateBackData } from "../../BackEnd/updateBackData";
+// import store from "../../core";
 const swiperRef = createRef();
 
 const deviceHeight = Dimensions.get("window").height;
@@ -67,37 +68,37 @@ export default function Home({ navigation, route }) {
 
 
   
-  async function upgradeBackData() {
-    const {notSentToBackAnswers, sentToBackAnswers, swipeTypeObj, removedIdStillInBackEnd} = latestSwipeReducer;
-    // console.log("[removedIdStillInBackEnd]", removedIdStillInBackEnd);
-    if (notSentToBackAnswers.length>0 || removedIdStillInBackEnd.length>0) {   //todo: revoir la logique
-      console.log("it needs to be upgraded ===================");
-      console.log("[removedIdStillInBackEnd]", removedIdStillInBackEnd);
-      const filteredSwipeTypeObj = notSentToBackAnswers.reduce((obj, key) => {
-        if (key in swipeTypeObj) {
-          obj[key] = swipeTypeObj[key];
-        }
-        return obj;
-      }, {});
+  // async function updateBackData() {
+  //   const {notSentToBackAnswers, sentToBackAnswers, swipeTypeObj, removedIdStillInBackEnd} = latestSwipeReducer;
+  //   // console.log("[removedIdStillInBackEnd]", removedIdStillInBackEnd);
+  //   if (notSentToBackAnswers.length>0 || removedIdStillInBackEnd.length>0) {   //todo: revoir la logique
+  //     console.log("it needs to be upgraded ===================");
+  //     console.log("[removedIdStillInBackEnd]", removedIdStillInBackEnd);
+  //     const filteredSwipeTypeObj = notSentToBackAnswers.reduce((obj, key) => {
+  //       if (key in swipeTypeObj) {
+  //         obj[key] = swipeTypeObj[key];
+  //       }
+  //       return obj;
+  //     }, {});
 
-      const success = await updateSwipe(notSentToBackAnswers, filteredSwipeTypeObj, removedIdStillInBackEnd);
-      //todo : handle les removedIdStillInBackEnd
+  //     const success = await updateSwipe(notSentToBackAnswers, filteredSwipeTypeObj, removedIdStillInBackEnd);
+  //     //todo : handle les removedIdStillInBackEnd
 
-      if (success) {
-        dispatch(handleAllSwipeSent());
-      } else {
-        console.log("couldn't update backEnd swipe answers");
-      }
+  //     if (success) {
+  //       dispatch(handleAllSwipeSent());
+  //     } else {
+  //       console.log("couldn't update backEnd swipe answers");
+  //     }
       
-    } else {
-      console.log("backEnd swipe answers update is not needed")
-    }
-  }
+  //   } else {
+  //     console.log("backEnd swipe answers update is not needed")
+  //   }
+  // }
  
  
    useEffect(()=> {
      if (appState!=="active") {
-       upgradeBackData(); 
+       updateBackData(dispatch); 
      }
    }, [appState])
  
@@ -152,8 +153,8 @@ export default function Home({ navigation, route }) {
 
 
   function calculNextCardsToAsk() {
-    const answeredCards = Object.keys(swipeReducer.swipeTypeObj);
-    const notAnsweredCards = swipeReducer.idCardsList.filter(item => !(answeredCards.includes(item)));
+    const answeredCards = Object.keys(latestSwipeReducer.swipeTypeObj);
+    const notAnsweredCards = latestSwipeReducer.idCardsList.filter(item => !(answeredCards.includes(item)));
     return notAnsweredCards.slice(0,12);
   }
  
@@ -182,7 +183,7 @@ export default function Home({ navigation, route }) {
 
 
   async function getPreviousCard(){
-    const {notSentToBackAnswers, sentToBackAnswers} = swipeReducer;
+    const {notSentToBackAnswers, sentToBackAnswers} = latestSwipeReducer;
     console.log("[notSentToBackAnswers]", notSentToBackAnswers);
     console.log("[sentToBackAnswers]", sentToBackAnswers);
     let previousCardId;
@@ -272,10 +273,10 @@ export default function Home({ navigation, route }) {
 
   useEffect(() => {
     // console.log("[swipeReducer]", swipeReducer);
-    length = Object.keys(swipeReducer.swipeTypeObj).length;
+    length = Object.keys(latestSwipeReducer.swipeTypeObj).length;
     console.log("[absoluteIndex]", length);
     setAbsoluteIndex(length);
-  }, [swipeReducer.swipeTypeObj]);
+  }, [latestSwipeReducer.swipeTypeObj]);
 
 // ==================position de la carte===================================
 
@@ -307,7 +308,7 @@ function onSwiping(x, y){
       <View style={styles.mainContainer}>
         <SwipeLevel
           absoluteIndex={absoluteIndex}
-          minSwipeForRanking={swipeReducer.minSwipeForRanking} // 'pas' des levels
+          minSwipeForRanking={latestSwipeReducer.minSwipeForRanking} // 'pas' des levels
           progressBarColor={"#70DDFF"}
           // borderColor={null}
           mainBarColor={"#BFF0FF"}

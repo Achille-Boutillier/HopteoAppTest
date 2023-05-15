@@ -283,7 +283,9 @@ export async function verifyRecoveryCode(email, code) {
     },
     body: JSON.stringify({
       email,
-      code,
+      code: parseInt(code),
+      // email: "achille.972@hotmail.com",
+      // code: ("100336"),
     }),
   };
 

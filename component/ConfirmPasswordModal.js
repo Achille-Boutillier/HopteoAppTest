@@ -1,7 +1,7 @@
 
 
 import { Ionicons } from "@expo/vector-icons";
-import { View, StyleSheet, Text, TextInput } from "react-native";
+import { View, StyleSheet, Text, TextInput, ActivityIndicator } from "react-native";
 import { Colors } from "../constant/Colors";
 import Modal from "react-native-modal";
 import PrimaryButton from "./buttons/PrimaryButton";
@@ -11,7 +11,7 @@ import { useState } from "react";
 import InputComponent from "./InputComponent";
 // import EStyleSheet from "react-native-extended-stylesheet";
 
-export default function ConfirmPasswordModal({isVisible, handlePasswordModal, modalBodyText, modalErrorMessage, onSubmitPassword, modalButtonName }) {
+export default function ConfirmPasswordModal({isVisible, togglePasswordModal, modalBodyText, modalErrorMessage, onSubmitPassword, modalButtonName, isPasswordModalCharging }) {
 
   const [password, setPassword] = useState("");
 
@@ -27,43 +27,37 @@ export default function ConfirmPasswordModal({isVisible, handlePasswordModal, mo
         <View style={styles.header}>
           <Text style={styles.headerText}> Attention !</Text>
           <PrimaryButton
-            onPress={handlePasswordModal}
+            onPress={togglePasswordModal}
             name="close-outline"
             size={40}
             color={Colors.orange500}
           />
         </View>
         <View style={styles.body}>
-          <Text style={styles.bodyText}>{modalBodyText}</Text>
-          <Text style={styles.errorMessageText}>{modalErrorMessage}</Text>
-          <InputComponent
-            title="Mot de passe" 
-            inputType="password" 
-            input={password} 
-            setInput={setPassword} 
-            onSubmitEditing={onSubmit} 
-            // setIsEditing={setIsEditing}
-          />
-          {/* <View style={styles.modalPasswordContainer}>
-            <TextInput
-              style={styles.passwordInput}
-              autoCapitalize="none" //empêcher l'autocapitalisation ou autocorrection du phone
-              autoCorrect={false}
-              onChangeText={(enteredText) => setPassword(enteredText)}
-              secureTextEntry
-              value={password}
-              placeholder="Mot de passe"
-              onSubmitEditing={onSubmit}
-            />
-            
-          </View> */}
-          <TerciaryButton
-            title={modalButtonName}
-            onPress={onSubmit}
-            color={Colors.orange500}
-            isFullColor={true}
-            fontSize={15}
-          />
+          {isPasswordModalCharging
+            ? <ActivityIndicator/>
+            : ((<>
+                <Text style={styles.bodyText}>{modalBodyText}</Text>
+                <Text style={styles.errorMessageText}>{modalErrorMessage}</Text>
+                <InputComponent
+                  title="Mot de passe" 
+                  inputType="password" 
+                  input={password} 
+                  setInput={setPassword} 
+                  onSubmitEditing={onSubmit} 
+                  // setIsEditing={setIsEditing}
+                />
+                
+                <TerciaryButton
+                  title={modalButtonName}
+                  onPress={onSubmit}
+                  color={Colors.orange500}
+                  isFullColor={true}
+                  fontSize={15}
+                />
+              </>
+            ))
+          }
         </View>
       </View>
       </Modal>
