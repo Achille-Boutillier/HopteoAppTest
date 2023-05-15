@@ -224,6 +224,7 @@ const dispatch = useDispatch();
   // -----------------------------------------------------------------------------------------------------
 
   function onPressDisconnect() {
+    updateBackData(dispatch);   // maj les info anvant de deconnecter
     disconnect();
     navigation.reset({
       index: 0,

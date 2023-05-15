@@ -111,10 +111,18 @@ export async function getDetails(idCard) {
 
 // updateSwipe
 
-export async function updateSwipe(idCardList, swipeTypeObj, removedIdStillInBackEnd) {
+export async function updateSwipe(idCardList, swipeTypeObj, removedIdStillInBackEnd, userSettingStatus) {
   try {
     const authData = await getAuthData();
-    const {cursustype, filiere} = getUserSettingStatus();
+    const {cursustype, filiere} = userSettingStatus;
+    // const {cursustype, filiere} = getUserSettingStatus();
+
+    console.log("[updateSwipe]", cursustype )
+    console.log("[updateSwipe]", filiere )
+    console.log("[updateSwipe]",  authData.token)
+    console.log("======================================================")
+    console.log("[updateSwipe]",  idCardList)
+    console.log("[updateSwipe]",  swipeTypeObj)
 
     const requestOptions = {
       method: "PUT",
@@ -141,7 +149,7 @@ export async function updateSwipe(idCardList, swipeTypeObj, removedIdStillInBack
       throw data;
     }
   } catch (error) {
-    console.log("bloc try failed :");
+    console.log("[updateSwipe]", "bloc try failed :");
     console.log(error);
     return false;
   }

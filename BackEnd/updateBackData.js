@@ -8,6 +8,7 @@ import { reinitialiseSwipeReducer } from "../core/reducers/swipeReducer";
 import { reinitialiseUserSettingReducer } from "../core/reducers/userSettingReducer";
 
 export async function updateBackData(dispatch) {
+  const userSettingReducer = store.getState().userSettingReducer;
   const {notSentToBackAnswers, sentToBackAnswers, swipeTypeObj, removedIdStillInBackEnd} = store.getState().swipeReducer;
   // console.log("[removedIdStillInBackEnd]", removedIdStillInBackEnd);
   if (notSentToBackAnswers.length>0 || removedIdStillInBackEnd.length>0) {   //todo: revoir la logique
@@ -19,8 +20,9 @@ export async function updateBackData(dispatch) {
       }
       return obj;
     }, {});
+  // console.log("[removedIdStillInBackEnd]", filteredSwipeTypeObj);
 
-    const success = await updateSwipe(notSentToBackAnswers, filteredSwipeTypeObj, removedIdStillInBackEnd);
+    const success = await updateSwipe(notSentToBackAnswers, filteredSwipeTypeObj, removedIdStillInBackEnd, userSettingReducer);
     //todo : handle les removedIdStillInBackEnd
 
     if (success) {
