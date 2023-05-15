@@ -26,7 +26,7 @@ export default function SchoolPage({ navigation, route }) {
   const singleSchoolData = useSelector((state) => state.schoolReducer.schoolsData[schoolId]);
   const [readyToDisplay, setReadyToDisplay] = useState(false);
   
-  // console.log(singleSchoolData);
+  console.log("[hahahahahha --------------------]", singleSchoolData);
   // const id = singleSchoolData.id;
   const previousScreen = route.params.previousScreen;
   console.log(previousScreen);
@@ -129,7 +129,8 @@ export default function SchoolPage({ navigation, route }) {
   
           <MainNumberComponent
             moyenneBac={singleSchoolData.moyenneBac}
-            medianWageNoPrime={singleSchoolData.medianWageNoPrime}
+            // medianWageNoPrime={singleSchoolData.medianWageNoPrime}
+            salaireMoyen={singleSchoolData.salaireMoyen}
             fraisScolarite={singleSchoolData.fraisScolarite}
           />
   

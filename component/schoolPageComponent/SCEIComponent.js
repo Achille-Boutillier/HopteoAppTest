@@ -1,5 +1,7 @@
 import { StyleSheet, View, Text, ScrollView, Dimensions } from "react-native";
 import { useEffect, useState } from "react";
+import { Ionicons } from "@expo/vector-icons";
+
 import { Colors } from "../../constant/Colors";
 import { getUserSettingStatus } from "../../BackEnd/controllers/userData";
 // import { SwipeListView } from "react-native-swipe-list-view";
@@ -32,10 +34,12 @@ function DotComponent({ list, currentNumber }) {
   }, [currentNumber])
 
 
-  
-
   return <View style={styles.dotContainer}>{dotContent}</View>;
 }
+
+
+
+
 
 export default function SCEIComponent({ parcoursChoix, admission }) {
   //todo: implementer un currentField
@@ -66,9 +70,6 @@ export default function SCEIComponent({ parcoursChoix, admission }) {
     console.log(4, sortedList); //
     return sortedList;
   }
-
-  //todo : renomer filiereList en sortedFiliereList (en bas)
-
 
 
   useEffect(() => {
@@ -173,13 +174,18 @@ export default function SCEIComponent({ parcoursChoix, admission }) {
         <DotComponent list={sortedFiliereList} currentNumber={figureSlide} />
       </View>
 
-      <View style={styles.currentConcoursComponent}>
-        <Text style={styles.subTitle}>
-          {admission[sortedFiliereList[figureSlide]][currentParcours]?.concours 
-          ? admission[sortedFiliereList[figureSlide]][currentParcours].concours
-          : "-"}
-        </Text>
-       {/* par exemple admission["MP"]["parcours1"].concours */}
+      <View style={styles.currentConcoursContainer}>
+        <View style={styles.iconContainer}>
+          <Ionicons name={"newspaper-sharp"} size={25} color={Colors.grey} />
+        </View>
+          <View style={{flex: 1}}  numberOfLines={2}>
+            <Text style={[styles.subTitle, {}]}>
+              {admission[sortedFiliereList[figureSlide]][currentParcours]?.concours 
+              ? admission[sortedFiliereList[figureSlide]][currentParcours].concours
+              : "-"}  {/* par exemple admission["MP"]["parcours1"].concours */}
+            </Text>
+                            
+        </View>
       </View>
 
     </View>
@@ -247,6 +253,7 @@ const styles = StyleSheet.create({
     textTransform: "capitalize",
     textAlign: "center",
     verticalAlign: "middle",
+    // borderWidth: 1,
   },
 
   swipeableContainer: {
@@ -316,14 +323,24 @@ const styles = StyleSheet.create({
     // textAlign: "center",
     verticalAlign: "middle",
   },
-  currentConcoursComponent: {
+  currentConcoursContainer: {
     backgroundColor: Colors.white,
-    paddingHorizontal: 15,
+    paddingRight: 15,
     paddingVertical: 8,
+    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-between",
     borderRadius: 10,
+    width:figureSize.width
     // width: parcoursSize.width,
     // height: parcoursSize.height,
-  }
+  },
+  iconContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    width: "27%",
+    // marginRight: 20,
+    // paddingHorizontal: 13,
+    // borderWidth:1,
+  },
 });

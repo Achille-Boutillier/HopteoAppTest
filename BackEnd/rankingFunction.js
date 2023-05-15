@@ -6,12 +6,15 @@
 //                                                swipeObj : {ingeCard1 : "like", ingeCard2 : "dislike"},
 //                                                answerByTheme : {theme1 : 2, theme2: 5}}
 // minSwipeForRanking envoyé via splashData
+// Calculer et retourner une liste d'id triés avec le rang pour chaque ecole
 export function generateRanking(swipe, cards, schools, minSwipeForRanking, themeDetail, swipeSettings) {
-    try {
+    try{
         if (swipe.answeredList.length>=minSwipeForRanking) {  // Si l'utilisateur a swipé un certain nb de proposition
             // Récupérer les écoles
             let schoolIdList = [];
+            let schoolName = {};
             schoolIdList = schools.map((school)=>{
+                schoolName[school._id] = school.nomEcole;
                 return school._id;
             });
             // Récupérer les cartes
@@ -28,7 +31,9 @@ export function generateRanking(swipe, cards, schools, minSwipeForRanking, theme
             const nbAnswer = swipe.answeredList.length;
             for (let schoolId of schoolIdList) {
                 if (!Object.values(schoolGroupObj[schoolId]).includes(0)) {  // Si l'école est concernée par le nouveau classement
-                    schoolGradeObj[schoolId] = 0;  // Initialiser la note à 0
+                    schoolGradeObj[schoolId] = {};
+                    schoolGradeObj[schoolId].grade = 0;  // Initialiser la note à 0
+                    schoolGradeObj[schoolId].schoolName = schoolName[schoolId];
                     // Calcul de la note
                     for (let idCard of swipe.answeredList) {
                         let weight = 0;
@@ -36,24 +41,24 @@ export function generateRanking(swipe, cards, schools, minSwipeForRanking, theme
                             const themeWeight = themeDetail[cardObj[idCard].idTheme].themeWeight;
                             weight = themeWeight * swipe.answerByTheme[cardObj[idCard].idTheme] / nbAnswer;
                         }
-    
+
                         const swipeType = swipe.swipeObj[idCard];
                         const swipeBonus = swipeSettings[swipeType];
-                        schoolGradeObj[schoolId] += weight * swipeBonus.bonus;
+                        schoolGradeObj[schoolId].grade += weight * swipeBonus.bonus;
                     }
                 }
             }
             //---------------------------------------------------------------------------//
             // Calculer le rang pour chaque école et créer l'objet ecole
-            const sortedSchoolGradeList = createSchoolGradeList(schoolGradeObj);
+            const sortedSchoolGradeList = createSchoolGradeList(schoolGradeObj, schoolIdList);
             if (sortedSchoolGradeList) {
                 let rank = 1;
                 let sortedSchool = [];
                 let previousSchoolGrade = 0;
                 for (let schoolGradeList of sortedSchoolGradeList) {
-                    const schoolId = schoolGradeList[0];
-                    let grade = schoolGradeList[1];
-                    // grade = Math.round(grade);
+                    const schoolId = schoolGradeList.schoolName;
+                    let grade = schoolGradeList.grade;
+                    //grade = Math.round(grade);
                     // Si la note est positive, on prend en compte l'école dans le classement
                     // Détermination du rang de l'école en fonction de sa note
                     if (previousSchoolGrade > grade) {
@@ -70,6 +75,9 @@ export function generateRanking(swipe, cards, schools, minSwipeForRanking, theme
                     sortedSchool.push({...newEcole});
                 }
                 //---------------------------------------------------------------------------//
+                if (schoolRank.rankObj.empty && Object.keys(schoolRank.rankObj).length > 1) {
+                    delete schoolRank.rankObj.empty;
+                }
                 return {sortedSchoolList: sortedSchool};
             } else {
                 throw "Impossible d'accéder au classement des écoles";
@@ -81,7 +89,6 @@ export function generateRanking(swipe, cards, schools, minSwipeForRanking, theme
         console.log("[generateRANKING ERROR]", error);
         return {error}
     }
-    
 }
 
 //---------------------------------------- Fonctions secondaires --------------------------------------------//
@@ -134,14 +141,17 @@ function createSchoolGroupObj(schoolIdList, cardObj, swipe) {
 }
 
 // Appelé dans generateRanking. Renvoie une liste triée d'école en fonction de leur rang
-function createSchoolGradeList(schoolGradeObj) {
+function createSchoolGradeList(schoolGradeObj, schoolIdList) {
     // Transformer l'objet en une liste contenant des éléments de type [clé, valeur]
-    let schoolIdList = Object.keys(schoolGradeObj);
     let schoolGradeList = schoolIdList.map(function(schoolId) {
-        return [schoolId, schoolGradeObj[schoolId]];
+        return { id: schoolId, grade: schoolGradeObj[schoolId].grade, schoolName: schoolGradeObj[schoolId].schoolName };
     });
     schoolGradeList.sort(function(firstElem, secondElem) {
-        return secondElem[1] - firstElem[1];
+        if (secondElem.grade - firstElem.grade === 0) {
+            return firstElem.schoolName.localeCompare(secondElem.schoolName);
+        } else {
+            return secondElem.grade - firstElem.grade;
+        }
     });
     return(schoolGradeList);
 }

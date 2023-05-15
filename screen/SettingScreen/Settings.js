@@ -63,8 +63,12 @@ const dispatch = useDispatch();
   // ** Signaler un Beug ---------------------------
 
 
-  function handleFeedbackModal() {
+  function onPressBugReport() {
     return Linking.openURL("https://docs.google.com/forms/d/e/1FAIpQLSfecyioNQwyYGtMLdIVB4_ovEm_tRbAd0Tpyqixnlh0MpRkzQ/viewform?usp=sf_link");
+  }
+
+  function onPressIdee() {
+    return Linking.openURL("https://docs.google.com/forms/d/e/1FAIpQLSfMJ3f158RFLro2jpeGJTDrdWZieQEw3HF1TTPgv9zxTGbJlA/viewform");
   }
 
   // ** Fin Beug ---------------------
@@ -249,12 +253,17 @@ const dispatch = useDispatch();
         <SettingsSection
           iconName={"bug-outline"}
           optionTitle={"Signaler un Bug"}
-          onPress={handleFeedbackModal}
+          onPress={onPressBugReport}
         />
         <SettingsSection
           iconName={"chatbubble-outline"}
           optionTitle={"Nous contacter"}
           onPress={handleContactUsmodal}
+        />
+        <SettingsSection
+          iconName={"bulb-outline"}
+          optionTitle={"Une idée d'amélioration ?"}
+          onPress={onPressIdee}
         />
         <SettingsSection
           iconName={"information-circle-outline"}
