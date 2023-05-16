@@ -13,6 +13,13 @@ export default function SignUp({ navigation, route }) {
   const [errorMessage, setErrorMessage] = useState();
 
 
+  // function resetNavigationScreen(screen) {
+  //   navigation.reset({
+  //     index: 0,
+  //     routes: [{ name: screen }],
+  //   });
+  // }
+
   // function onSignUpPress() {
   //   setSignUpButtonPressed(true);
   // }
@@ -30,7 +37,9 @@ export default function SignUp({ navigation, route }) {
     if (signUpAnswer?.success) {
       setErrorMessage(); // éviter d'avoir un msg d'erreur si on revient sur la page de connexion plus tard
       storeNewAuthData(signUpAnswer.authData);
-      navigation.navigate("First Questions Screen");
+      // resetNavigationScreen("OnBoardScreen");
+      navigation.navigate("OnBoardScreen");
+      // navigation.navigate("First Questions Screen");
     } else {
       if (signUpAnswer?.message) {
         setErrorMessage(signUpAnswer.message);

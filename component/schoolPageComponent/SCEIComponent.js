@@ -175,17 +175,18 @@ export default function SCEIComponent({ parcoursChoix, admission }) {
       </View>
 
       <View style={styles.currentConcoursContainer}>
+
         <View style={styles.iconContainer}>
           <Ionicons name={"newspaper-sharp"} size={25} color={Colors.grey} />
         </View>
-          <View style={{flex: 1}}  numberOfLines={2}>
-            <Text style={[styles.subTitle, {}]}>
-              {admission[sortedFiliereList[figureSlide]][currentParcours]?.concours 
-              ? admission[sortedFiliereList[figureSlide]][currentParcours].concours
-              : "-"}  {/* par exemple admission["MP"]["parcours1"].concours */}
-            </Text>
-                            
+        <View style={{flex: 1}}  numberOfLines={2}>
+          <Text style={[styles.subTitle, {}]}>
+            {admission[sortedFiliereList[figureSlide]][currentParcours]?.concours 
+            ? admission[sortedFiliereList[figureSlide]][currentParcours].concours
+            : "-"}  {/* par exemple admission["MP"]["parcours1"].concours */}
+          </Text>                  
         </View>
+        {/* <View style={{width: "10%", borderWidth: 1}}></View> */}
       </View>
 
     </View>

@@ -69,8 +69,8 @@ export default function OnBoardScreen({ navigation }) {
       //   : null
       // )}
       // NextButtonComponent={<TerciaryButton title={nextButtonTitle} onPress={()=> {}}  color={Colors.orange500} isFullColor={true} fontSize={14}/>}
-      onDone={() => resetNavigationScreen('Signup Screen')}
-      onSkip={() => resetNavigationScreen('Signup Screen')}
+      onDone={() => resetNavigationScreen('First Questions Screen')}
+      onSkip={() => resetNavigationScreen('First Questions Screen')}
       titleStyles={styles.title}
       subTitleStyles={styles.subtitle}
       containerStyles={styles.container}

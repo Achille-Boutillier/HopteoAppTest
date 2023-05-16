@@ -30,11 +30,9 @@ export default function Card({ cardValue, currentTheme, setSwipeButtonZIndex, sw
 
   useEffect(()=> {
     console.log("----------------- changement de taille ------------")
-    if (isCardDetailVisible) {
-      setSwipeButtonZIndex(isCardDetailVisible ? 0 : 2);
-    if (!cardDetail) {
+    setSwipeButtonZIndex(isCardDetailVisible ? 0 : 2);
+    if (isCardDetailVisible && !cardDetail) {
       getCardDetail();
-    }
     }
     
   }, [isCardDetailVisible])

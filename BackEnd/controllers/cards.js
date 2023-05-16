@@ -117,12 +117,12 @@ export async function updateSwipe(idCardList, swipeTypeObj, removedIdStillInBack
     const {cursustype, filiere} = userSettingStatus;
     // const {cursustype, filiere} = getUserSettingStatus();
 
-    console.log("[updateSwipe]", cursustype )
-    console.log("[updateSwipe]", filiere )
-    console.log("[updateSwipe]",  authData.token)
-    console.log("======================================================")
-    console.log("[updateSwipe]",  idCardList)
-    console.log("[updateSwipe]",  swipeTypeObj)
+    // console.log("[updateSwipe]", cursustype )
+    // console.log("[updateSwipe]", filiere )
+    // console.log("[updateSwipe]",  authData.token)
+    // console.log("======================================================")
+    // console.log("[updateSwipe]",  idCardList)
+    // console.log("[updateSwipe]",  swipeTypeObj)
 
     const requestOptions = {
       method: "PUT",
@@ -171,8 +171,11 @@ export async function undoSwipe(id, idTheme, dispatch) {
         "Content-Type": "application/json",
         authorization: "Bearer " + authData.token,
         cursustype,
-        filiere
+        filiere, 
       },
+      body: JSON.stringify({
+        idCard: id
+      }),
     };
 
     const response = await fetch(route + "/undoSwipe", requestOptions);

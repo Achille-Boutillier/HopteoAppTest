@@ -208,7 +208,7 @@ export default function Home({ navigation, route }) {
     }
   }
 
-  async function gotToPreviousCard() {
+  async function goToPreviousCard() {
     const index = listIndex;
     const {id, idTheme} = cardList[index-1];
     swiperRef.current.jumpToCardIndex(index - 1); 
@@ -239,7 +239,7 @@ export default function Home({ navigation, route }) {
       if (listIndex === 0) {
         getPreviousCard();
       } else {
-        gotToPreviousCard();
+        goToPreviousCard();
       }
 
     }

@@ -71,7 +71,8 @@ export default function SplashScreen({ navigation }) {
       tryToken(authData);
     } else {
       // navigation.navigate("Signup Screen");
-      resetNavigationScreen("OnBoardScreen");
+      resetNavigationScreen("Signup Screen");
+      // resetNavigationScreen("OnBoardScreen");
     }
   }
 

@@ -76,7 +76,7 @@ function FirstQuestionsScreen({ navigation }) {
       setCurrentQuestion(previousQuestion);
     } else {
       disconnect();
-      resetNavigationScreen("Login Screen")
+      resetNavigationScreen("Login Screen");
       // navigation.navigate("Login Screen");
     }
   }
