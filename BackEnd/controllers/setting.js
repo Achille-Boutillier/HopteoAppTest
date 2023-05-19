@@ -149,17 +149,25 @@ export async function deleteUser(password) {
     let response = await fetch(route + "/deleteUser", requestOptions);
     console.log(response.status);
     const data = await response.json();
-    // console.log(data);
+    console.log(data);
     // return data;
     if (response.status===200) {
-        return {data, success: true};
+        return {...data, success: true};
     } else {
-        return {data, success: false};
+      let errorMessage;
+      if (typeof data?.message === "string") {
+        errorMessage=data.message;
+      } else if (typeof data?.error === "string") {
+        errorMessage=data.error;
+      } else {
+        errorMessage="Une erreur s'est produite...";
+      }
+      return {errorMessage, success: false}
     }
   } catch (error) {
     console.log("bloc try failed :");
     console.log(error);
-    return {success: false};
+    return {errorMessage:"Une erreur s'est produite...", success: false};
   }
 }
 

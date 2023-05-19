@@ -26,11 +26,14 @@
     }
   },
   "submit": {
-    "production": {
+    "production": { 
       "ios": {
         "appleId": "antoine.landraing2@gmail.com",
         "ascAppId": "6447057343",
         "appleTeamId": "2KH53SSGXT"
+      },
+      "android": {
+        "serviceAccountKeyPath": "../Builds/pc-api-6197848069061171654-513-c4ecb868c19e.json"
       }
     }
   }

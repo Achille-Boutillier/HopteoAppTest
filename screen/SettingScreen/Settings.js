@@ -181,8 +181,8 @@ const dispatch = useDispatch();
         routes: [{ name: 'Login Screen' }],
       });
       resetAllStore(dispatch);
-    } else if (data?.message) {
-      setModalErrorMessage(data.message);
+    } else if (data.errorMessage) {
+      setModalErrorMessage(data.errorMessage);
     } else {
       setModalErrorMessage("Une erreur est survenue");
     }

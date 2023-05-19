@@ -8,7 +8,7 @@ import { splashSwipeSuccess } from "../../core/reducers/swipeReducer";
 
 
 
-export const mainUrl = "https://app.hopteo.com/api/v0";
+export const mainUrl = "https://app.hopteo.fr/api/v0";
 const route = mainUrl + "/user";
 
 export async function getAuthData() {
@@ -136,6 +136,7 @@ export async function login(email, password) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      // getSplashData: false
       getSplashData: true
     },
     body: JSON.stringify({
@@ -152,14 +153,21 @@ export async function login(email, password) {
     if (response.status===200) {
       return {...data, success: true};
     } else {
-      return {...data, success: false}
+
+      let errorMessage;
+      if (typeof data?.error === "string") {
+        errorMessage=data.error;
+      } else {
+        errorMessage="Une erreur s'est produite... L'adresse email est peut-être déjà associée à un compte";
+      }
+      return {errorMessage, success: false}
+      
     }
   } catch (error) {
     console.error(error);
     return {
       success: false,
-      error:
-        "Serveur inaccessible !\n Nos équipes mettent tout en oeuvre pour résoudre le problème",
+      errorMessage:"Serveur inaccessible !\n Nos équipes mettent tout en oeuvre pour résoudre le problème",
     };
   }
 }
@@ -173,7 +181,7 @@ export async function signup(email, password) {
     },
     body: JSON.stringify({
       email: email,
-      password: password
+      password: password,
     }),
   };
 
@@ -185,14 +193,21 @@ export async function signup(email, password) {
     if (response.status===201) {
       return {...data, success: true};
     } else {
-      return {...data, success: false};
+
+      let errorMessage;
+      if (typeof data?.error === "string") {
+        errorMessage=data.error
+      } else {
+        errorMessage="Une erreur s'est produite... L'adresse email est peut-être déjà associée à un compte";
+      }
+      return {errorMessage, success: false}
+
     }
   } catch (error) {
     console.error(error);
     return {
       success: false,
-      message:
-        "Serveur inaccessible !\n Nos équipes mettent tout en oeuvre pour résoudre le problème",
+      errorMessage:"Serveur inaccessible !\n Nos équipes mettent tout en oeuvre pour résoudre le problème",
     };
   }
 }

@@ -10,6 +10,7 @@ import AuthComponent from "../../component/AuthComponent";
 export default function Login({ navigation }) {
   
   const [errorMessage, setErrorMessage] = useState();
+  const [ischarging, setIscharging] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -20,8 +21,13 @@ export default function Login({ navigation }) {
     });
   }
 
+  function handleIsCharging(){
+    setIscharging(true);
+    setErrorMessage("");
+  }
+
   async function tryLogin(email, password) {
-    // setLoginButtonPressed(false); // reset l'etat du bouton au cas où l'authentification echoue
+    handleIsCharging();
     const loginAnswer = await login(email, password);
     if (loginAnswer?.success) {
       storeNewAuthData(loginAnswer.authData);
@@ -34,15 +40,14 @@ export default function Login({ navigation }) {
       }
       setErrorMessage();
       resetNavigationScreen(nextScreen);
-      // navigation.navigate(nextScreen);
     } else {
-      if (loginAnswer?.message) {
-        // console.log("je passe dans else if");
-        setErrorMessage(loginAnswer?.message);
+      if (loginAnswer.errorMessage) {
+        setErrorMessage(loginAnswer.errorMessage);
       } else {
         setErrorMessage("Echec de la tentative de connexion");
       }
     }
+    setIscharging(false);
   }
 
   function goToSignup() {
@@ -57,7 +62,7 @@ export default function Login({ navigation }) {
   // }, [loginButtonPressed]);
 
   return (
-    <AuthComponent typeScreen="login" onSubmit={tryLogin} onChangeTypeScreen={goToSignup} errorMessage={errorMessage}/>
+    <AuthComponent typeScreen="login" onSubmit={tryLogin} onChangeTypeScreen={goToSignup} errorMessage={errorMessage} ischarging={ischarging}/>
   );
 }
 

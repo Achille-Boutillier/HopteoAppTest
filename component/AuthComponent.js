@@ -1,15 +1,16 @@
 
 import { useEffect, useState } from "react";
-import {FlatList, StyleSheet, View, ActivityIndicator, Text } from "react-native";
+import {FlatList, StyleSheet, View, ActivityIndicator, Text, ScrollView } from "react-native";
 import { Colors } from "../constant/Colors";
 import InputComponent from "./InputComponent";
 import { BrandComponent } from "./TopBar";
 import TerciaryButton from "./buttons/TerciaryButton";
 import QuaternaryButton from "./buttons/QuaternaryButton";
 import { useNavigation } from "@react-navigation/native";
+import ActivityComponent from "./ActivityComponent";
 
 
-export default function AuthComponent({typeScreen ,onSubmit, onChangeTypeScreen, errorMessage }) {
+export default function AuthComponent({typeScreen ,onSubmit, onChangeTypeScreen, errorMessage, ischarging }) {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -51,7 +52,7 @@ export default function AuthComponent({typeScreen ,onSubmit, onChangeTypeScreen,
   }
 
   return (
-    <View style={styles.mainContainer}>
+    <View style={styles.mainContainer} >
      
      {/* <View style={styles.headerContainer}>
         <Text style={styles.pageTitle}>{pageTitle}</Text>
@@ -65,9 +66,12 @@ export default function AuthComponent({typeScreen ,onSubmit, onChangeTypeScreen,
       }
 
 
-      <View style={[styles.bodyContainer, headerReadius, 
-        isEditing ? styles.bodyOnEditing : 
-        styles.bodyNotEditing]}>
+      <View style={[
+          styles.bodyContainer, 
+          isEditing ? styles.bodyOnEditing : {...styles.bodyNotEditing, ...headerReadius},
+          // {opacity: ischarging ? 0.6 : 1}
+        ]}
+      >
 
         <Text style={styles.catchPhrase}>{catchPhrase}</Text>
 
@@ -109,6 +113,7 @@ export default function AuthComponent({typeScreen ,onSubmit, onChangeTypeScreen,
         <BrandComponent marginLeft={0} logoSize={60} fontSize={30}/> */}
 
       </View>
+      {ischarging ? <ActivityComponent/> : null}
       
     </View>
   );
@@ -155,8 +160,9 @@ const styles = StyleSheet.create({
 
   bodyOnEditing: {
     position: "relative",
-    height: "100%",
-    paddingTop: 0,
+    flex: 1,
+    // height: "99%",
+    // marginTop: 10,
     // bottom: null,
     // justifyContent: "center",
   }, 
