@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import {ScrollView} from "react-native";
 import { signup, storeNewAuthData } from "../../BackEnd/controllers/userData";
 
 import AuthComponent from "../../component/AuthComponent";
+// import { ScrollView } from "react-native-gesture-handler";
 
 
 export default function SignUp({ navigation, route }) {

@@ -29,19 +29,19 @@ export default function OnBoardScreen({ navigation }) {
     {
       backgroundColor: '#fff',
       image: <OnBoardImageComponent screenType={"rank"} />,
-      subtitle: "Consulte ton classement d'écoles d'ingénieur personalisé",
+      subtitle: "Consulte ton classement d'écoles d'ingénieurs personnalisé",
       title: '',
     },
     {
       backgroundColor: '#fff',
       image: <OnBoardImageComponent screenType={"school"} />,
-      subtitle: "Compare les spécificités propres à chaque écoles : la formation, le coût, la localisation, etc ...",
+      subtitle: "Compare les spécificités propres à chaque école : la formation, le coût, la localisation, etc ...",
       title: '',
     },
     {
       backgroundColor: '#fff',
       image: <OnBoardImageComponent screenType={"explore"} stroke={true}/>,
-      subtitle: "L'onglet explore te permet de découvrir librement les écoles de ton choix.",
+      subtitle: "L'onglet 'Explore' te permet de découvrir librement les écoles de ton choix.",
       title: '',
     },
   ];

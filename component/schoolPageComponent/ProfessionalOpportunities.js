@@ -4,7 +4,8 @@ import { Colors } from "../../constant/Colors";
 
 export default function ProfessionalOpportunities({secteurDebouche}) {
 
-  const secteur = Object.keys(secteurDebouche);   //--> ["chimie", "energies", ...]
+  // ! si secteurDebouche n'existe pas, il ne faut pas utiliser object.keys()
+  const secteur = Object.keys(secteurDebouche ? secteurDebouche : {});   //--> ["chimie", "energies", ...]
 
 
   return (
@@ -14,14 +15,9 @@ export default function ProfessionalOpportunities({secteurDebouche}) {
           <Text key={key} style={styles.textStyle} > {`${item} : ${secteurDebouche[item]}%`}</Text>
         ))}
 
-
-        {/* <Text style={styles.textStyle} > {`\u2022  ${secteur[0]} : ${secteurDebouche[secteur[0]]}%`}</Text> */}
-
       </View>
     </View>
   );
-
-return 
 };
 
 const styles = StyleSheet.create({

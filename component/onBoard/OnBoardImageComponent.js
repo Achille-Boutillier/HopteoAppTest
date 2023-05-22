@@ -17,7 +17,7 @@ export default function OnBoardImageComponent({screenType, stroke=false}) {
     switch (screenType) {
       case "intro" :
         // newPath = require("../../assets/images/onBoardImages/swipeScreenshot.jpg");
-        newTitle= "Découvre comment créer ton classement d'école d'ingénieur personalisé sur Hopteo.";
+        newTitle= "Découvre comment créer ton classement d'écoles d'ingénieurs personnalisé sur Hopteo.";
         break;
       case "swipe" :
         newPath = require("../../assets/images/onBoardImages/swipeScreenshot.jpg");
@@ -26,7 +26,7 @@ export default function OnBoardImageComponent({screenType, stroke=false}) {
         break;
       case "rank" :
         newPath = require("../../assets/images/onBoardImages/classementScreenshot.jpg");
-        newTitle= "Découvre ton classement Personalisé";
+        newTitle= "Découvre ton classement Personnalisé";
         
         break;
       case "school" :
