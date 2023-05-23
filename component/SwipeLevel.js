@@ -68,7 +68,7 @@ export default function SwipeLevel({absoluteIndex, minSwipeForRanking, progressB
             <PrimaryButton onPress={handleLevelModal} name="close-outline" size={60} color={Colors.orange500}/>
             </View>
             <View style={styles.modalBody}>
-            <Text style={{fontSize:20, textAlign: 'center', width: "80%", marginTop: -20}}>Félicitation, un nouveau classement est disponible !!</Text>
+            <Text style={{fontSize:20, textAlign: 'center', width: "80%", marginTop: -20}}>Félicitation, ton premier classement est disponible !!</Text>
             {/* <Text style={{fontSize:20, textAlign: 'center', marginHorizontal: 10, marginVertical: 20}}>Cliquez Ici pour découvrir votre classement d'école :</Text> */}
             {/* <PrimaryButton onPress={goToRanking} name="ribbon" size={60} color={Colors.orange500} /> */}
             <TerciaryButton title="Voir le classement" onPress={goToRanking} color={Colors.orange500} isFullColor={true} fontSize={20} />
