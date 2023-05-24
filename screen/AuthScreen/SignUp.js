@@ -16,8 +16,27 @@ export default function SignUp({ navigation, route }) {
     setErrorMessage("");
   }
 
+  function isUserInputReadyToSubmit(email, password) {
+    if (email==="" || password==="") {
+      setErrorMessage("Tous les champs doivent être remplis");
+      return false;
+    } else if (!email.includes("@") || !email.includes(".")) {
+      setErrorMessage("Le format de l'email est invalide");
+      return false
+    } else {
+      return true;
+    }
+  }
+
   async function trySignUp(email, password) {
     handleIsCharging();
+
+    if (!isUserInputReadyToSubmit(email, password)) {
+      setIscharging(false);
+      return;
+    } 
+
+
     const signUpAnswer = await signup(email, password);
     if (signUpAnswer?.success) {
       setErrorMessage(); // éviter d'avoir un msg d'erreur si on revient sur la page de connexion plus tard

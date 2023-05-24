@@ -26,7 +26,21 @@ export default function Login({ navigation }) {
     setErrorMessage("");
   }
 
+  function isUserInputReadyToSubmit(email, password) {
+    if (email==="" || password==="") {
+      setErrorMessage("Un des champs n'est pas rempli");
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   async function tryLogin(email, password) {
+    if (!isUserInputReadyToSubmit(email, password)) {
+      setIscharging(false);
+      return;
+    }
+
     handleIsCharging();
     const loginAnswer = await login(email, password);
     if (loginAnswer?.success) {

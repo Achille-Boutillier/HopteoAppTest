@@ -19,6 +19,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
+    zIndex: 3,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',    // transparence du background
   },
 });

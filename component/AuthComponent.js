@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from "react";
-import {FlatList, StyleSheet, View, ActivityIndicator, Text, ScrollView } from "react-native";
+import {FlatList, StyleSheet, View, ActivityIndicator, Text, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
 import { Colors } from "../constant/Colors";
 import InputComponent from "./InputComponent";
 import { BrandComponent } from "./TopBar";
@@ -52,32 +52,57 @@ export default function AuthComponent({typeScreen ,onSubmit, onChangeTypeScreen,
   }
 
   return (
-    <View style={styles.mainContainer} >
-     
-     {/* <View style={styles.headerContainer}>
-        <Text style={styles.pageTitle}>{pageTitle}</Text>
-      </View> */}
-      {!isEditing 
-        ? (
-          <View style={styles.headerContainer}>
-            <Text style={styles.pageTitle}>{pageTitle}</Text>
-          </View>
-        ) : null
-      }
-
-
-      <View style={[
-          styles.bodyContainer, 
-          isEditing ? styles.bodyOnEditing : {...styles.bodyNotEditing, ...headerReadius},
-          // {opacity: ischarging ? 0.6 : 1}
-        ]}
+    <View style={styles.mainContainer}>
+      <View 
+        style={ [styles.contentContainer, isEditing ? (
+            Platform.OS === "ios" ? styles.contentContainerIosOnEditing : null
+          ) : null ] 
+        } 
       >
+      
+      
+        <Text style={styles.pageTitle}>{pageTitle}</Text>
+    
 
-        <Text style={styles.catchPhrase}>{catchPhrase}</Text>
+        {/* {!isEditing 
+          ? (
+            <View style={styles.headerContainer}>
+              <Text style={styles.pageTitle}>{pageTitle}</Text>
+            </View>
+          ) : null
+        } */}
 
+
+        {/* <View style={[
+            styles.bodyContainer, 
+            isEditing ? styles.bodyOnEditing : {...styles.bodyNotEditing, ...headerReadius},
+            // {opacity: ischarging ? 0.6 : 1}
+          ]}
+        > */}
+
+        {!isEditing 
+          ? (
+          <Text style={styles.catchPhrase}>{catchPhrase}</Text>
+          ) : null
+        }
+
+        {/* {errorMessage 
+          ? (
+            <Text style={styles.errorMessage} >{errorMessage}</Text>
+          ) : null
+        } */}
+
+        {/* {<Text style={styles.errorMessage} >{errorMessage}</Text>} */}
+
+        {/* <KeyboardAvoidingView
+          style={{width: "100%", alignItems: "center", zIndex: 2, backgroundColor: Colors.white}}
+          behavior={Platform.OS == "ios" ? "padding" : "height"}
+        > */}
         <Text style={styles.errorMessage} >{errorMessage}</Text>
 
-        <View style={[styles.formContainer, {height: isForgetVisible ? 200 : 190}]}>
+        <View 
+          style={[styles.formContainer, {height: isForgetVisible ? 200 : 190}]}
+        >
           <InputComponent title="Email" inputType="email" input={email} setInput={setEmail} setIsEditing={setIsEditing} />
           <View style={{width: "100%"}} > 
             <InputComponent 
@@ -104,17 +129,21 @@ export default function AuthComponent({typeScreen ,onSubmit, onChangeTypeScreen,
           </View>
 
         </View>
+        {/* </KeyboardAvoidingView> */}
+        <TerciaryButton title={firstButtonTitle} onPress={()=> onSubmit(email, password)} color={Colors.orange500} isFullColor={true}/>
+
 
           
-        <TerciaryButton title={firstButtonTitle} onPress={()=> onSubmit(email, password)} color={Colors.orange500} isFullColor={true}/>
         {!isEditing ? <TerciaryButton title={secondButtonTitle} onPress={onChangeTypeScreen} color={Colors.orange500} /> : null}
         {!isEditing ? <BrandComponent marginLeft={0} logoSize={60} fontSize={30}/> : null}
-        {/* <TerciaryButton title={secondButtonTitle} onPress={onChangeTypeScreen} color={Colors.orange500} />
-        <BrandComponent marginLeft={0} logoSize={60} fontSize={30}/> */}
+        
+        
+        
 
-      </View>
+     
       {ischarging ? <ActivityComponent/> : null}
-      
+        
+      </View>
     </View>
   );
 }
@@ -122,20 +151,33 @@ export default function AuthComponent({typeScreen ,onSubmit, onChangeTypeScreen,
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: Colors.orange500,
-    justifyContent: "flex-start",
-    // marginTop: "10%",
+    backgroundColor: Colors.white,
+    // justifyContent: "space-around",
+    // alignItems: "center",
   },
+
+  contentContainer: {
+    flex: 1,
+    backgroundColor: Colors.white,
+    justifyContent: "space-around",
+    alignItems: "center",
+  },
+
+  contentContainerIosOnEditing: {
+    flex: 0,
+    height: "60%",
+  },
+
   headerContainer: {
-    height: "13%",
+    // height: "13%",
     alignSelf: "center",
     justifyContent: "center",
-    // borderWidth: 1,
+    borderWidth: 1,
   },
   pageTitle: {
     // verticalAlign: "center",
     textAlign: "center",
-    color: Colors.white,
+    color: Colors.orange500,
     fontSize: 30,
     fontWeight: "700",
 
@@ -149,31 +191,31 @@ const styles = StyleSheet.create({
     marginHorizontal: "10%",
   },
 
-  bodyContainer: {
-    backgroundColor: Colors.white,
-    width: "100%",
-    alignItems: "center",
-    // borderTopLeftRadius: 80,
-    justifyContent: "space-evenly",
-    // borderWidth: 1
-  },
+  // bodyContainer: {
+  //   backgroundColor: Colors.white,
+  //   width: "100%",
+  //   alignItems: "center",
+  //   // borderTopLeftRadius: 80,
+  //   justifyContent: "space-evenly",
+  //   // borderWidth: 1
+  // },
 
-  bodyOnEditing: {
-    position: "relative",
-    flex: 1,
-    // height: "99%",
-    // marginTop: 10,
-    // bottom: null,
-    // justifyContent: "center",
-  }, 
-  bodyNotEditing: {
-    position: "absolute",
-    height: "87%",
-    bottom: 0,
-    // paddingTop: 50,
-    // justifyContent: "center",
+  // bodyOnEditing: {
+  //   position: "relative",
+  //   flex: 1,
+  //   // height: "99%",
+  //   // marginTop: 10,
+  //   // bottom: null,
+  //   // justifyContent: "center",
+  // }, 
+  // bodyNotEditing: {
+  //   position: "absolute",
+  //   height: "87%",
+  //   bottom: 0,
+  //   // paddingTop: 50,
+  //   // justifyContent: "center",
 
-  },
+  // },
 
   
 
