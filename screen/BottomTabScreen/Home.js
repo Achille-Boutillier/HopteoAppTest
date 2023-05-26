@@ -44,6 +44,7 @@ export default function Home({ navigation, route }) {
 
   const [isCardListLoaded, setIsCardListLoaded] = useState(false);
   const [cardList, setCardList] = useState([]);
+  const [allCardsPile, setAllCardsPile] = useState([]);
   
   // const [isDetailVisible, setIsDetailVisible] = useState(false);
   const [swipeButtonZIndex, setSwipeButtonZIndex] = useState(2);
@@ -140,7 +141,11 @@ export default function Home({ navigation, route }) {
     unableCard();
     const data = await nextPile(nextIdCardList);
     console.log("Je passe dans getCards");
-    console.log( "[cardsObject]" ,data);
+    setAllCardsPile((pile) => pile.concat(data.cardsPile));       // ! redundant ?
+    // console.log( "[redundent ? ========]" ,findDuplicate(allCardsPile));    // ! redundent ?
+    console.log( "[allCardsPile]" ,allCardsPile);    // ! redundent ?
+
+    // console.log( "[cardsObject]" ,data);
     if (data.cardsPile) {
       setListIndex(0);
       console.log("[cardList]", data.cardsPile);
@@ -157,10 +162,12 @@ export default function Home({ navigation, route }) {
     const notAnsweredCards = latestSwipeReducer.idCardsList.filter(item => !(answeredCards.includes(item)));
     return notAnsweredCards.slice(0,12);
   }
- 
+
   useEffect(() => {
     if (isPileOver) {
       const nextIdCardList = calculNextCardsToAsk();
+      console.log("[nextIdCardList]", nextIdCardList);
+      // console.log("[DUPLICATS ===== ]", findDuplicate(nextIdCardList));
       getCards(nextIdCardList);
     }
   }, [isPileOver]);
@@ -296,6 +303,13 @@ function onSwiping(x, y){
   setSwipeDir(direction);
 }
 
+  function onSwipedAll() {
+    setTimeout(() => {
+      console.log("[=====================]" , "action performed");
+      setIsPileOver(true);
+    }, 300);
+  }
+
   // ---------- méthodes relatives au swipe ----------------------
 
   // () => swiperRef.current.jumpToCardIndex(newIndex);
@@ -354,7 +368,7 @@ function onSwiping(x, y){
             // infinite // repars sur les premières cartes quand c'est fini => à changer
             // onSwipedAll={() => {}}  // function à appeler quand toutes les cartes ont été swipées
             onSwiping={onSwiping}
-            onSwipedAll={() => setIsPileOver(true)}
+            onSwipedAll={() => onSwipedAll()}
             // dragStart={setSwipeButtonZIndex.bind(this, 0)}
             dragEnd={()=>{
               // setSwipeButtonZIndex(2);
