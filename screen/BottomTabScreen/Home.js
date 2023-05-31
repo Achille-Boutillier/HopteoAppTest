@@ -1,15 +1,16 @@
-import {StyleSheet, Text, View, ActivityIndicator, TouchableOpacity, Button, Alert, Dimensions, AppState } from "react-native";
+import {StyleSheet, Text, View, ActivityIndicator, TouchableOpacity, Button, Alert, Dimensions, AppState, Platform } from "react-native";
 // import Modal from "react-native-modal";
 import { useSelector, useDispatch } from "react-redux";
 
 import { useState, useEffect, useLayoutEffect, createRef, useRef  } from "react";
+// import VersionCheck from 'react-native-version-check-expo';
 
 import Swiper from "react-native-deck-swiper";
 
 import Card from "../../component/Card";
 import { Colors } from "../../constant/Colors";
 import { HeaderButton } from "../../component/TopBar";
-import {nextPile, undoSwipe, swipeHandler, updateSwipe} from "../../BackEnd/controllers/cards";
+import {nextPile, undoSwipe} from "../../BackEnd/controllers/cards";
 import SwipeLevel from "../../component/SwipeLevel";
 import { alertProvider } from "../../BackEnd/errorHandler";
 import MessageContainer from "../../component/MessageContainer";
@@ -53,6 +54,56 @@ export default function Home({ navigation, route }) {
 
   
 
+  // ----------- pop up mise a jour ----------------------------------------------------
+  // async function checkAppVersion() {
+  //   const currentVersion = VersionCheck.getCurrentVersion();    //! vaut null, fait planter getLastVersion() suivante
+  //   console.log("currentVersion", currentVersion)
+  //   const latestVersion = await VersionCheck.getLatestVersion({
+  //     provider: Platform.OS==="ios" ? "appStore"  : "playStore", // Vérifier la dernière version sur le Play Store
+  //   });
+
+  //   if (VersionCheck.needUpdate(currentVersion, latestVersion)) {
+  //     Alert.alert(
+  //       "Mise à jour disponible",
+  //       "Une nouvelle version de l'application est disponible. Veux-tu la mettre à jour ?",
+  //       [
+  //         {
+  //           text: 'Mettre à jour',
+  //           onPress: () => {
+  //             (Platform.OS === "ios" || Platform.OS === "android") 
+  //             ? VersionCheck.openAppStore()  // open App/Play store 
+  //             : Linking.openURL("https://linktr.ee/hopteo" );
+  //           },
+  //         },
+  //         {
+  //           text: 'Plus tard',
+  //           style: 'cancel',
+  //         },
+  //       ],
+  //       {cancelable: false }
+  //     );
+  //   }
+  // };
+
+  // ! plutôt utiliser Updates from "expo"
+
+  // const checkForUpdate = async () => {
+  //   const update = await Updates.checkForUpdateAsync();
+  //   if (update.isAvailable) {
+  //     // Display a message or UI component to notify the user about the update
+  //     console.log('New version is available');
+  //   }
+  // };
+
+
+
+  useEffect(() => {
+    // checkAppVersion();
+  }, []);
+
+
+  // --------------------------fin pop up maj ---------------------------------------------------------
+
   // ------------ upgrade backEnd Data if app goes on background -----------------------
 
   const [appState, setAppState] = useState("active");
@@ -66,42 +117,13 @@ export default function Home({ navigation, route }) {
       subscription.remove();
     };
   }, []);
-
-
-  
-  // async function updateBackData() {
-  //   const {notSentToBackAnswers, sentToBackAnswers, swipeTypeObj, removedIdStillInBackEnd} = latestSwipeReducer;
-  //   // console.log("[removedIdStillInBackEnd]", removedIdStillInBackEnd);
-  //   if (notSentToBackAnswers.length>0 || removedIdStillInBackEnd.length>0) {   //todo: revoir la logique
-  //     console.log("it needs to be upgraded ===================");
-  //     console.log("[removedIdStillInBackEnd]", removedIdStillInBackEnd);
-  //     const filteredSwipeTypeObj = notSentToBackAnswers.reduce((obj, key) => {
-  //       if (key in swipeTypeObj) {
-  //         obj[key] = swipeTypeObj[key];
-  //       }
-  //       return obj;
-  //     }, {});
-
-  //     const success = await updateSwipe(notSentToBackAnswers, filteredSwipeTypeObj, removedIdStillInBackEnd);
-  //     //todo : handle les removedIdStillInBackEnd
-
-  //     if (success) {
-  //       dispatch(handleAllSwipeSent());
-  //     } else {
-  //       console.log("couldn't update backEnd swipe answers");
-  //     }
-      
-  //   } else {
-  //     console.log("backEnd swipe answers update is not needed")
-  //   }
-  // }
  
  
-   useEffect(()=> {
-     if (appState!=="active") {
-       updateBackData(dispatch); 
-     }
-   }, [appState])
+  useEffect(()=> {
+    if (appState!=="active") {
+      updateBackData(dispatch); 
+    }
+  }, [appState])
  
    // ----------- fin upgrade backEnd Data -------------------------
 
@@ -202,13 +224,11 @@ export default function Home({ navigation, route }) {
 
     const {cardsPile, error} = await nextPile([previousCardId]);
     if (cardsPile) {
-      const {id, idTheme} = cardsPile[0];
+      // const {id, idTheme} = cardsPile[0];
       // const newCardList = cardList;
       // newCardList.unshift(cardsPile[0]);      // add an element to the biginning of newCardList (return length de la nouvelle liste)
-      const undoSuccess = await undoSwipe(id, idTheme, dispatch);
-      (undoSuccess)
-        ? setCardList((previousList) => [cardsPile[0], ...previousList]) 
-        : alertProvider("Impossible de revenir en arrière pour le moment");
+      // const undoSuccess = await undoSwipe(id, idTheme, dispatch);
+      setCardList((previousList) => [cardsPile[0], ...previousList])
         
     } else {
       alertProvider(error);
@@ -220,17 +240,18 @@ export default function Home({ navigation, route }) {
     const {id, idTheme} = cardList[index-1];
     swiperRef.current.jumpToCardIndex(index - 1); 
     setListIndex(index - 1);
-    const undoSuccess = await undoSwipe(id, idTheme, dispatch);
-    if (!undoSuccess) {
-      swiperRef.current.jumpToCardIndex(index), 
-      setListIndex(index),
-      alertProvider("Impossible de revenir en arrière pour le moment")
-    }
+    // const undoSuccess = await undoSwipe(id, idTheme, dispatch);
+    // if (!undoSuccess) {
+    //   swiperRef.current.jumpToCardIndex(index);
+    //   setListIndex(index);
+    //   alertProvider("Impossible de revenir en arrière pour le moment");
+    // }
       
   }
 
 
-  async function onPressUndo() {
+  function onPressUndo() {
+    console.log("id card", cardList[listIndex]);      // !!! pbm de key  
     setIsUndoPress(true);
   }
 

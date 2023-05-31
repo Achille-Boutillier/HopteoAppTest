@@ -15,6 +15,7 @@ export default function SwipeLevel({absoluteIndex, minSwipeForRanking, progressB
   const navigation = useNavigation();
 
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isFirstRanking, setIsFirstRanking ] = useState();
 
 
   const [levelNumber, setLevelNumber] = useState();
@@ -24,7 +25,8 @@ export default function SwipeLevel({absoluteIndex, minSwipeForRanking, progressB
   function calculNewScore() {
     const newLevel = parseInt(absoluteIndex/minSwipeForRanking) + 1;
     const newScore = parseInt( (absoluteIndex/minSwipeForRanking + 1 - newLevel) *100 );  // on tronque la valeur car on veut atteindre 100% que si on dépasse 99.99999....% 
-    if (newLevel>levelNumber && newLevel===2) {
+    if (levelNumber>=1 && newLevel>levelNumber) {
+      setIsFirstRanking(newLevel===2);
       handleLevelModal();
     }
     setLevelNumber(newLevel);
@@ -64,15 +66,19 @@ export default function SwipeLevel({absoluteIndex, minSwipeForRanking, progressB
 
       <Modal isVisible={isModalVisible}>
           <View style={styles.modal}>
-            <View style={styles.modalCross}>
-            <PrimaryButton onPress={handleLevelModal} name="close-outline" size={60} color={Colors.orange500}/>
-            </View>
+            { isFirstRanking 
+              ? null 
+              : (
+                <View style={styles.modalCross}>
+                <PrimaryButton onPress={handleLevelModal} name="close-outline" size={60} color={Colors.orange500}/>
+                </View>
+              ) 
+            }
             <View style={styles.modalBody}>
-            <Text style={{fontSize:20, textAlign: 'center', width: "80%", marginTop: -20}}>Félicitation, ton premier classement est disponible !!</Text>
-            {/* <Text style={{fontSize:20, textAlign: 'center', marginHorizontal: 10, marginVertical: 20}}>Cliquez Ici pour découvrir votre classement d'école :</Text> */}
-            {/* <PrimaryButton onPress={goToRanking} name="ribbon" size={60} color={Colors.orange500} /> */}
+            <Text style={{fontSize:20, textAlign: 'center', width: "80%", marginTop: -20}}>
+              { isFirstRanking ? "Félicitation, ton premier classement est disponible !!" : "Ton classement a été amélioré !"}
+            </Text>
             <TerciaryButton title="Voir le classement" onPress={goToRanking} color={Colors.orange500} isFullColor={true} fontSize={20} />
-            {/* <SecondaryButton onPress={goToRanking} fontSize={20} buttonText="Voir le classement" preSized={false} /> */}
             </View>
           </View>
       </Modal>

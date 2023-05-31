@@ -7,47 +7,58 @@ import { getBannerData } from "../BackEnd/controllers/school";
 import { useDispatch } from "react-redux";
 import ExploreSchoolBanner from "./ExploreSchoolBanner";
 import MessageContainer from "./MessageContainer";
+import { searchSchool } from "../BackEnd/controllers/explore";
 
-export default function SearchedComponent({searchedIdList, scrollWidth, scrollHeight}) {
+export default function SearchedComponent({searchInput, isResearchSubmited, setIsResearchSubmited,scrollWidth, scrollHeight}) {
   const dispatch = useDispatch();
-  const [schoolIdList, setSchoolIdList] = useState(null);
-  const [displayResearch, setDisplayResearch] = useState();
+  const [schoolIdList, setSchoolIdList] = useState([]);
+  const [isRequestOver, setIsRequestOver] = useState(false);
+
 
   async function loadMissingSchoolData(idList) {
     const schoolsData = store.getState().schoolReducer.schoolsData;
     const notMissingSchoolId = Object.keys(schoolsData).filter((item)=> schoolsData[item].nomEcole);
     const missingSchoolId = idList.filter((item)=>!notMissingSchoolId.includes(item));
-
+    setSchoolIdList(idList);    // ici pour être effectué avant setIsRequestOver;
     if (missingSchoolId.length>0) {
       const data = await getBannerData(missingSchoolId, dispatch);
       if (data.success) {
-        setDisplayResearch(true);
+        setIsRequestOver(true);
       } else {
         alertProvider();
       }
     } else {
-      setDisplayResearch(true); 
+      setIsRequestOver(true); 
+    }
+  }
+
+  async function handleSubmitResearch() {
+    const {schoolMatchId, success} = await searchSchool(searchInput);
+    if (success) {
+      loadMissingSchoolData(schoolMatchId);
+    } else {
+      alertProvider();
     }
   }
 
   useEffect(()=> {
-    if (searchedIdList) {
-      // (()=> setDisplayResearch(false))()    //executer le "set" instantanément
-      loadMissingSchoolData(searchedIdList);
-      setSchoolIdList(searchedIdList);
-    } else {
-      setDisplayResearch(false);
-      setSchoolIdList(null);
+    if (isResearchSubmited) {
+      handleSubmitResearch();
+      // setIsResearchSubmited(false);
     }
-    
-  }, [searchedIdList])
+  }, [isResearchSubmited])
+
+  useEffect(()=> {
+    console.log(searchInput);
+    setIsResearchSubmited(false);
+    setIsRequestOver(false);
+    setSchoolIdList([])
+  }, [searchInput])
 
 
-  if (!searchedIdList) {
-    return <MessageContainer>Lance vite ta recherche !</MessageContainer> 
-  } else {
+  if (isResearchSubmited) {
 
-    if (displayResearch) {
+    if (isRequestOver) {
       if (schoolIdList?.length>0) {
         return (
           <FlatList
@@ -78,6 +89,9 @@ export default function SearchedComponent({searchedIdList, scrollWidth, scrollHe
     } else {
       return <ActivityIndicator color={Colors.orange500} />
     }
+  } else {
+    return ;
+    // <MessageContainer>Les résultats apparaitront une fois la recherche lancée</MessageContainer> 
   }
   
 }

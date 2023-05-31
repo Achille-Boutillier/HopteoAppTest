@@ -59,7 +59,7 @@ export default function InputComponent({title, inputType, setInput, input, onSub
       placeholder="*****";
       autoComplete="off";
       // keyboardType="default";
-      keyboardType="email-address"
+      keyboardType="email-address";
       secureTextEntry=true; 
     } else if (inputType==="numeric") {
       placeholder="123456";

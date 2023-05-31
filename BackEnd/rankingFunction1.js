@@ -75,7 +75,7 @@ export function generateRanking(swipe, cards, schools, minSwipeForRanking, theme
                 throw "Impossible d'accéder au classement des écoles";
             }
         } else {
-            return {message : "Continue de swiper pour voir apparaitre ton premier classement"};
+            return {message : "Continue de swiper pour voir apparaître ton premier classement"};
         }
     } catch(error) {
         console.log("[generateRANKING ERROR]", error);

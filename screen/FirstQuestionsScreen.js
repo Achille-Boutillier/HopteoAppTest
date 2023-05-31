@@ -15,7 +15,7 @@ import PrimaryButton from "../component/buttons/PrimaryButton";
 
 function FirstQuestionsScreen({ navigation }) {
   const [studyField, setStudyField] = useState();
-  const [bacMean, setBacMean] = useState();
+  const [bacMean, setBacMean] = useState("");
   const [allQuestionsAnswered, setAllQuestionsAnswered] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState("studyField");
 

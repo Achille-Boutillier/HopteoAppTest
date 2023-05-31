@@ -30,8 +30,8 @@ export default function Explore({ navigation, route }) {
   const dispatch = useDispatch();
 
   // const []
-  const [searchedIdList, setSearchedIdList] = useState(null);
-  const [isSubmitResearch, setIsSubmitResearch] = useState(false);
+  // const [searchedIdList, setSearchedIdList] = useState(null);
+  const [isResearchSubmited, setIsResearchSubmited] = useState(false);
   const [searchInput, setSearchInput] = useState(null);
   const [isResearching, setIsResearching] = useState(false);
   // const [errorMessage, setErrorMessage] = useState(null);
@@ -85,33 +85,33 @@ export default function Explore({ navigation, route }) {
   }, [])
 
   function handleStopResearch() {
-    setSearchInput(null);
-    setIsSubmitResearch(false); 
+    setSearchInput("");
+    setIsResearchSubmited(false); 
     setIsResearching(false)
-    setSearchedIdList(null);
+    // setSearchedIdList(null);
   }
 
 
-  async function handleSubmitResearch() {
-    const {schoolMatchId, success} = await searchSchool(searchInput);
-    if (success) {
-      setSearchedIdList(schoolMatchId);
-    } else {
-      alertProvider();
-    }
-    // setIsSubmitResearch(true);   //!!! s'assurer que searchedIdList déjà storée
+  // async function handleSubmitResearch() {
+  //   const {schoolMatchId, success} = await searchSchool(searchInput);
+  //   if (success) {
+  //     setSearchedIdList(schoolMatchId);
+  //   } else {
+  //     alertProvider();
+  //   }
+  //   // setIsSubmitResearch(true);   //!!! s'assurer que searchedIdList déjà storée
+  // }
+
+  function onSubmitResearch(){  ///!! appelé que quand j'appuie sur rechercher, il faut qu'elle soit appelé onfocus du textInput
+    setIsResearchSubmited(true);
+    // setSearchInput(userInput);
   }
 
-  function onSubmitResearch(userInput){  ///!! appelé que quand j'appuie sur rechercher, il faut qu'elle soit appelé onfocus du textInput
-    setIsSubmitResearch(true);
-    setSearchInput(userInput);
-  }
-
-  useEffect(()=> {
-    if (isSubmitResearch) {
-      handleSubmitResearch();
-    }
-  }, [searchInput])
+  // useEffect(()=> {
+  //   if (isSubmitResearch) {
+  //     handleSubmitResearch();
+  //   }
+  // }, [searchInput])
 
 
   // -------------Header button -----------
@@ -131,19 +131,28 @@ export default function Explore({ navigation, route }) {
   return (
     <View style={styles.mainContainer}>
 
-      {/* <View style={{ width: "100%", marginTop: "2%" }}>
+      <View style={{ width: "100%", marginTop: "2%" }}>
         <SearchBar
+          searchInput={searchInput}
+          setSearchInput = {setSearchInput}
           onSubmitResearch={onSubmitResearch}
           handleStopResearch={handleStopResearch}
           onBeginResearch={onBeginResearch}
         />
-      </View> */}
+      </View>
 
-      <ExploreByArea scrollWidth={scrollWidth} scrollHeight={scrollHeight}/>
+      {!isResearching ? <ExploreByArea scrollWidth={scrollWidth} scrollHeight={scrollHeight}/> : null}
+
       {isResearching
         ? (
           <View style={styles.researchContainer}>
-            <SearchedComponent searchedIdList={searchedIdList} scrollWidth={scrollWidth} scrollHeight={scrollHeight} />
+            <SearchedComponent 
+              searchInput={searchInput} 
+              isResearchSubmited={isResearchSubmited} 
+              setIsResearchSubmited={setIsResearchSubmited} 
+              scrollWidth={scrollWidth} 
+              scrollHeight={scrollHeight} 
+            />
           </View>
         )
         : null
@@ -172,12 +181,6 @@ const styles = StyleSheet.create({
   },
   researchContainer: {
     flex: 1,
-    position: "absolute",
-    top: 50,
-    bottom: 0,
-    right: 0,
-    left: 0,
-    // borderWidth: 1,
-    backgroundColor: Colors.backgroundColor,
+    
   },
 });

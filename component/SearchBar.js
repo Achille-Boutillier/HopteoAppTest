@@ -3,17 +3,16 @@ import { useState, useRef } from "react";
 import { Colors } from "../constant/Colors";
 import PrimaryButton from "./buttons/PrimaryButton";
 
-export default function SearchBar({onSubmitResearch, handleStopResearch, onBeginResearch,}) {
+export default function SearchBar({searchInput, setSearchInput ,onSubmitResearch, handleStopResearch, onBeginResearch,}) {
   const [isResearching, setIsResearching] = useState(false);
-  const [userInput, setUserInput] = useState("");
   const textInputRef = useRef(null);
 
   function onPressStopResearch() {
     if (textInputRef.current.isFocused()){
-      textInputRef.current.blur();    // quitter l'edition de UserInput
+      textInputRef.current.blur();    // quitter l'edition de searchInput
     }
     textInputRef.current.clear();   // reset l'edition à nulle
-    setUserInput("");
+    setSearchInput("");
     setIsResearching(false);
     handleStopResearch();
   }
@@ -21,8 +20,8 @@ export default function SearchBar({onSubmitResearch, handleStopResearch, onBegin
   function onSubmit() {
     if (textInputRef.current.isFocused()) {       // si userInput était en pleine édition
       textInputRef.current.blur();
-      if (userInput) {
-        onSubmitResearch(userInput);
+      if (searchInput!=="") {
+        onSubmitResearch();
       } else {
         handleStopResearch();
       }
@@ -40,17 +39,6 @@ export default function SearchBar({onSubmitResearch, handleStopResearch, onBegin
 
   }
 
-  // todo: comment utiliser onEndEditing que si onSubmit n'a pas été utilisé (textInput always run onEndEditing after onSubmit)
-  // function onEndEditing() {
-  //   // handleIsEditing(false);
-  //   // blurContent(1);
-  //   setIsResearching(false);
-
-  //   // if (!userInput) {
-  //   //   setIsResearching(false);
-  //   // }
-  // }
-
   return (
     <View style={styles.mainContainer}>
       <PrimaryButton
@@ -64,12 +52,12 @@ export default function SearchBar({onSubmitResearch, handleStopResearch, onBegin
         ref={textInputRef}
         style={styles.inputContainer}
         placeholder="Rechercher"
-        onChangeText={setUserInput} // .trim() to remove whitespace at the end and begining
+        onChangeText={setSearchInput} // .trim() to remove whitespace at the end and begining
         onPressIn={onPressIn}
         // onEndEditing={onEndEditing}
         clearButtonMode="while-editing"
         onSubmitEditing={onSubmit}
-        value={userInput}
+        value={searchInput}
         // type="email"
         autoCapitalize="none"
         selectionColor={Colors.orange500}
@@ -93,15 +81,12 @@ const styles = StyleSheet.create({
     // flex: 1,
     width: "70%",
     height: 40,
-    // mainContainerColor: Colors.white,
     alignItems: "center",
     alignSelf: "center",
-    // justifyContent: "space-evenly",
     flexDirection: "row",
     borderRadius: 15,
     paddingRight: "5%",
     paddingLeft: "1%",
-    // borderWidth: 1,
     backgroundColor: Colors.white,
     marginBottom: "5%",
   },
@@ -109,12 +94,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     flex: 1,
     height: "100%",
-    // width: "70%",
-    //  borderWidth: 1,
-    // marginBottom: "3%",
-    // borderRadius: 10,
     paddingLeft: 10,
-    // borderWidth: 1,
-    // fontSize: "80%",
+  
   },
 });
