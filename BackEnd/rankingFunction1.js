@@ -6,6 +6,17 @@
 //                                                swipeObj : {ingeCard1 : "like", ingeCard2 : "dislike"},
 //                                                answerByTheme : {theme1 : 2, theme2: 5}}
 // minSwipeForRanking envoyé via splashData
+
+
+import store from "../core";
+import {getForRankingFailure, getForRankingRequest, getForRankingSuccess } from "../core/reducers/forRankingReducer";
+import { calculNewRank, calculNewRankSuccess, calculNewRankFailure } from "../core/reducers/schoolReducer";
+import { getRankingAlgoData } from "./controllers/ranking";
+import { alertProvider } from "./errorHandler";
+import { getBannerData } from "./controllers/school";
+
+
+
 export function generateRanking(swipe, cards, schools, minSwipeForRanking, themeDetail, swipeSettings) {
     try {
         if (swipe.answeredList.length>=minSwipeForRanking) {  // Si l'utilisateur a swipé un certain nb de proposition
@@ -145,3 +156,90 @@ function createSchoolGradeList(schoolGradeObj) {
     });
     return(schoolGradeList);
 }
+
+
+
+
+// =================== fonctions pour front (schoolRanking.js + explore.js) ========================================
+
+
+export async function calculateNewRank(setReadyToDisplayRank, dispatch ) {
+    setReadyToDisplayRank(false);
+    const {cards, schoolIdObj } = store.getState().forRankingReducer;
+    let doesCardsExist = cards instanceof Object;
+    doesCardsExist ? doesCardsExist = Object.keys(cards)>0 : null;
+
+    if (doesCardsExist) {                       // verif qu'on a les datas necessaires au calcul
+      prepareAndCalcul(cards, schoolIdObj, setReadyToDisplayRank, dispatch);
+    } else {
+      dispatch(getForRankingRequest());
+      const data = await getRankingAlgoData();
+      if (data.success) {
+        delete data.success;
+        dispatch(getForRankingSuccess({cards: data.cards, schoolIdObj: data.schoolIdObj }));
+        prepareAndCalcul(data.cards, data.schoolIdObj, setReadyToDisplayRank, dispatch);
+      } else {
+        dispatch(getForRankingFailure());
+      }
+    }
+  }
+
+
+
+function prepareAndCalcul(cards, schoolIdObj, setReadyToDisplayRank, dispatch) {
+    console.log("je passe dans calcuuuuull -----------------");
+    dispatch(calculNewRank());
+
+    //preparer les datas pour generateRanking()
+    const {swipeTypeObj, answerByTheme, minSwipeForRanking, swipeSettings} = store.getState().swipeReducer;
+    const themeObj = store.getState().themeReducer.themeObj
+    const swipe = {
+      answeredList : Object.keys(swipeTypeObj), 
+      swipeObj : swipeTypeObj,
+      answerByTheme : answerByTheme 
+    };
+    
+    const ranking = generateRanking(swipe, cards, schoolIdObj, minSwipeForRanking, themeObj, swipeSettings);
+    console.log("[generateRanking ----------------]", ranking);
+    // todo : les datas des écoles ne s'affichent pas dans le classement 
+
+
+    if (ranking?.sortedSchoolList){
+      dispatch(calculNewRankSuccess({sortedSchoolList: ranking.sortedSchoolList}));
+      let rankIdList = [];
+      ranking.sortedSchoolList.map((item) => rankIdList.push(item.id));
+      loadMissingSchoolData(rankIdList, setReadyToDisplayRank, dispatch);
+      // dispatch();
+    } else if (ranking?.message) {
+      dispatch(calculNewRankSuccess({message: ranking.message}));
+      setReadyToDisplayRank(true);
+    } else if (ranking?.error) {
+      alertProvider(ranking?.error);
+      dispatch(calculNewRankFailure(ranking.error));
+      setReadyToDisplayRank(true);
+      return;
+    } else {
+      alertProvider();
+      dispatch(calculNewRankFailure());
+      return;
+    }
+
+  }
+
+async function loadMissingSchoolData(rankIdList, setReadyToDisplayRank, dispatch) {
+const schoolsData = store.getState().schoolReducer.schoolsData;
+const notMissingSchoolId = Object.keys(schoolsData).filter((item)=> schoolsData[item].nomEcole);
+console.log("[notMissingSchoolId]", notMissingSchoolId);
+const missingSchoolId = rankIdList.filter((item)=>!notMissingSchoolId.includes(item));
+if (missingSchoolId.length>0) {
+    const data = await getBannerData(missingSchoolId, dispatch);
+    if (data.success) {
+    setReadyToDisplayRank(true);
+    } else {
+    alertProvider();
+    }
+} else {
+    setReadyToDisplayRank(true);
+}
+}
+

@@ -58,8 +58,8 @@ export default function InputComponent({title, inputType, setInput, input, onSub
     } else if (inputType==="password") {
       placeholder="*****";
       autoComplete="off";
-      // keyboardType="default";
-      keyboardType="email-address";
+      keyboardType="default";
+      // keyboardType="email-address";
       secureTextEntry=true; 
     } else if (inputType==="numeric") {
       placeholder="123456";

@@ -5,6 +5,7 @@ import { login, storeNewAuthData, storeSplashData } from "../../BackEnd/controll
 import { useDispatch } from "react-redux";
 
 import AuthComponent from "../../component/AuthComponent";
+import ActivityComponent from "../../component/ActivityComponent";
 
 
 export default function Login({ navigation }) {
@@ -76,7 +77,11 @@ export default function Login({ navigation }) {
   // }, [loginButtonPressed]);
 
   return (
-    <AuthComponent typeScreen="login" onSubmit={tryLogin} onChangeTypeScreen={goToSignup} errorMessage={errorMessage} ischarging={ischarging}/>
+    <>
+      <AuthComponent typeScreen="login" onSubmit={tryLogin} onChangeTypeScreen={goToSignup} errorMessage={errorMessage} ischarging={ischarging}/>
+      {ischarging ? <ActivityComponent/> : null}
+    </>
+
   );
 }
 

@@ -3,6 +3,7 @@ import {ScrollView} from "react-native";
 import { signup, storeNewAuthData } from "../../BackEnd/controllers/userData";
 
 import AuthComponent from "../../component/AuthComponent";
+import ActivityComponent from "../../component/ActivityComponent";
 // import { ScrollView } from "react-native-gesture-handler";
 
 
@@ -61,7 +62,10 @@ export default function SignUp({ navigation, route }) {
   }
 
   return (
-    <AuthComponent typeScreen="signup" onSubmit={trySignUp} onChangeTypeScreen={goToLogin} errorMessage={errorMessage} ischarging={ischarging}/>
+    <>
+      <AuthComponent typeScreen="signup" onSubmit={trySignUp} onChangeTypeScreen={goToLogin} errorMessage={errorMessage} ischarging={ischarging}/>
+      {ischarging ? <ActivityComponent/> : null}
+    </>
   );
 }
 

@@ -12,14 +12,18 @@ import SearchBar from "../../component/SearchBar";
 import { getSchoolByArea, searchSchool } from "../../BackEnd/controllers/explore";
 import { alertProvider } from "../../BackEnd/errorHandler";
 import { HeaderButton } from "../../component/TopBar";
+import ActivityComponent from "../../component/ActivityComponent.js"
 
 import { useDispatch, useSelector } from "react-redux";
 import { getSchoolByAreaFailure, getSchoolByAreaRequest, getSchoolByAreaSuccess } from "../../core/reducers/schoolReducer";
+import { setSwipeStateHasChanged } from "../../core/reducers/swipeReducer";
+import store from "../../core";
 // import store from "../../core";
 // import { getBannerData } from "../../BackEnd/controllers/school";
 import SearchedComponent from "../../component/SearchedComponent";
 import ExploreByArea from "../../component/ExploreByArea";
-import { ActivityIndicator } from "react-native";
+import { calculateNewRank } from "../../BackEnd/rankingFunction1";
+// import { ActivityIndicator } from "react-native";
 
 const width = Dimensions.get("window").width;
 
@@ -29,8 +33,7 @@ export default function Explore({ navigation, route }) {
   const scrollHeight = 120;
   const dispatch = useDispatch();
 
-  // const []
-  // const [searchedIdList, setSearchedIdList] = useState(null);
+  const [readyToDisplayRank, setReadyToDisplayRank] = useState(false);
   const [isResearchSubmited, setIsResearchSubmited] = useState(false);
   const [searchInput, setSearchInput] = useState(null);
   const [isResearching, setIsResearching] = useState(false);
@@ -42,7 +45,6 @@ export default function Explore({ navigation, route }) {
     dispatch(getSchoolByAreaRequest());
     const data = await getSchoolByArea();
     console.log("[schoolByArea]", data);
-    // const data = await getSchoolByArea(dispatch);
     if (data.success) {
       delete data.success;
       dispatch(getSchoolByAreaSuccess(data));
@@ -60,24 +62,25 @@ export default function Explore({ navigation, route }) {
     handleSchoolByArea();
   }, [])
 
-  // TODO : voir si focus necessaire :
-
-  // useEffect(() => {
-  //   // 'focus' quand on atteri sur le screen; 'blur' quand on quitte
-  //   const unsubscribe = navigation.addListener("focus", () => {
-  //     handleSchoolByArea();  
-  //   });
-  //   return unsubscribe;
-  // }, [navigation]);
-
-
   // ------------- fin school by Area -------------------------------------
  
 
-  // function (value) {
-  //   // setBlurValue(value);
-  //   console.log(value);
-  // }
+  useEffect(() => {
+    // 'focus' quand on atteri sur le screen; 'blur' quand on quitte
+    const unsubscribe = navigation.addListener("focus", () => {
+      const swipeStateHasChanged = store.getState().swipeReducer.swipeStateHasChanged;
+      if (swipeStateHasChanged){
+        console.log("New rank calculating ...........................................");
+        // calculateNewRank(()=>{}, dispatch); 
+        calculateNewRank(setReadyToDisplayRank, dispatch); 
+        dispatch(setSwipeStateHasChanged(false));
+      }
+    });
+    return unsubscribe;
+  }, [navigation]);
+
+
+ 
 
   const onBeginResearch = useCallback(()=> {   // todo: error : excessive number Pending callback (à cause du set passé au child)
     console.log("Passing throught handleIsEditing");
@@ -92,26 +95,10 @@ export default function Explore({ navigation, route }) {
   }
 
 
-  // async function handleSubmitResearch() {
-  //   const {schoolMatchId, success} = await searchSchool(searchInput);
-  //   if (success) {
-  //     setSearchedIdList(schoolMatchId);
-  //   } else {
-  //     alertProvider();
-  //   }
-  //   // setIsSubmitResearch(true);   //!!! s'assurer que searchedIdList déjà storée
-  // }
-
   function onSubmitResearch(){  ///!! appelé que quand j'appuie sur rechercher, il faut qu'elle soit appelé onfocus du textInput
     setIsResearchSubmited(true);
     // setSearchInput(userInput);
   }
-
-  // useEffect(()=> {
-  //   if (isSubmitResearch) {
-  //     handleSubmitResearch();
-  //   }
-  // }, [searchInput])
 
 
   // -------------Header button -----------
@@ -131,31 +118,37 @@ export default function Explore({ navigation, route }) {
   return (
     <View style={styles.mainContainer}>
 
-      <View style={{ width: "100%", marginTop: "2%" }}>
-        <SearchBar
-          searchInput={searchInput}
-          setSearchInput = {setSearchInput}
-          onSubmitResearch={onSubmitResearch}
-          handleStopResearch={handleStopResearch}
-          onBeginResearch={onBeginResearch}
-        />
-      </View>
-
-      {!isResearching ? <ExploreByArea scrollWidth={scrollWidth} scrollHeight={scrollHeight}/> : null}
-
-      {isResearching
+      {readyToDisplayRank 
         ? (
-          <View style={styles.researchContainer}>
-            <SearchedComponent 
-              searchInput={searchInput} 
-              isResearchSubmited={isResearchSubmited} 
-              setIsResearchSubmited={setIsResearchSubmited} 
-              scrollWidth={scrollWidth} 
-              scrollHeight={scrollHeight} 
-            />
-          </View>
-        )
-        : null
+          <>
+            <View style={{ width: "100%", marginTop: "2%" }}>
+              <SearchBar
+                searchInput={searchInput}
+                setSearchInput = {setSearchInput}
+                onSubmitResearch={onSubmitResearch}
+                handleStopResearch={handleStopResearch}
+                onBeginResearch={onBeginResearch}
+              />
+            </View>
+
+            {!isResearching ? <ExploreByArea scrollWidth={scrollWidth} scrollHeight={scrollHeight}/> : null}
+
+            {isResearching
+              ? (
+                <View style={styles.researchContainer}>
+                  <SearchedComponent 
+                    searchInput={searchInput} 
+                    isResearchSubmited={isResearchSubmited} 
+                    setIsResearchSubmited={setIsResearchSubmited} 
+                    scrollWidth={scrollWidth} 
+                    scrollHeight={scrollHeight} 
+                  />
+                </View>
+              )
+              : null
+            }
+          </>
+        ) :  <ActivityComponent darkBackground={false}/>
       }
 
     </View>

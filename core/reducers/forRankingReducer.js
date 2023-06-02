@@ -28,6 +28,10 @@ export const forRankingSlice = createSlice({
       state.loading = null;
       state.error = false;
     },
+
+    setIsRankCalculationNeeded: (state, action) => {
+      state.isRankCalculationNeeded = action.payload;
+    }
   },
 });
 

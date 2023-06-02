@@ -8,6 +8,7 @@ export const initialSwipeState = {
   swipeSettings: {},        // {"superlike": {"bonus": 5,"nbAnswer": 5}, "like": {"bonus": 1,"nbAnswer": 1 }, ... },
   answerByTheme: {},        // "answerByTheme": {"theme1": 19, "theme3": 10, "theme2": 1}
   rankingAbsoluteIndex: -1,  
+  swipeStateHasChanged: true,
   loading: null,
   error: null,
 };

@@ -25,9 +25,9 @@ export default function ExploreByArea({scrollWidth, scrollHeight}) {
 
   useEffect(()=> {
     setSchoolByAreaState(schoolByArea);
-    console.log("[schoolByArea]", schoolByArea);
-    console.log("[test]", !!null);
-    console.log(schoolByArea?.listFormation);
+    console.log("on passe dans usefect pour setSchoolByAreaState -------------------------------")
+    // console.log("[schoolByArea]", schoolByArea);
+    // console.log(schoolByArea?.listFormation);
   }, [schoolByArea])
 // -------- fin useSelector -----------------------------------------
 
@@ -63,7 +63,7 @@ export default function ExploreByArea({scrollWidth, scrollHeight}) {
 
   useEffect(()=> {
     // console.log(schoolByAreaState)
-    if (schoolByAreaState?.schoolPack && schoolByAreaState?.schoolPack){
+    if (schoolByAreaState?.schoolPack ){
       handleMissingData();
     }
   }, [schoolByAreaState])
@@ -91,7 +91,7 @@ export default function ExploreByArea({scrollWidth, scrollHeight}) {
                 ? <HorizontalAreaScroll areaIdList={schoolByAreaState.schoolPack[section.item]} scrollWidth={scrollWidth} scrollHeight={scrollHeight}  />
                 : ( 
                   <View style={styles.emptyAreaMessage} > 
-                    <Text>Aucun favori</Text>  
+                    <Text>Aucune école dans cette section</Text>  
                   </View>
                 )
               }
@@ -114,6 +114,9 @@ export default function ExploreByArea({scrollWidth, scrollHeight}) {
 
 function HorizontalAreaScroll({areaIdList, scrollWidth, scrollHeight}) {
   // console.log(areaIdList);
+
+  // todo: ordonner par rang les écoles de areaIdList
+
   return (
     <HorizontalScroll scrollViewSize={{ width: scrollWidth, height: scrollHeight,}}>
       {/* <Text>haha</Text> */}

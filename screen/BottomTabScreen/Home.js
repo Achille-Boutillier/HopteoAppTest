@@ -10,11 +10,11 @@ import Swiper from "react-native-deck-swiper";
 import Card from "../../component/Card";
 import { Colors } from "../../constant/Colors";
 import { HeaderButton } from "../../component/TopBar";
-import {nextPile, undoSwipe} from "../../BackEnd/controllers/cards";
+import {nextPile} from "../../BackEnd/controllers/cards";
 import SwipeLevel from "../../component/SwipeLevel";
 import { alertProvider } from "../../BackEnd/errorHandler";
 import MessageContainer from "../../component/MessageContainer";
-import { storeNewSwipe, removeSwipe, handleAllSwipeSent } from "../../core/reducers/swipeReducer";
+import { storeNewSwipe, removeSwipe, setSwipeStateHasChanged } from "../../core/reducers/swipeReducer";
 import SwipeButton from "../../component/buttons/SwipeButton";
 import { updateBackData } from "../../BackEnd/updateBackData";
 // import store from "../../core";
@@ -159,7 +159,7 @@ export default function Home({ navigation, route }) {
       setIsCardListLoaded(true);
       return
     }
-    console.log("[idCardList]", nextIdCardList)
+    console.log("[idCardList]", nextIdCardList);
     unableCard();
     const data = await nextPile(nextIdCardList);
     console.log("Je passe dans getCards");
@@ -224,11 +224,12 @@ export default function Home({ navigation, route }) {
 
     const {cardsPile, error} = await nextPile([previousCardId]);
     if (cardsPile) {
-      // const {id, idTheme} = cardsPile[0];
+      const {id, idTheme} = cardsPile[0];
+      dispatch(removeSwipe({id, idTheme}));
       // const newCardList = cardList;
       // newCardList.unshift(cardsPile[0]);      // add an element to the biginning of newCardList (return length de la nouvelle liste)
       // const undoSuccess = await undoSwipe(id, idTheme, dispatch);
-      setCardList((previousList) => [cardsPile[0], ...previousList])
+      setCardList((previousList) => [cardsPile[0], ...previousList]);
         
     } else {
       alertProvider(error);
@@ -240,23 +241,26 @@ export default function Home({ navigation, route }) {
     const {id, idTheme} = cardList[index-1];
     swiperRef.current.jumpToCardIndex(index - 1); 
     setListIndex(index - 1);
+    dispatch(removeSwipe({id, idTheme}));
     // const undoSuccess = await undoSwipe(id, idTheme, dispatch);
     // if (!undoSuccess) {
     //   swiperRef.current.jumpToCardIndex(index);
     //   setListIndex(index);
     //   alertProvider("Impossible de revenir en arrière pour le moment");
     // }
-      
   }
 
 
   function onPressUndo() {
-    console.log("id card", cardList[listIndex]);      // !!! pbm de key  
     setIsUndoPress(true);
   }
 
+  useEffect(()=> {
+    console.log("id card", cardList[listIndex]);      // !!! pbm de key  
+    console.log("[cardList]", cardList); 
+  }, [cardList])
 
-  async function handleUndoPress() {
+  function handleUndoPress() {
     console.log("je passe dans handleUndoPress");
     if (absoluteIndex === 0) {
       Alert.alert("Impossible !", "Tu te trouves déjà sur la première carte", [
@@ -268,6 +272,10 @@ export default function Home({ navigation, route }) {
         getPreviousCard();
       } else {
         goToPreviousCard();
+      }
+
+      if (!latestSwipeReducer.swipeStateHasChanged){
+        dispatch(setSwipeStateHasChanged(true));
       }
 
     }
@@ -290,7 +298,10 @@ export default function Home({ navigation, route }) {
     const id = cardList[index].id;         
     console.log( "[id swipe ]" ,id);
     setListIndex(index + 1);
-    dispatch(storeNewSwipe({id, swipeType, idTheme}))
+    dispatch(storeNewSwipe({id, swipeType, idTheme}));
+    if (!latestSwipeReducer.swipeStateHasChanged){
+      dispatch(setSwipeStateHasChanged(true));
+    }
     // const isSuccessfull = await swipeHandler(id, swipeType);
     // if (!isSuccessfull) {
     //   dispatch(removeSwipe({id, idTheme}));
@@ -463,7 +474,8 @@ function onSwiping(x, y){
                 },
               },
               bottom: {
-                title: "INDECIS",
+                title: "INDECIS.E",
+                // title: "INDECIS",
                 style: {
                   label: {
                     backgroundColor: "white",

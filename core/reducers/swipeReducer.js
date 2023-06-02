@@ -82,13 +82,18 @@ export const swipeSlice = createSlice({
       state.sentToBackAnswers = state.sentToBackAnswers.concat(state.notSentToBackAnswers);
       state.notSentToBackAnswers = [];
       state.removedIdStillInBackEnd = [];
+    },
+
+    setSwipeStateHasChanged: (state, action) => {
+      state.swipeStateHasChanged = action.payload;
     }
 
   },
 });
 
 export const { splashSwipeRequest, splashSwipeSuccess, splashSwipeFailure, storeNewSwipe, removeSwipe, 
-  storeRankingAbsoluteIndex, removeAllSwipe, reinitialiseSwipeReducer, handleAllSwipeSent } =
+  storeRankingAbsoluteIndex, removeAllSwipe, reinitialiseSwipeReducer, handleAllSwipeSent, 
+  setSwipeStateHasChanged } =
   swipeSlice.actions;
 
 export default swipeSlice.reducer;

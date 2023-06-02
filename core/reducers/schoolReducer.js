@@ -63,12 +63,17 @@ export const schoolSlice = createSlice({
     // --------------------rank----------------------------
 
     calculNewRank: (state) => {
+      console.log("[schoolsData reducer]" , state.schoolsData);
       state.loading = true;
       state.error = false;
+      for (const clé in state.schoolsData) {
+        delete state.schoolsData[clé]?.rank
+      }
     },
     calculNewRankSuccess: (state, action) => { 
       console.log("storing new rank -----------------")  ;
       const {sortedSchoolList, message} = action.payload;  
+      console.log("[sortedSchoolList]", sortedSchoolList);
       if (Array.isArray(sortedSchoolList)) {
         let idList = [];
         sortedSchoolList.map((item) => {

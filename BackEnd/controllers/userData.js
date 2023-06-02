@@ -157,8 +157,10 @@ export async function login(email, password) {
       let errorMessage;
       if (typeof data?.error === "string") {
         errorMessage=data.error;
+      } else if (typeof data?.message === "string") {
+        errorMessage=data.message;
       } else {
-        errorMessage="Une erreur s'est produite... L'adresse email est peut-être déjà associée à un compte";
+        errorMessage="Une erreur s'est produite... ";
       }
       return {errorMessage, success: false}
       
@@ -167,7 +169,7 @@ export async function login(email, password) {
     console.error(error);
     return {
       success: false,
-      errorMessage:"Serveur inaccessible !\n Nos équipes mettent tout en oeuvre pour résoudre le problème",
+      errorMessage:"Serveur inaccessible...\n Nos équipes mettent tout en oeuvre pour résoudre le problème",
     };
   }
 }

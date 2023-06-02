@@ -52,7 +52,7 @@ export default function AuthComponent({typeScreen ,onSubmit, onChangeTypeScreen,
   }
 
   return (
-    <View style={styles.mainContainer}>
+    <View style={[styles.mainContainer, ischarging ? {opacity: 0.3} : null]}>
       <View 
         style={ [styles.contentContainer, isEditing ? (
             Platform.OS === "ios" ? styles.contentContainerIosOnEditing : null
@@ -141,7 +141,7 @@ export default function AuthComponent({typeScreen ,onSubmit, onChangeTypeScreen,
         
 
      
-      {ischarging ? <ActivityComponent/> : null}
+      {/* {ischarging ? <ActivityComponent/> : null} */}
         
       </View>
     </View>

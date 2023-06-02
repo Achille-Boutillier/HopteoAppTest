@@ -6,6 +6,7 @@ import { BrandComponent } from "../../component/TopBar";
 import RecoveryCodeComponent from "../../component/RecoveryCodeComponent";
 import HeaderComponent from "../../component/HeaderComponent";
 import { sendRecoveryCode } from "../../BackEnd/controllers/userData";
+import ActivityComponent from "../../component/ActivityComponent";
 
 
 export default function RecoveryCode({}) {
@@ -20,26 +21,20 @@ export default function RecoveryCode({}) {
     <View style={styles.mainContainer}>
       <HeaderComponent/>
 
-      <View style={[styles.bodyContainer, isCharging ? {opacity: 0.4} : null]}>
+      <View style={[styles.bodyContainer, isCharging ? {opacity: 0.3} : null]}>
         
         {!isEditing 
-          ? ((
-          <View style={styles.brandContainer}> 
-            <BrandComponent marginLeft={0} logoSize={60} fontSize={30}/> 
-          </View> 
-          )): null}
+          ? (
+            <View style={styles.brandContainer}> 
+              <BrandComponent marginLeft={0} logoSize={60} fontSize={30}/> 
+            </View> 
+          ): null}
 
         <RecoveryCodeComponent setIsEditing={setIsEditing} isCharging={isCharging} setIsCharging={setIsCharging} />     
 
       </View>
 
-      {isCharging 
-        ? ((
-          <View style = {styles.chargingContainer}>
-            <ActivityIndicator size={"large"} color={Colors.orange500} />
-          </View>
-        )): null
-      }      
+      {isCharging  ? <ActivityComponent/> : null }      
 
       
       
