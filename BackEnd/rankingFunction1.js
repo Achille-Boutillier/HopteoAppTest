@@ -9,7 +9,7 @@
 
 
 import store from "../core";
-import {getForRankingFailure, getForRankingRequest, getForRankingSuccess } from "../core/reducers/forRankingReducer";
+import {getForRankingFailure, getForRankingRequest, getForRankingSuccess, setExploreScreenNeedReload, setRankingScreenNeedReload } from "../core/reducers/forRankingReducer";
 import { calculNewRank, calculNewRankSuccess, calculNewRankFailure } from "../core/reducers/schoolReducer";
 import { getRankingAlgoData } from "./controllers/ranking";
 import { alertProvider } from "./errorHandler";
@@ -163,8 +163,15 @@ function createSchoolGradeList(schoolGradeObj) {
 // =================== fonctions pour front (schoolRanking.js + explore.js) ========================================
 
 
-export async function calculateNewRank(setReadyToDisplayRank, dispatch ) {
-    setReadyToDisplayRank(false);
+export async function calculateNewRank(setReadyToDisplayRank, dispatch, currentScreen ) {
+    (()=>setReadyToDisplayRank(false))();
+    // if (currentScreen==="exploreScreen") {
+    //     dispatch(setRankingScreenNeedReload(true));
+    //     dispatch(setExploreScreenNeedReload(false));
+    // } else if (currentScreen==="rankingScreen") {
+    //     dispatch(setRankingScreenNeedReload(false));
+    //     dispatch(setExploreScreenNeedReload(true));
+    // }
     const {cards, schoolIdObj } = store.getState().forRankingReducer;
     let doesCardsExist = cards instanceof Object;
     doesCardsExist ? doesCardsExist = Object.keys(cards)>0 : null;
@@ -226,12 +233,14 @@ function prepareAndCalcul(cards, schoolIdObj, setReadyToDisplayRank, dispatch) {
 
   }
 
-async function loadMissingSchoolData(rankIdList, setReadyToDisplayRank, dispatch) {
+export async function loadMissingSchoolData(rankIdList, setReadyToDisplayRank, dispatch) {
 const schoolsData = store.getState().schoolReducer.schoolsData;
 const notMissingSchoolId = Object.keys(schoolsData).filter((item)=> schoolsData[item].nomEcole);
 console.log("[notMissingSchoolId]", notMissingSchoolId);
 const missingSchoolId = rankIdList.filter((item)=>!notMissingSchoolId.includes(item));
 if (missingSchoolId.length>0) {
+    console.log("va t'il y avoir un beeuuuug mntn ?");
+    console.log("missingSchoolData", missingSchoolId);
     const data = await getBannerData(missingSchoolId, dispatch);
     if (data.success) {
     setReadyToDisplayRank(true);

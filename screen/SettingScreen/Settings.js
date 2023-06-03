@@ -12,7 +12,7 @@ import ConfirmPasswordModal from "../../component/ConfirmPasswordModal";
 import { useDispatch } from "react-redux";
 import { reinitialiseSchoolReducer } from "../../core/reducers/schoolReducer";
 import { reinitialiseForRankingReducer } from "../../core/reducers/forRankingReducer";
-import { reinitialiseSwipeReducer } from "../../core/reducers/swipeReducer";
+import { reinitialiseSwipeReducer, setSwipeStateHasChanged } from "../../core/reducers/swipeReducer";
 import { reinitialiseUserSettingReducer } from "../../core/reducers/userSettingReducer";
 import { resetAllStore, updateBackData } from "../../BackEnd/updateBackData";
 
@@ -152,7 +152,12 @@ const dispatch = useDispatch();
     const resetSuccess = await resetSwipe(password, dispatch);
     if (resetSuccess) {
       togglePasswordModal();
+      setSwipeStateHasChanged(true);
       navigation.navigate("Home", {jumpToFirstCard: true});
+      // navigation.reset({
+      //   index: 0,
+      //   routes: [{ name: "Home" }],
+      // });
     } else {
       setModalErrorMessage("la réinitialisation a échouée");
       // alertProvider();

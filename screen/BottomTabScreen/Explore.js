@@ -17,12 +17,14 @@ import ActivityComponent from "../../component/ActivityComponent.js"
 import { useDispatch, useSelector } from "react-redux";
 import { getSchoolByAreaFailure, getSchoolByAreaRequest, getSchoolByAreaSuccess } from "../../core/reducers/schoolReducer";
 import { setSwipeStateHasChanged } from "../../core/reducers/swipeReducer";
+import { loadMissingSchoolData } from "../../BackEnd/rankingFunction1";
 import store from "../../core";
 // import store from "../../core";
 // import { getBannerData } from "../../BackEnd/controllers/school";
 import SearchedComponent from "../../component/SearchedComponent";
 import ExploreByArea from "../../component/ExploreByArea";
 import { calculateNewRank } from "../../BackEnd/rankingFunction1";
+import { setExploreScreenNeedReload, setRankingScreenNeedReload } from "../../core/reducers/forRankingReducer";
 // import { ActivityIndicator } from "react-native";
 
 const width = Dimensions.get("window").width;
@@ -64,23 +66,46 @@ export default function Explore({ navigation, route }) {
 
   // ------------- fin school by Area -------------------------------------
  
+  // ----------------------- Calcul rank --------------------------------------
+
+  useEffect(()=> {
+    const swipeStateHasChanged = store.getState().swipeReducer.swipeStateHasChanged;
+    const rankIdList = store.getState().schoolReducer.rankIdList;
+    if (!swipeStateHasChanged){
+      if ( Array.isArray(rankIdList) ){
+        console.log("[rankIdList]", rankIdList);
+        loadMissingSchoolData(rankIdList, setReadyToDisplayRank, dispatch);
+      } else {
+        setReadyToDisplayRank(true);
+      }
+    } 
+  }, [])
+
 
   useEffect(() => {
     // 'focus' quand on atteri sur le screen; 'blur' quand on quitte
     const unsubscribe = navigation.addListener("focus", () => {
       const swipeStateHasChanged = store.getState().swipeReducer.swipeStateHasChanged;
+      const exploreScreenNeedReload = store.getState().swipeReducer.exploreScreenNeedReload;
       if (swipeStateHasChanged){
         console.log("New rank calculating ...........................................");
         // calculateNewRank(()=>{}, dispatch); 
-        calculateNewRank(setReadyToDisplayRank, dispatch); 
+        calculateNewRank(setReadyToDisplayRank, dispatch, "exploreScreen"); 
         dispatch(setSwipeStateHasChanged(false));
-      }
+      } 
+      // else {
+      //   if (exploreScreenNeedReload) {      // pour être sûr que l'ordre de la flatList est maj
+      //   (()=>setReadyToDisplayRank(false))();
+      //   dispatch(setExploreScreenNeedReload(false));
+      //   (()=>setReadyToDisplayRank(true))();
+      //   }
+      // }
     });
     return unsubscribe;
   }, [navigation]);
 
 
- 
+// ------------ Fin calcul rank ------------------------------------------
 
   const onBeginResearch = useCallback(()=> {   // todo: error : excessive number Pending callback (à cause du set passé au child)
     console.log("Passing throught handleIsEditing");
