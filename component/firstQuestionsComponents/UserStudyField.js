@@ -1,59 +1,69 @@
-import { View, StyleSheet, Text, Button, TextInput } from "react-native";
+import { View, StyleSheet, Text, Button, TextInput, ScrollView } from "react-native";
 // import { useState, useEffect } from "react";
 
 import { Colors } from "../../constant/Colors";
 import SecondaryButton from "../buttons/SecondaryButton";
+import { useSelector } from "react-redux";
 
 export default function UserStudyField({ onPressField }) {
+
+  let filiere = useSelector((state) => state.userSettingReducer.filiereList);
+  filiere = [...new Set(filiere)];
+  const leftField = filiere.slice(0, Math.round(filiere.length/2));
+  const rightField = filiere.slice(Math.round(filiere.length/2), filiere.length);
+
+
   return (
-    <View style={styles.mainContainer}>
+    // <View style={styles.mainContainer}>
+
+      <ScrollView contentContainerStyle={styles.mainContainer} showsVerticalScrollIndicator={false} >
+
+
       <View style={styles.questionContainer}>
         <Text style={styles.textStyle}>
           {"Sélectionne ta filière"}
         </Text>
       </View>
+
+
       <View style={styles.buttonContainer}>
+
         <View style={styles.ButtonColumnContainer}>
-          <SecondaryButton onPress={onPressField.bind(this, "MPSI")} buttonText="MPSI" />
-          <SecondaryButton onPress={onPressField.bind(this, "PCSI")} buttonText="PCSI" />
-          <SecondaryButton onPress={onPressField.bind(this, "MP")} buttonText="MP" />
-          <SecondaryButton onPress={onPressField.bind(this, "PC")} buttonText="PC" />          
-          <SecondaryButton onPress={onPressField.bind(this, "PT")} buttonText="PT" />
-          <SecondaryButton onPress={onPressField.bind(this, "TPC")} buttonText="TPC" />
+          {leftField.map( (item) => {
+              return <SecondaryButton key={item} onPress={onPressField.bind(this, item)} buttonText={item} />
+            }
+          )}
         </View>
+
         <View style={styles.ButtonColumnContainer}>
-          <SecondaryButton onPress={onPressField.bind(this, "MP2I")} buttonText="MP2I" />
-          <SecondaryButton onPress={onPressField.bind(this, "PTSI")} buttonText="PTSI" />
-          <SecondaryButton onPress={onPressField.bind(this, "MPI")} buttonText="MPI" />
-          <SecondaryButton onPress={onPressField.bind(this, "PSI")} buttonText="PSI" />          
-          <SecondaryButton onPress={onPressField.bind(this, "TSI")} buttonText="TSI" />
-          <SecondaryButton onPress={onPressField.bind(this, "Autre")} buttonText="Autre" />
+          {rightField.map( (item) => {
+              return <SecondaryButton key={item} onPress={onPressField.bind(this, item)} buttonText={item} />
+            }
+          )}
+          <SecondaryButton onPress={onPressField.bind(this, "Autre")} buttonText="Autre" />          
         </View>
+        
       </View>
-    </View>
+      
+      {/* <SecondaryButton onPress={onPressField.bind(this, "Autre")} buttonText="Autre" preSized={false}/> */}
+      </ScrollView>
+
   );
 }
 
 
 const styles = StyleSheet.create({
   mainContainer: {
-    // backgroundColor: Colors.blue400,
     alignItems: "center",
-    justifyContent: "center",
-    height: "80%",
-    width: "90%",
-    // borderWidth: 1,
-    // borderRadius: 45,
-
+    // justifyContent: "center",
+    // width: "90%",
   },
   questionContainer: {
-    width: "70%",
+    // width: "70%",
     alignItems: "center",
     justifyContent: "center",
-    // backgroundColor: Colors.white,
-    // borderRadius: 15,
-    // paddingVertical: 3,
-    
+    marginTop: 40,
+    // borderWidth: 1
   },
   textStyle: {
     fontSize: 24,
@@ -61,19 +71,17 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   buttonContainer: {
+    // borderWidth: 1,
     // flex: 1,
-    height: "80%",
-    width: "90%",
-    alignItems: "center",
-    justifyContent: "center",
+    width: "95%",
     marginTop: "5%",
     flexDirection: "row",
   },
   ButtonColumnContainer: {
     width: "50%", 
-    height: "100%",
-    justifyContent: "space-evenly",
     alignItems: "center",
+    marginVertical: 10,
+    // flex: 1,
     // borderWidth: 1,
   },
  

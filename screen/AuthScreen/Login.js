@@ -36,6 +36,22 @@ export default function Login({ navigation }) {
     }
   }
 
+
+  function handleSplashData(data) {
+    let nextScreen;
+    if (data.userSettingStatus) {
+      storeSplashData(data.splashData, dispatch);
+      nextScreen = "Main Screens";
+
+      // navigation.navigate("Main Screens");
+    } else {
+      dispatch(storeAllFiliereList(data.filiereList));
+      nextScreen = "First Questions Screen";
+    }
+    resetNavigationScreen(nextScreen);
+  }
+
+
   async function tryLogin(email, password) {
     if (!isUserInputReadyToSubmit(email, password)) {
       setIscharging(false);
@@ -46,15 +62,7 @@ export default function Login({ navigation }) {
     const loginAnswer = await login(email, password);
     if (loginAnswer?.success) {
       storeNewAuthData(loginAnswer.authData);
-      let nextScreen;
-      if (loginAnswer?.userSettingStatus) {
-        storeSplashData(loginAnswer.splashData, dispatch);
-        nextScreen = "Main Screens";
-      } else {
-        nextScreen = "First Questions Screen";
-      }
-      setErrorMessage();
-      resetNavigationScreen(nextScreen);
+      handleSplashData(loginAnswer);
     } else {
       if (loginAnswer.errorMessage) {
         setErrorMessage(loginAnswer.errorMessage);
@@ -70,11 +78,6 @@ export default function Login({ navigation }) {
     navigation.navigate("Signup Screen");
   }
 
-  // useEffect(() => {
-  //   if (loginButtonPressed) {
-  //     tryLogin();
-  //   }
-  // }, [loginButtonPressed]);
 
   return (
     <>

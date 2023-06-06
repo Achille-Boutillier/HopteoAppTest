@@ -11,6 +11,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { modifyLike } from "../BackEnd/controllers/school";
 import RibbonComponent from "./RibbonComponent";
 
+const screenWidth = Dimensions.get("window").width;
 
 export default function SchoolBanner({schoolId}) {    //id, rank, nomEcole, typeFormation, like
   const navigation = useNavigation();
@@ -21,7 +22,6 @@ export default function SchoolBanner({schoolId}) {    //id, rank, nomEcole, type
   useEffect(()=>{
     if (singleSchoolData?.rank<3) {
     console.log( "[singleSchoolData]" , singleSchoolData);
-
     }
   }, [singleSchoolData])
 
@@ -49,10 +49,10 @@ export default function SchoolBanner({schoolId}) {    //id, rank, nomEcole, type
 
   return (
     <TouchableOpacity
-      style={[styles.bannerContainer, bannerColor ? {borderWidth: 2, borderColor: bannerColor} : null]}
+      style={[styles.bannerContainer, bannerColor ? { borderColor: bannerColor} : {borderColor: Colors.white}]}
       onPress={onPressSchool.bind(this, schoolId)}
     >
-      <RibbonComponent rank={singleSchoolData?.rank} size={35} setBannerColor={setBannerColor}/>
+      <RibbonComponent rank={singleSchoolData?.rank} size={35} setBannerColor={setBannerColor} />
       
       <View style={styles.writtenInfo}>
         <Text style={{ fontWeight: "500" }}>{singleSchoolData.nomEcole}</Text>
@@ -71,6 +71,7 @@ export default function SchoolBanner({schoolId}) {    //id, rank, nomEcole, type
             // name={isSchoolLiked ? "heart" : "heart-outline"}  
             name={singleSchoolData.like ? "heart" : "heart-outline"}  
             size={30}
+            // color={Colors.orange500}
             color={bannerColor ? bannerColor : Colors.orange500}
             bigButton={true}
           />
@@ -87,7 +88,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     alignSelf: "center",
-    width: 0.9 * Dimensions.get("window").width,
+    width: 0.9 * screenWidth,
+    borderWidth: 2,
     height: 80,
     borderRadius: 15,
     paddingLeft: "4%",
@@ -114,6 +116,11 @@ const styles = StyleSheet.create({
     // right: "5%",
   },
   rightItems: {
-    paddingHorizontal: "10%",
+    // paddingHorizontal: "10%",
+    alignItems: "center",
+    justifyContent: "center",
+    width: 35,
+    height: 35,
+    // borderWidth: 1
   },
 });

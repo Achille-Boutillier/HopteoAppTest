@@ -61,10 +61,10 @@ export default function ExploreSchoolBanner({ schoolId }) {
     >
 
       <View style={styles.topContainer}>
-        <RibbonComponent rank={singleSchoolData.rank} circleSize={20} iconSize={30} fontSize={10} setBannerColor={setBannerColor}/>
+        <RibbonComponent rank={singleSchoolData.rank} circleSize={23} iconSize={30} fontSize={10} setBannerColor={setBannerColor}/>
           
         <Pressable 
-          style={{justifyContent: "center", alignItems: "center", position: "absolute", right: 0, }} 
+          style={styles.likeContainer} 
           onPress={handleLikePress}
           hitSlop={{top: 30, bottom: 30, left: 10, right: 10}}
           >
@@ -145,11 +145,16 @@ const styles = StyleSheet.create({
     fontSize: 12,
     // color: Colors.grey,
   },
-  // likeContainer: {
-  //   width: "100%",
-  //   borderWidth: 1,
-  // // height: "30%",
-  // },
+  likeContainer: {
+    justifyContent: "center", 
+    alignItems: "center", 
+    position: "absolute", 
+    right: 0,
+    width: 30,
+    height: 30,
+    // borderWidth: 1
+
+  },
   topContainer: {
     flexDirection: "row",
     alignSelf: "center",

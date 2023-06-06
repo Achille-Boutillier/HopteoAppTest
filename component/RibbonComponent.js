@@ -42,13 +42,11 @@ export default function RibbonComponent({rank, circleSize=22, fontSize=14, iconS
       default : 
         setBannerColor(null);
         setRibbonIcon(
-          <View style={{ alignItems: "center", justifyContent:"center"}}>
             <View style={[styles.rankContainer, {borderRadius: circleSize, width: circleSize, height: circleSize, }]}>
               <Text style={[{color: Colors.white, fontWeight: "700", marginTop: -2,}, {fontSize: fontSize}]}>
                 {rank}
               </Text>
             </View>
-          </View>
         )
         break;
     }
@@ -56,17 +54,22 @@ export default function RibbonComponent({rank, circleSize=22, fontSize=14, iconS
     
   }, [rank])
 
-  return ribbonIcon;
+  return (
+    <View style={[styles.mainContainer, {width: iconSize, height: iconSize}]}>
+      {ribbonIcon}
+    </View>
+
+    );
 }
 
 const styles = StyleSheet.create({
+  mainContainer: {
+    alignItems: "center", 
+    justifyContent:"center", 
+    // borderWidth: 1
+  },
   rankContainer: {
-    // borderWidth: 1,
-    // borderColor: Colors.grey,
     backgroundColor: Colors.grey,
-    // borderRadius: 22,
-    // width: 22,
-    // height: 22,
     justifyContent: "center",
     alignItems: "center",
   },

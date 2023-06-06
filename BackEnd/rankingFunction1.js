@@ -18,6 +18,8 @@ import { getBannerData } from "./controllers/school";
 
 
 export function generateRanking(swipe, cards, schools, minSwipeForRanking, themeDetail, swipeSettings) {
+    // console.error(schools);
+
     try {
         if (swipe.answeredList.length>=minSwipeForRanking) {  // Si l'utilisateur a swipé un certain nb de proposition
             // Récupérer les écoles

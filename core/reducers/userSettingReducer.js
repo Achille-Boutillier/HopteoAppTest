@@ -29,6 +29,10 @@ export const userSettingSlice = createSlice({
       state.cursustype = "";
       state.loading = false;
       state.error = null;
+    },
+
+    storeAllFiliereList : (state, action) => {
+      state.filiereList = action.payload;
     }
   },
 });
@@ -38,6 +42,7 @@ export const {
   getUserSettingSuccess,
   getUserSettingFailure,
   reinitialiseUserSettingReducer,
+  storeAllFiliereList,
 } = userSettingSlice.actions;
 
 export default userSettingSlice.reducer;

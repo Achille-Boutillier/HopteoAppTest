@@ -4,6 +4,7 @@ import { signup, storeNewAuthData } from "../../BackEnd/controllers/userData";
 
 import AuthComponent from "../../component/AuthComponent";
 import ActivityComponent from "../../component/ActivityComponent";
+import { storeAllFiliereList } from "../../core/reducers/userSettingReducer";
 // import { ScrollView } from "react-native-gesture-handler";
 
 
@@ -31,20 +32,17 @@ export default function SignUp({ navigation, route }) {
 
   async function trySignUp(email, password) {
     handleIsCharging();
-
     if (!isUserInputReadyToSubmit(email, password)) {
       setIscharging(false);
       return;
     } 
 
-
     const signUpAnswer = await signup(email, password);
     if (signUpAnswer?.success) {
       setErrorMessage(); // éviter d'avoir un msg d'erreur si on revient sur la page de connexion plus tard
       storeNewAuthData(signUpAnswer.authData);
-      // resetNavigationScreen("OnBoardScreen");
+      storeAllFiliereList(signUpAnswer.filiereList);
       navigation.navigate("OnBoardScreen");
-      // navigation.navigate("First Questions Screen");
     } else {
       if (signUpAnswer.errorMessage) {
         setErrorMessage(signUpAnswer.errorMessage);

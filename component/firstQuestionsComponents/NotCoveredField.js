@@ -12,19 +12,17 @@ export default function NotCoveredField({}) {
 
 const styles = StyleSheet.create({
   mainContainer: {
+    // alignSelf: "center",
     alignItems: "center",
-    justifyContent: "space-between",
-    height: 250,
+    justifyContent: "center",
+    // height: 250,
     width: "85%",
-    // flex: 1,
-    height: "30%",
-    marginTop: -80,
-    // borderWidth: 1,
+    flex: 1,
   },
   
   text: {
     fontSize: 20,
     textAlign: "center",
-    // marginBottom: 30,
+    marginBottom: 50,
   }
 });

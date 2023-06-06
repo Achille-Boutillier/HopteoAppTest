@@ -12,6 +12,7 @@ import * as SecureStore from "expo-secure-store"; // voir doc expo pour ios (peu
 
 import { Colors } from "../constant/Colors";
 import {getAuthData, refreshAuth, tryAuth, storeNewAuthData, storeSplashData} from "../BackEnd/controllers/userData";
+import { storeAllFiliereList } from "../core/reducers/userSettingReducer";
 
 export default function SplashScreen({ navigation }) {
   // const [errorMessage, setErrorMessage] = useState();
@@ -27,80 +28,74 @@ export default function SplashScreen({ navigation }) {
   
   //todo: mettre les fonctions de store dans le frontEnd
 
+
+  function handleSplashData(data) {
+    let nextScreen;
+    if (data.userSettingStatus) {
+      storeSplashData(data.splashData, dispatch);
+      nextScreen = "Main Screens";
+
+      // navigation.navigate("Main Screens");
+    } else {
+      dispatch(storeAllFiliereList(data.filiereList));
+      nextScreen = "First Questions Screen";
+    }
+    resetNavigationScreen(nextScreen);
+  }
+
   async function tryRefreshToken(authData) {
     // console.log("refreshToken", authData.refreshToken);
     const data = await refreshAuth(authData.refreshToken, true);
     if (data.authData) {
       await storeNewAuthData(data.authData);
-      if (data.userSettingStatus) {
-        storeSplashData(data.splashData, dispatch);
-        resetNavigationScreen('Main Screens')
-        // navigation.navigate("Main Screens");
-
-      } else {
-        resetNavigationScreen("First Questions Screen")
-        // navigation.navigate("First Questions Screen");
-      }
+      handleSplashData(data);
     } else {
       // navigation.navigate("Login Screen");
       resetNavigationScreen("Login Screen");
     }
   }
 
-  async function tryToken(authData, letTryRefresh = true) {
+  async function tryToken(authData) {
     const data = await tryAuth(authData.token);
     if (data.success) {
-      if (data.userSettingStatus) {
-        storeSplashData(data.splashData, dispatch);
-        resetNavigationScreen("Main Screens")
-        // navigation.navigate("Main Screens");
-      } else {
-        resetNavigationScreen("First Questions Screen")
-        // navigation.navigate("First Questions Screen");
-      }
+      handleSplashData(data);
     } else {
       tryRefreshToken(authData)
     }
   }
 
 
-  async function splashHandler() {
+  async function onSplashDidMount() {
     const authData = await getAuthData();
     console.log("authData", authData);
     if (authData?.token) {
       tryToken(authData);
     } else {
-      // navigation.navigate("Signup Screen");
       resetNavigationScreen("Signup Screen");
-      // resetNavigationScreen("OnBoardScreen");
     }
   }
 
   // tester les différents cas :
-  async function tester() {
-    SecureStore.deleteItemAsync("authData");
+  // async function tester() {
+  //   SecureStore.deleteItemAsync("authData");
     // const authData = await getAuthData();
     // authData.token = "a";
     // authData.refreshToken = "b";
     // await SecureStore.setItemAsync("authData", JSON.stringify(authData));
-  }
+  // }
 
   useEffect(() => {
-    splashHandler();
+    onSplashDidMount();
     // tester();
   }, []);
 
   return (
     <View style={styles.mainContainer}>
-      {/* <ActivityIndicator size="large" color={Colors.orange500} /> */}
       <Image
         source={require("../assets/images/splashHopteo.png")}
         style={{ height: "100%", width: "100%" }}
         resizeMode="contain"
       />
-      {/* <View style={styles.errorContainer}>
-        <Text style={styles.errorText}>{errorMessage}</Text>
-      </View> */}
     </View>
   );
 }

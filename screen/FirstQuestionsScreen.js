@@ -134,6 +134,7 @@ function FirstQuestionsScreen({ navigation }) {
 
   return (
     <View style={styles.mainContainer}>
+
       <View style={styles.headerContainer}>
         <View style={styles.backButtonContainer}>
           <PrimaryButton
@@ -145,8 +146,8 @@ function FirstQuestionsScreen({ navigation }) {
         </View>
         <BrandComponent logoSize={30} fontSize={17}/>
       </View>
+      
       <View style={styles.bodyContainer}>
-        {/* <BrandComponent/> */}
         {screenToShow}
       </View>
       
@@ -160,6 +161,7 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     backgroundColor: Colors.backgroundColor, 
+    // borderWidth: 1,
   },
   headerContainer: {
     flexDirection: "row",
@@ -175,9 +177,9 @@ const styles = StyleSheet.create({
   },
   bodyContainer: {
     flex: 1,
-    justifyContent: "space-evenly",
+    // justifyContent: "center",
     alignItems: "center",
-    // alignItems: "center",
+    // borderWidth: 1,
   },
 
 });
