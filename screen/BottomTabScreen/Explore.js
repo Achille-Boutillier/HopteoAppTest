@@ -14,22 +14,20 @@ import { alertProvider } from "../../BackEnd/errorHandler";
 import { HeaderButton } from "../../component/TopBar";
 import ActivityComponent from "../../component/ActivityComponent.js"
 
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch} from "react-redux";
 import { getSchoolByAreaFailure, getSchoolByAreaRequest, getSchoolByAreaSuccess } from "../../core/reducers/schoolReducer";
 import { setSwipeStateHasChanged } from "../../core/reducers/swipeReducer";
 import { loadMissingSchoolData } from "../../BackEnd/rankingFunction1";
 import store from "../../core";
-// import store from "../../core";
-// import { getBannerData } from "../../BackEnd/controllers/school";
+
 import SearchedComponent from "../../component/SearchedComponent";
 import ExploreByArea from "../../component/ExploreByArea";
 import { calculateNewRank } from "../../BackEnd/rankingFunction1";
-import { setExploreScreenNeedReload, setRankingScreenNeedReload } from "../../core/reducers/forRankingReducer";
 // import { ActivityIndicator } from "react-native";
 
 const width = Dimensions.get("window").width;
 
-export default function Explore({ navigation, route }) {
+export default function Explore({ navigation}) {
 
   const scrollWidth = width;
   const scrollHeight = 120;

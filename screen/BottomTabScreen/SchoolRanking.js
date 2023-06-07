@@ -1,36 +1,32 @@
-import {FlatList, StyleSheet, View, ActivityIndicator, Text,} from "react-native";
-import { useEffect, useState, useLayoutEffect } from "react";
-import { calculNewRank, calculNewRankSuccess, calculNewRankFailure, getSchoolBannerRequest, getSchoolBannerSuccess, getSchoolBannerFailure } from "../../core/reducers/schoolReducer";
+import {FlatList, StyleSheet, View, ActivityIndicator, Text, Share,} from "react-native";
+import { useEffect, useState, useLayoutEffect, useRef } from "react";
 import { calculateNewRank, loadMissingSchoolData } from "../../BackEnd/rankingFunction1";
 import { Colors } from "../../constant/Colors";
-import {getRankingAlgoData} from "../../BackEnd/controllers/ranking";
-// import { generateRanking } from "../../BackEnd/rankingFunction1";
-// import { generateRankin } from "../../BackEnd/rankingFunction1";
-// import { generateRanking } from "../../BackEnd/rankingFunction";
-import { getBannerData } from "../../BackEnd/controllers/school";
+
+import * as MediaLibrary from 'expo-media-library';
+import { captureRef, captureScreen } from 'react-native-view-shot';
+import ViewShot from "react-native-view-shot";
+
 import SchoolBanner from "../../component/SchoolBanner";
 import MessageContainer from "../../component/MessageContainer";
 import { HeaderButton } from "../../component/TopBar";
-import { alertProvider } from "../../BackEnd/errorHandler";
 import { useSelector, useDispatch } from "react-redux";
-import { setSwipeStateHasChanged, storeRankingAbsoluteIndex } from "../../core/reducers/swipeReducer";
+import { setSwipeStateHasChanged} from "../../core/reducers/swipeReducer";
 import store from "../../core";
-import { setRankingScreenNeedReload } from "../../core/reducers/forRankingReducer";
-// import { getForRankingFailure, getForRankingRequest, getForRankingSuccess } from "../../core/reducers/forRankingReducer";
+import PrimaryButton from "../../component/buttons/PrimaryButton";
+import InfoPopup from "../../component/popup/InfoPopup";
 
 
 function SchoolRanking({ navigation, route }) {
   const schoolReducer = useSelector((state) => state.schoolReducer);
-  // const themeObj = useSelector((state)=> state.themeReducer.themeObj)
-  // const forRanking = useSelector(((state)=> state.forRankingReducer.))
+  const forRankingReducer = useSelector((state) => state.forRankingReducer);
 
+  //! à tej
+  useEffect(()=> {
+    console.log("showRankingPopup -------------------", forRankingReducer.showRankingPopup)
+  }, [forRankingReducer.showRankingPopup])
 
-  // todo : virer le componentToShow du useEffect, direct dans le return sous condition if
-
-  
-  // const [previousAbsoluteIndex, setPreviousAbsoluteIndex] = useState(-1);
   const [readyToDisplayRank, setReadyToDisplayRank] = useState(false);
-  const [componentToShow, setComponentToShow] = useState();
   const dispatch = useDispatch();
 
   
@@ -55,87 +51,14 @@ function SchoolRanking({ navigation, route }) {
     // 'focus' quand on atteri sur le screen; 'blur' quand on quitte
     const unsubscribe = navigation.addListener("focus", () => {
     const swipeStateHasChanged = store.getState().swipeReducer.swipeStateHasChanged;
-    const rankingScreenNeedReload = store.getState().swipeReducer.rankingScreenNeedReload;
       if (swipeStateHasChanged){    // if new calcul needed
         calculateNewRank(setReadyToDisplayRank, dispatch, "rankingScreen"); 
         dispatch(setSwipeStateHasChanged(false));
       } 
-      // else {
-      //   if (rankingScreenNeedReload) {      // pour être sûr que l'ordre de la flatList est maj
-      //   (()=>setReadyToDisplayRank(false))();
-      //   dispatch(setRankingScreenNeedReload(false));
-      //   (()=>setReadyToDisplayRank(true))();
-      //   }
-      // }
     });
     return unsubscribe;
   }, [navigation]);
-// ---------------------- fin calcul ----------------------------------------------------
 
-  // useEffect(()=> {
-  //   const rankIdList = schoolReducer.rankIdList;
-  //   if (Array.isArray(rankIdList)) {
-  //     loadMissingSchoolData(rankIdList);
-  //   } else {
-  //     setReadyToDisplayRank(true);
-  //   }
-  // }, [schoolReducer.rankIdList])
-
-  // function loadRanking() {
-  //   if (Array.isArray(schoolReducer.rankIdList)) {
-  //     setComponentToShow(
-  //       <FlatList
-  //         data={schoolReducer.rankIdList}
-  //         // data={schoolReducer.rankIdList.slice(0, 40)}
-  //         // extraData={} 
-  //         keyExtractor={(item) => item}
-  //         showsVerticalScrollIndicator={false}
-  //         renderItem={({item}) => {
-  //           return (<SchoolBanner schoolId={item} />);
-  //         }}
-  //       />
-  //     );
-  //   } else {
-  //     setComponentToShow(
-  //       <MessageContainer>{schoolReducer.rankIdList}</MessageContainer>
-  //     );
-  //   }
-  // } 
-
-  useEffect(() => {
-    if (readyToDisplayRank) {
-      // const rankIdList = schoolReducer.rankIdList;
-      
-      if (Array.isArray(schoolReducer.rankIdList)) {
-        setComponentToShow(
-          <FlatList
-            data={schoolReducer.rankIdList}
-            // data={schoolReducer.rankIdList.slice(0, 40)}
-            // extraData={schoolReducer.rankIdList} 
-            keyExtractor={(item) => item}
-            showsVerticalScrollIndicator={false}
-            renderItem={({item}) => {
-              return (<SchoolBanner schoolId={item} />);
-            }}
-          />
-        );
-      } else if (typeof schoolReducer.rankIdList === 'string') {
-        setComponentToShow(
-          <MessageContainer>{schoolReducer.rankIdList}</MessageContainer>
-        );
-      } else {
-        setComponentToShow(
-          <MessageContainer>{"Une erreur est survenue... Nos équipes mettent tout en oeuvre pour réparer ce beug."}</MessageContainer>
-        );
-      }
-    } else {
-      setComponentToShow(
-        <View style={{flex: 1, justifyContent: "center", alignItems: "center"} }>
-          <ActivityIndicator size="large" color={Colors.orange500} />
-        </View>
-      );
-    }
-  }, [readyToDisplayRank]);
 
   useEffect(()=> {
     console.log("je passe dans le reclassement")
@@ -148,6 +71,61 @@ function SchoolRanking({ navigation, route }) {
       (()=>setReadyToDisplayRank(true))();
     }   
   }, [schoolReducer.rankIdList])
+
+
+
+  // ---------------------- fin calcul ----------------------------------------------------
+
+  // ---------------- capture & partage classement ------------------
+
+  // const [status, requestPermission] = MediaLibrary.usePermissions();
+  // // ...rest of the code remains same
+
+  // if (status === null) {
+  //   requestPermission();
+  // }
+
+  const viewShotRef = useRef();
+
+  async function onPressCapture() {
+   const imageURI = await viewShotRef.current.capture();
+  //  Share.share()
+  };
+
+
+  // async function requestMediaLibraryPermission() {
+  //   const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
+  
+  //   if (status !== 'granted') {
+  //     console.log('Permission not granted!');
+  //   }
+  // };
+
+  
+
+  // async function saveScreenshot(uri) {
+  //   await requestMediaLibraryPermission();
+  
+  //   try {
+  //     const asset = await MediaLibrary.createAssetAsync(uri);
+  //     await MediaLibrary.createAlbumAsync('Screenshots', asset, false);
+  //     console.log('Screenshot saved successfully!');
+  //   } catch (error) {
+  //     console.log('Error saving screenshot:', error);
+  //   }
+  // };
+
+  // async function onPressCapture() {
+  //   await captureScreen({
+  //     format: 'jpg',
+  //     quality: 0.8,
+  //   }).then((uri) => {
+  //     saveScreenshot(uri);
+  //   });
+  // };
+
+
+  // ---------------------- fin capture --------------------------------
 
 
 
@@ -164,12 +142,21 @@ function SchoolRanking({ navigation, route }) {
     });
   }, [navigation]);
 
-
+// ---------------fin button header -------------------------------------
 
   return (
     <View style={styles.mainContainer}>
-      {/* <View style={styles.listContainer}>{componentToShow}</View> */}
-      <View style={styles.listContainer}>
+      {forRankingReducer.showRankingPopup 
+        ? <InfoPopup message="Retourne swiper pour affiner ton classement"/>
+        : null 
+      }
+      <View style={styles.topContainer}>
+        <Text style={styles.titleText}>Ton classement personnalisé</Text>
+        <View style={styles.screenshotButtonContainer}>
+          <PrimaryButton onPress={onPressCapture} name="share-social" size={30} color={Colors.orange500}/>
+        </View>
+      </View>
+      <ViewShot style={styles.listContainer} ref={viewShotRef}>
         { readyToDisplayRank 
           ? (
             Array.isArray(schoolReducer.rankIdList)
@@ -196,7 +183,7 @@ function SchoolRanking({ navigation, route }) {
       )
 
         }
-        </View>
+        </ViewShot>
       
     </View>
   );
@@ -208,11 +195,37 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     mainContainerColor: Colors.backgroundColor,
-    alignItems: "center",
+    // alignItems: "center",
     // padding: 10,
   },
 
+  topContainer: {
+    marginHorizontal: "5%",
+    marginBottom: "5%",
+    marginTop: "2%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  }, 
+  titleText: {
+    fontWeight: "500",
+    fontSize: 18,
+    color: Colors.grey,
+    verticalAlign: "middle",
+    // borderWidth: 1
+  },
+
+  screenshotButtonContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 40,
+    // paddingLeft: -5,
+    backgroundColor: Colors.white,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
   listContainer: {
+    alignSelf: "center",
     alignItems: "center",
     flex: 1,
     width: "90%",

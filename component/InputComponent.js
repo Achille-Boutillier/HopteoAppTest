@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import { 
   Keyboard,
-  View, StyleSheet, TextInput, Text,
+  View, StyleSheet, TextInput, Text, TouchableOpacity,
 } from "react-native";
 import { Colors } from "../constant/Colors";
+import PrimaryButton from "./buttons/PrimaryButton";
 
 
 // import { Dimensions } from "react-native";
@@ -12,6 +13,7 @@ import { Colors } from "../constant/Colors";
 
 export default function InputComponent({title, inputType, setInput, input, onSubmitEditing, setIsEditing,}) {
   const [textInputSetting, setTextInputSetting] = useState({});
+  const [isPasswordVisible, setIsPasswordVisible] = useState(true);
 
   const inputRef = useRef(null);
 
@@ -67,13 +69,26 @@ export default function InputComponent({title, inputType, setInput, input, onSub
       keyboardType="numeric";
       secureTextEntry=false;
     }
-    setTextInputSetting({placeholder, autoComplete, keyboardType, secureTextEntry, autoCapitalize: "none" })
+    setIsPasswordVisible(secureTextEntry);
+    setTextInputSetting({placeholder, autoComplete, keyboardType, autoCapitalize: "none" })
   }, [inputType])
+
+
+  function toggleVisibility() {
+    setIsPasswordVisible((bool)=> !bool);
+  }
 
 
   return (
     <View style={styles.mainContainer} >
       <Text style={styles.titleText}>{title}</Text>
+
+      {inputType==="password" 
+        ? (
+          <PrimaryButton style={styles.visibilityButton} onPress={toggleVisibility} name={isPasswordVisible ? "eye" : "eye-off"} size={20} color={Colors.orange500}/>
+        ) : null
+      }
+      
       <TextInput
         ref={inputRef}
         style={styles.textInput}
@@ -84,7 +99,7 @@ export default function InputComponent({title, inputType, setInput, input, onSub
         placeholder={textInputSetting.placeholder}
         // autoComplete={textInputSetting.autoComplete}
         keyboardType={textInputSetting.keyboardType}
-        secureTextEntry={textInputSetting.secureTextEntry}
+        secureTextEntry={isPasswordVisible}
         onSubmitEditing={onSubmitEditing ? onSubmitEditing : null}
         selectionColor={Colors.orange500}
         onFocus={onFocus}
@@ -124,6 +139,15 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     paddingVertical: 1,
     backgroundColor: Colors.white,
+  },
+
+  visibilityButton: {
+    position: "absolute",
+    right: 15,
+    top: 5
+  },
+  visibilityButtonText: {
+
   },
   
 });

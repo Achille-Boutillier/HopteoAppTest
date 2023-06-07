@@ -9,7 +9,7 @@
 
 
 import store from "../core";
-import {getForRankingFailure, getForRankingRequest, getForRankingSuccess, setExploreScreenNeedReload, setRankingScreenNeedReload } from "../core/reducers/forRankingReducer";
+import {getForRankingFailure, getForRankingRequest, getForRankingSuccess,  } from "../core/reducers/forRankingReducer";
 import { calculNewRank, calculNewRankSuccess, calculNewRankFailure } from "../core/reducers/schoolReducer";
 import { getRankingAlgoData } from "./controllers/ranking";
 import { alertProvider } from "./errorHandler";
@@ -167,13 +167,7 @@ function createSchoolGradeList(schoolGradeObj) {
 
 export async function calculateNewRank(setReadyToDisplayRank, dispatch, currentScreen ) {
     (()=>setReadyToDisplayRank(false))();
-    // if (currentScreen==="exploreScreen") {
-    //     dispatch(setRankingScreenNeedReload(true));
-    //     dispatch(setExploreScreenNeedReload(false));
-    // } else if (currentScreen==="rankingScreen") {
-    //     dispatch(setRankingScreenNeedReload(false));
-    //     dispatch(setExploreScreenNeedReload(true));
-    // }
+
     const {cards, schoolIdObj } = store.getState().forRankingReducer;
     let doesCardsExist = cards instanceof Object;
     doesCardsExist ? doesCardsExist = Object.keys(cards)>0 : null;

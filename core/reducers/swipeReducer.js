@@ -51,10 +51,6 @@ export const swipeSlice = createSlice({
         state.notSentToBackAnswers.pop();
       }
     },
-    
-    storeRankingAbsoluteIndex : (state, action) => {
-      state.rankingAbsoluteIndex = action.payload;
-    },
 
     removeAllSwipe: (state) => {
       state.swipeTypeObj = {};
@@ -92,7 +88,7 @@ export const swipeSlice = createSlice({
 });
 
 export const { splashSwipeRequest, splashSwipeSuccess, splashSwipeFailure, storeNewSwipe, removeSwipe, 
-  storeRankingAbsoluteIndex, removeAllSwipe, reinitialiseSwipeReducer, handleAllSwipeSent, 
+  removeAllSwipe, reinitialiseSwipeReducer, handleAllSwipeSent, 
   setSwipeStateHasChanged } =
   swipeSlice.actions;
 

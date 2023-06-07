@@ -8,7 +8,7 @@ import { Colors } from "../../constant/Colors";
 import {deleteUser, disconnect, getUserInfo, getAppContact, getAppInfo, resetSwipe } from "../../BackEnd/controllers/setting";
 import { alertProvider } from "../../BackEnd/errorHandler.js";
 
-import ConfirmPasswordModal from "../../component/ConfirmPasswordModal";
+import ConfirmPasswordModal from "../../component/popup/ConfirmPasswordModal";
 import { useDispatch } from "react-redux";
 import { reinitialiseSchoolReducer } from "../../core/reducers/schoolReducer";
 import { reinitialiseForRankingReducer } from "../../core/reducers/forRankingReducer";

@@ -2,13 +2,13 @@
 
 import { Ionicons } from "@expo/vector-icons";
 import { View, StyleSheet, Text, TextInput, ActivityIndicator } from "react-native";
-import { Colors } from "../constant/Colors";
+import { Colors } from "../../constant/Colors";
 import Modal from "react-native-modal";
-import PrimaryButton from "./buttons/PrimaryButton";
+import PrimaryButton from "../buttons/PrimaryButton";
 // import SecondaryButton from "./buttons/SecondaryButton";
-import TerciaryButton from "./buttons/TerciaryButton";
+import TerciaryButton from "../buttons/TerciaryButton";
 import { useState } from "react";
-import InputComponent from "./InputComponent";
+import InputComponent from "../InputComponent";
 // import EStyleSheet from "react-native-extended-stylesheet";
 
 export default function ConfirmPasswordModal({isVisible, togglePasswordModal, modalBodyText, modalErrorMessage, onSubmitPassword, modalButtonName, isPasswordModalCharging }) {

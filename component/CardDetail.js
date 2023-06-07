@@ -26,7 +26,7 @@ export default function CardDetail({ cardDetail }) {
 
       <View style={styles.infoTextContainer}>
         {isDetailLoaded ? (
-          <Text style={styles.infoText} adjustsFontSizeToFit={true} numberOfLines={12}> {cardDetail} </Text>
+          <Text style={styles.infoText} adjustsFontSizeToFit={true} numberOfLines={12}>{cardDetail}</Text>
         ) : (
           <ActivityIndicator size="large" color={Colors.smoothBlack} />
         )}

@@ -29,13 +29,11 @@ export const forRankingSlice = createSlice({
       state.error = false;
     },
 
-    setRankingScreenNeedReload: (state, action) => {
-      state.rankingScreenNeedReload = action.payload;
+    toggleShowRankingPopup: (state) => {
+      state.showRankingPopup = !state.showRankingPopup;
     },
 
-    setExploreScreenNeedReload: (state, action) => {
-      state.exploreScreenNeedReload = action.payload;
-    }
+  
   },
 });
 
@@ -44,7 +42,7 @@ export const {
   getForRankingSuccess,
   getForRankingFailure,
   reinitialiseForRankingReducer,
-  setRankingScreenNeedReload, setExploreScreenNeedReload
+  toggleShowRankingPopup,
 } = forRankingSlice.actions;
 
 export default forRankingSlice.reducer;

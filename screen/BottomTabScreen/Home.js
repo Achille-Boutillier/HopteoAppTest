@@ -474,8 +474,8 @@ function onSwiping(x, y){
                 },
               },
               bottom: {
-                title: "INDECIS.E",
-                // title: "INDECIS",
+                title: "NEUTRE",
+                // title: "INDECIS.E",
                 style: {
                   label: {
                     backgroundColor: "white",
