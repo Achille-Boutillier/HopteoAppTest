@@ -8,6 +8,7 @@ import store from "../core";
 import { getBannerData } from "../BackEnd/controllers/school";
 import ExploreSchoolBanner from "./ExploreSchoolBanner";
 import MessageContainer from "./MessageContainer";
+import ActivityComponent from "./ActivityComponent";
 
 
 
@@ -73,37 +74,45 @@ export default function ExploreByArea({scrollWidth, scrollHeight}) {
   if (!!schoolByAreaState && isReadyToDisplay) {
     // return <ActivityIndicator color={Colors.orange500} />
     return (
-      <FlatList
-        data={schoolByAreaState.listFormation}
-        extraData={schoolByAreaState}
-        keyExtractor={(item) => item}
-        showsVerticalScrollIndicator={false}
-        // style={{paddingLeft: 5}}
-        // contentContainerStyle={{ paddingHorizontal: 0, borderWidth: 1  }}
-        renderItem={(section) => {
-          // console.log(schoolByAreaState.schoolPack[section.item]);
+      
+      <>
+        <View style={styles.mainTitle} > 
+          <Text style={styles.mainTitleText}>Par Spécialité</Text>  
+        </View>
 
-          return (
-            <View style={{ marginBottom: 20, }}>
-              <View style={{ marginBottom: 5, marginLeft: 10 }}><Text> {section.item} </Text></View>
-  
-              { schoolByAreaState.schoolPack[section.item].length > 0 
-                ? <HorizontalAreaScroll areaIdList={schoolByAreaState.schoolPack[section.item]} scrollWidth={scrollWidth} scrollHeight={scrollHeight}  />
-                : ( 
-                  <View style={styles.emptyAreaMessage} > 
-                    <Text>Aucune école dans cette section</Text>  
-                  </View>
-                )
-              }
-  
-            </View>
-          );
-          
-        }}
-      />
+        <FlatList
+          data={schoolByAreaState.listFormation}
+          extraData={schoolByAreaState}
+          keyExtractor={(item) => item}
+          showsVerticalScrollIndicator={false}
+          // style={{paddingLeft: 5}}
+          // contentContainerStyle={{ paddingHorizontal: 0, borderWidth: 1  }}
+          renderItem={(section) => {
+            // console.log(schoolByAreaState.schoolPack[section.item]);
+
+            return (
+              <View style={{ marginBottom: 20, }}>
+                <View style={{ marginBottom: 5, marginLeft: 10 }}><Text style={styles.subTitle}> {section.item} </Text></View>
+    
+                { schoolByAreaState.schoolPack[section.item].length > 0 
+                  ? <HorizontalAreaScroll areaIdList={schoolByAreaState.schoolPack[section.item]} scrollWidth={scrollWidth} scrollHeight={scrollHeight}  />
+                  : ( 
+                    <View style={styles.emptyAreaMessage} > 
+                      <Text>Aucune école dans cette section</Text>  
+                    </View>
+                  )
+                }
+    
+              </View>
+            );
+            
+          }}
+        />
+      </>
     )
   } else {
-    return <ActivityIndicator color={Colors.orange500} />
+    return <ActivityComponent/>
+    // return <ActivityIndicator color={Colors.orange500} />
   }
   
 }
@@ -136,6 +145,15 @@ function HorizontalAreaScroll({areaIdList, scrollWidth, scrollHeight}) {
 
 
 const styles = StyleSheet.create({
+  mainTitle: {
+    marginLeft: 8,
+    marginBottom: 15,
+  },
+  mainTitleText: {
+    fontSize: 18,
+    fontWeight: "600",
+  },
+
   innerScrollViewContainer: {
     alignItems: "center",
     justifyContent: "center",
@@ -155,5 +173,11 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginTop: 10, 
     paddingVertical: 5,
+  },
+
+  subTitle: {
+    fontSize: 14,
+    color: Colors.grey,
+    fontWeight: "500",
   }
 });

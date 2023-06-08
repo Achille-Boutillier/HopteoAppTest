@@ -30,9 +30,10 @@ export async function storeNewAuthData(newAuthData) {
 export function storeSplashData(splashData, dispatch) {
   const {themeObj, 
     filiere, cursustype, secondYearFiliere, 
-    answeredCardList, idCardsList, minSwipeForRanking, swipeTypeObj, answerByTheme, swipeSettings } = splashData;
+    answeredCardList, idCardsList, minSwipeForRanking, swipeTypeObj, answerByTheme, swipeSettings,
+    lastAppVersion } = splashData;
   dispatch(getThemeSuccess(themeObj));
-  dispatch(getUserSettingSuccess({filiere, secondYearFiliere, cursustype}));
+  dispatch(getUserSettingSuccess({filiere, secondYearFiliere, cursustype, lastAppVersion}));
   dispatch(splashSwipeSuccess({answeredCardList, idCardsList, minSwipeForRanking, swipeTypeObj, answerByTheme, swipeSettings}));
 }
 

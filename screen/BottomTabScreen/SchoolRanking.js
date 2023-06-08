@@ -1,32 +1,34 @@
-import {FlatList, StyleSheet, View, ActivityIndicator, Text, Share,} from "react-native";
+import {FlatList, StyleSheet, View, ActivityIndicator, Text,} from "react-native";
 import { useEffect, useState, useLayoutEffect, useRef } from "react";
 import { calculateNewRank, loadMissingSchoolData } from "../../BackEnd/rankingFunction1";
 import { Colors } from "../../constant/Colors";
 
 import * as MediaLibrary from 'expo-media-library';
-import { captureRef, captureScreen } from 'react-native-view-shot';
-import ViewShot from "react-native-view-shot";
+import * as Sharing from "expo-sharing";
+// import {MediaLibrary} from "expo";
+// import * as Permissions from "expo"
+// import * as Permissions from "expo-permissions"
+import { GLView } from "expo-gl";
+import { captureRef } from 'react-native-view-shot';
+// import ViewShot from "react-native-view-shot";
 
 import SchoolBanner from "../../component/SchoolBanner";
 import MessageContainer from "../../component/MessageContainer";
-import { HeaderButton } from "../../component/TopBar";
+import { BrandComponent, HeaderButton } from "../../component/TopBar";
 import { useSelector, useDispatch } from "react-redux";
 import { setSwipeStateHasChanged} from "../../core/reducers/swipeReducer";
 import store from "../../core";
 import PrimaryButton from "../../component/buttons/PrimaryButton";
 import InfoPopup from "../../component/popup/InfoPopup";
+import { alertProvider } from "../../BackEnd/errorHandler";
 
 
 function SchoolRanking({ navigation, route }) {
   const schoolReducer = useSelector((state) => state.schoolReducer);
   const forRankingReducer = useSelector((state) => state.forRankingReducer);
 
-  //! à tej
-  useEffect(()=> {
-    console.log("showRankingPopup -------------------", forRankingReducer.showRankingPopup)
-  }, [forRankingReducer.showRankingPopup])
-
   const [readyToDisplayRank, setReadyToDisplayRank] = useState(false);
+  const [isScreenshotMode, setIsScreenshotMode] = useState(false);
   const dispatch = useDispatch();
 
   
@@ -78,51 +80,70 @@ function SchoolRanking({ navigation, route }) {
 
   // ---------------- capture & partage classement ------------------
 
-  // const [status, requestPermission] = MediaLibrary.usePermissions();
-  // // ...rest of the code remains same
+  
 
-  // if (status === null) {
-  //   requestPermission();
-  // }
+  // const viewShotRef = useRef();
 
-  const viewShotRef = useRef();
+  // async function onPressCapture() {
+  //  const imageURI = await viewShotRef.current.capture();   //! capture pas sur android
+  //  console.log("imageURI", imageURI);
+  //  Share.share({title: "Image", url: imageURI})
+  // };
 
-  async function onPressCapture() {
-   const imageURI = await viewShotRef.current.capture();
-  //  Share.share()
+
+  const viewRef = useRef();
+
+  const [status, requestPermission] = MediaLibrary.usePermissions();
+
+  function onPressCapture() {
+    setIsScreenshotMode(true);
+  }
+
+  async function handlePressCapture() {
+    console.log(status);
+    if (!status.granted) {
+      const {granted} = await requestPermission(); 
+      granted ? onSaveImageAsync() : alertProvider("Impossible d'effectuer la capture d'écran sans autorisation.");
+    } else {
+      onSaveImageAsync();
+    }
+
+  }
+
+
+  async function onSaveImageAsync() {
+    try {
+      const localUri = await captureRef(viewRef, {
+        // height: 440,
+        quality: 1,
+      });
+
+      await MediaLibrary.saveToLibraryAsync(localUri);
+      if (localUri) {
+        const isAvailable = await Sharing.isAvailableAsync();
+        isAvailable ? Sharing.shareAsync(localUri) : alertProvider("La fonctionalité 'partage' est impossible avec cet appareil.");
+        // Share.share({url: localUri});
+      } else {
+        alertProvider("Une erreur est survenue, la capture d'écran n'a pas aboutie.");
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
 
 
-  // async function requestMediaLibraryPermission() {
-  //   const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
-  
-  //   if (status !== 'granted') {
-  //     console.log('Permission not granted!');
-  //   }
-  // };
+  useEffect(() => {
+    if (isScreenshotMode) {
+      handlePressCapture();
+      setTimeout(() => {
+        setIsScreenshotMode(false);
+      }, 100);
+    }
+  }, [isScreenshotMode])
 
   
 
-  // async function saveScreenshot(uri) {
-  //   await requestMediaLibraryPermission();
   
-  //   try {
-  //     const asset = await MediaLibrary.createAssetAsync(uri);
-  //     await MediaLibrary.createAlbumAsync('Screenshots', asset, false);
-  //     console.log('Screenshot saved successfully!');
-  //   } catch (error) {
-  //     console.log('Error saving screenshot:', error);
-  //   }
-  // };
-
-  // async function onPressCapture() {
-  //   await captureScreen({
-  //     format: 'jpg',
-  //     quality: 0.8,
-  //   }).then((uri) => {
-  //     saveScreenshot(uri);
-  //   });
-  // };
 
 
   // ---------------------- fin capture --------------------------------
@@ -145,18 +166,24 @@ function SchoolRanking({ navigation, route }) {
 // ---------------fin button header -------------------------------------
 
   return (
-    <View style={styles.mainContainer}>
-      {forRankingReducer.showRankingPopup 
-        ? <InfoPopup message="Retourne swiper pour affiner ton classement"/>
+    <View style={styles.mainContainer} ref={viewRef}>
+      {forRankingReducer.showRankingPopup && !isScreenshotMode
+        ? <InfoPopup message="Retourne swiper pour affiner ton classement" />
         : null 
       }
       <View style={styles.topContainer}>
         <Text style={styles.titleText}>Ton classement personnalisé</Text>
-        <View style={styles.screenshotButtonContainer}>
+        <View style={styles.screenshotButtonContainer}  >
           <PrimaryButton onPress={onPressCapture} name="share-social" size={30} color={Colors.orange500}/>
         </View>
       </View>
-      <ViewShot style={styles.listContainer} ref={viewShotRef}>
+
+      {isScreenshotMode 
+        ? <View style={styles.brandForScreenshot}><BrandComponent/></View>
+        : null
+      }
+
+      <View style={styles.listContainer} >
         { readyToDisplayRank 
           ? (
             Array.isArray(schoolReducer.rankIdList)
@@ -176,17 +203,24 @@ function SchoolRanking({ navigation, route }) {
               )
             
           ) : (
-
             <View style={{flex: 1, justifyContent: "center", alignItems: "center"} }>
               <ActivityIndicator size="large" color={Colors.orange500} />
             </View>
-      )
+          )
 
         }
-        </ViewShot>
+      </View>
       
     </View>
   );
+
+  // return (
+  //   <View style={styles.mainContainer}>
+  //     <View style={styles.container1}></View>
+  //     <View style={styles.container2}></View>
+  //     <View style={styles.container3}></View>
+  //   </View>
+  // )
 }
 
 export default SchoolRanking;
@@ -206,6 +240,17 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
   }, 
+  brandForScreenshot: {
+    position: "absolute",
+    top: 0,
+    width: "100%",
+    backgroundColor: Colors.backgroundColor,
+    alignItems: "center",
+    paddingVertical: "4%",
+    // borderWidth: 1
+
+  },
+
   titleText: {
     fontWeight: "500",
     fontSize: 18,

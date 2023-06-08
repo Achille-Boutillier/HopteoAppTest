@@ -7,14 +7,19 @@ import Logo from "../assets/icons/logo.svg";
 
 const buttonSize = 30;
 
+const logoAndNameWidth = 130;
+
 export function BrandComponent({marginLeft="4%", logoSize=52, fontSize=25}) {
   return (
     <View style={[styles.brandContainer, { marginLeft: marginLeft}]}>
-      <Logo
+      {/* <View style={styles.imageContainer}> */}
+      {/* <Logo
         width={logoSize}
         height={logoSize}
       />
-      <Text style={[styles.text, {fontSize: fontSize}]}>Hopteo</Text>
+      <Text style={[styles.text, {fontSize: fontSize}]}>Hopteo</Text> */}
+      <Image source={require('../assets/logo/logoAndName.png')} style={styles.image} />
+      {/* </View> */}
     </View>
   );
 }
@@ -40,8 +45,8 @@ const styles = StyleSheet.create({
   brandContainer: {
     // flex: 1,
     marginLeft: "4%",
-    flexDirection: "row",
-    alignItems: "center",
+    // flexDirection: "row",
+    // alignItems: "center",
     // borderWidth: 1,
     // alignItems: "center",
   },
@@ -50,6 +55,18 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     // marginRight: 10, //cause logo has margin => help to center the brand component
     fontWeight: "bold",
+  },
+
+  // imageContainer: {
+  //   width: 100,
+
+  // },
+  image: {
+    // flex: 1,
+    width: logoAndNameWidth+1,
+    height: logoAndNameWidth*171/835,
+    // borderWidth: 1,
+    // aspectRatio: 1,
   },
 
   // --------------------------------------

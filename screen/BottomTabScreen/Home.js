@@ -1,9 +1,10 @@
-import {StyleSheet, Text, View, ActivityIndicator, TouchableOpacity, Button, Alert, Dimensions, AppState, Platform } from "react-native";
+import {StyleSheet, Text, View, ActivityIndicator, TouchableOpacity, Button, Alert, Dimensions, AppState, Platform, Linking } from "react-native";
 // import Modal from "react-native-modal";
 import { useSelector, useDispatch } from "react-redux";
 
 import { useState, useEffect, useLayoutEffect, createRef, useRef  } from "react";
 // import VersionCheck from 'react-native-version-check-expo';
+import VersionCheck from "react-native-version-check";
 
 import Swiper from "react-native-deck-swiper";
 
@@ -17,6 +18,7 @@ import MessageContainer from "../../component/MessageContainer";
 import { storeNewSwipe, removeSwipe, setSwipeStateHasChanged } from "../../core/reducers/swipeReducer";
 import SwipeButton from "../../component/buttons/SwipeButton";
 import { updateBackData } from "../../BackEnd/updateBackData";
+import store from "../../core";
 // import store from "../../core";
 const swiperRef = createRef();
 
@@ -55,50 +57,42 @@ export default function Home({ navigation, route }) {
   
 
   // ----------- pop up mise a jour ----------------------------------------------------
-  // async function checkAppVersion() {
-  //   const currentVersion = VersionCheck.getCurrentVersion();    //! vaut null, fait planter getLastVersion() suivante
-  //   console.log("currentVersion", currentVersion)
-  //   const latestVersion = await VersionCheck.getLatestVersion({
-  //     provider: Platform.OS==="ios" ? "appStore"  : "playStore", // Vérifier la dernière version sur le Play Store
-  //   });
-
-  //   if (VersionCheck.needUpdate(currentVersion, latestVersion)) {
-  //     Alert.alert(
-  //       "Mise à jour disponible",
-  //       "Une nouvelle version de l'application est disponible. Veux-tu la mettre à jour ?",
-  //       [
-  //         {
-  //           text: 'Mettre à jour',
-  //           onPress: () => {
-  //             (Platform.OS === "ios" || Platform.OS === "android") 
-  //             ? VersionCheck.openAppStore()  // open App/Play store 
-  //             : Linking.openURL("https://linktr.ee/hopteo" );
-  //           },
-  //         },
-  //         {
-  //           text: 'Plus tard',
-  //           style: 'cancel',
-  //         },
-  //       ],
-  //       {cancelable: false }
-  //     );
-  //   }
-  // };
-
-  // ! plutôt utiliser Updates from "expo"
-
-  // const checkForUpdate = async () => {
-  //   const update = await Updates.checkForUpdateAsync();
-  //   if (update.isAvailable) {
-  //     // Display a message or UI component to notify the user about the update
-  //     console.log('New version is available');
-  //   }
-  // };
+  async function checkAppVersion() {
+    const {lastAppVersion, currentAppVersion} = store.getState().userSettingReducer;
 
 
+    if (lastAppVersion!==currentAppVersion) {
+      Alert.alert(
+        "Mise à jour disponible",
+        "Une nouvelle version de l'application est disponible. Veux-tu la mettre à jour ?",
+        [
+          {
+            text: 'Mettre à jour',
+            onPress: () => redirectToStoreForUpdate()
+          },
+          {
+            text: 'Plus tard',
+            style: 'cancel',
+          },
+        ],
+        {cancelable: false }
+      );
+    }
+  };
+
+
+  function redirectToStoreForUpdate() {
+    if (Platform.OS === "ios") {
+      Linking.openURL("https://apps.apple.com/my/app/hopteo/id6447057343");
+    }  else if (Platform.OS === "android") {
+      Linking.openURL("https://play.google.com/store/apps/details?id=com.hopteo.hopteoApp" );
+    } else {
+      Linking.openURL("https://linktr.ee/hopteo" );
+    }
+  }
 
   useEffect(() => {
-    // checkAppVersion();
+    checkAppVersion();
   }, []);
 
 
