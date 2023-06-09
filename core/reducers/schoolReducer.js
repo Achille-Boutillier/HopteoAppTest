@@ -13,8 +13,16 @@ export const schoolSlice = createSlice({
       state.error = false;
     },
     getSchoolBannerSuccess: (state, action) => {
-      const schoolId = Object.keys(action.payload);
-      schoolId.map((item)=> {state.schoolsData[item] = {...state.schoolsData[item] , ...action.payload[item]} })    
+      // const schoolId = Object.keys(action.payload);
+      // schoolId.map((item)=> {
+      //   state.schoolsData[item] = {...state.schoolsData[item] , ...action.payload[item]} 
+      // }) 
+      for (const schoolId in action.payload) {
+        state.schoolsData[schoolId] = {...state.schoolsData[schoolId] , ...action.payload[schoolId]} 
+        if (action.payload[schoolId].like) {
+          state.likedSchoolList.push(schoolId);
+        }
+      }    
       state.loading = false;
       state.error = null;
     },
@@ -50,12 +58,14 @@ export const schoolSlice = createSlice({
     setSchoolLike: (state, action) => {
       const {schoolId, newLike } = action.payload;
       state.schoolsData[schoolId].like = newLike ;
+      newLike ? state.likedSchoolList.push(schoolId) : state.likedSchoolList = state.likedSchoolList.filter(item => item !== schoolId) ;
       state.error = false;
     },
     
     setSchoolLikeFailure: (state, action) => {
       const {schoolId, newLike } = action.payload;
       state.schoolsData[schoolId].like = !newLike ;
+      newLike ? state.likedSchoolList.push(schoolId) : state.likedSchoolList = state.likedSchoolList.filter(item => item !== schoolId) ;
       state.loading = false;
       state.error = true; 
     },
@@ -91,7 +101,7 @@ export const schoolSlice = createSlice({
       } else {
         state.rankIdList = "Un Problème est survenu";
       }
-      console.log("[rankIdList]" , state.rankIdList)
+      // console.log("[rankIdList]" , state.rankIdList)
       state.loading = false;
       state.error = false;
     },

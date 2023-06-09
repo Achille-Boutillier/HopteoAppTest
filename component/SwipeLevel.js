@@ -11,7 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 import TerciaryButton from "./buttons/TerciaryButton";
 
 
-export default function SwipeLevel({absoluteIndex, minSwipeForRanking, progressBarColor, mainBarColor, onPressUndo}) {
+export default function SwipeLevel({absoluteIndex, minSwipeForRanking, progressBarColor, mainBarColor, setIsUndoPress}) {
   const navigation = useNavigation();
 
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -20,7 +20,16 @@ export default function SwipeLevel({absoluteIndex, minSwipeForRanking, progressB
 
   const [levelNumber, setLevelNumber] = useState();
   const [score, setScore] = useState();
+  const [isUndoDisabled, setIsUndoDisabled] = useState(false);
   
+  function onPressUndo() {
+    // (()=>setIsUndoDisabled(true))();
+    (()=>setIsUndoPress(true))();
+    // setTimeout(() => {
+    //   setIsUndoDisabled(false);
+    // }, 400);
+
+  }
   
   function calculNewScore() {
     const newLevel = parseInt(absoluteIndex/minSwipeForRanking) + 1;
@@ -62,6 +71,7 @@ export default function SwipeLevel({absoluteIndex, minSwipeForRanking, progressB
           name="arrow-undo-circle"
           size={30}
           color={Colors.orange500}
+          disabled={isUndoDisabled}
         />
 
       <Modal isVisible={isModalVisible}>

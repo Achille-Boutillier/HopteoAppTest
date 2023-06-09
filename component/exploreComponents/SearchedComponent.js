@@ -1,13 +1,14 @@
 import { View, StyleSheet, TextInput, ActivityIndicator, FlatList } from "react-native";
 import { useState, useRef, useEffect } from "react";
-import { Colors } from "../constant/Colors";
+import { Colors } from "../../constant/Colors";
 // import PrimaryButton from "./buttons/PrimaryButton";
-import store from "../core";
-import { getBannerData } from "../BackEnd/controllers/school";
+import store from "../../core";
+import { getBannerData } from "../../BackEnd/controllers/school";
 import { useDispatch } from "react-redux";
 import ExploreSchoolBanner from "./ExploreSchoolBanner";
-import MessageContainer from "./MessageContainer";
-import { searchSchool } from "../BackEnd/controllers/explore";
+import MessageContainer from "../MessageContainer";
+import { searchSchool } from "../../BackEnd/controllers/explore";
+import { alertProvider } from "../../BackEnd/errorHandler";
 
 export default function SearchedComponent({searchInput, isResearchSubmited, setIsResearchSubmited,scrollWidth, scrollHeight}) {
   const dispatch = useDispatch();
@@ -66,6 +67,7 @@ export default function SearchedComponent({searchInput, isResearchSubmited, setI
             extraData={schoolIdList}      // mettre une 2eme data en liste ?
             keyExtractor={(item) => item}
             showsVerticalScrollIndicator={false}
+            scrollEnabled={false}
             numColumns={2}
             key={2} // obligatoire avec numColumns
             renderItem={({ item }) => {

@@ -245,10 +245,6 @@ export default function Home({ navigation, route }) {
   }
 
 
-  function onPressUndo() {
-    setIsUndoPress(true);
-  }
-
   useEffect(()=> {
     console.log("id card", cardList[listIndex]);      // !!! pbm de key  
     console.log("[cardList]", cardList); 
@@ -305,8 +301,8 @@ export default function Home({ navigation, route }) {
 
 
   useEffect(() => {
-    // console.log("[swipeReducer]", swipeReducer);
     length = Object.keys(latestSwipeReducer.swipeTypeObj).length;
+    console.log(length);
     console.log("[absoluteIndex]", length);
     setAbsoluteIndex(length);
   }, [latestSwipeReducer.swipeTypeObj]);
@@ -352,7 +348,8 @@ function onSwiping(x, y){
           progressBarColor={"#70DDFF"}
           // borderColor={null}
           mainBarColor={"#BFF0FF"}
-          onPressUndo={onPressUndo}
+          setIsUndoPress={setIsUndoPress}
+          // isUndoPress={isUndoPress}
           // progressBarColor={"#ebd226"}
           // mainBarColor={"#efe9bd"}
         />

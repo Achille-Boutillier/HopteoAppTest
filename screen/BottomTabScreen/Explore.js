@@ -20,8 +20,8 @@ import { setSwipeStateHasChanged } from "../../core/reducers/swipeReducer";
 import { loadMissingSchoolData } from "../../BackEnd/rankingFunction1";
 import store from "../../core";
 
-import SearchedComponent from "../../component/SearchedComponent";
-import ExploreByArea from "../../component/ExploreByArea";
+import SearchedComponent from "../../component/exploreComponents/SearchedComponent";
+import ExploreByArea from "../../component/exploreComponents/ExploreByArea";
 import { calculateNewRank } from "../../BackEnd/rankingFunction1";
 // import { ActivityIndicator } from "react-native";
 

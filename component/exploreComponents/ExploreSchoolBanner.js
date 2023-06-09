@@ -1,14 +1,14 @@
 import { StyleSheet, View, Text, TouchableOpacity, Button, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
-import { modifyLike } from "../BackEnd/controllers/school";
+import { modifyLike } from "../../BackEnd/controllers/school";
 import { useDispatch, useSelector } from "react-redux";
-import RibbonComponent from "./RibbonComponent";
+import RibbonComponent from "../RibbonComponent";
 
 // import PrimaryButton from "./buttons/PrimaryButton";
 import { useEffect, useState} from "react";
 
-import { Colors } from "../constant/Colors";
+import { Colors } from "../../constant/Colors";
 
 export default function ExploreSchoolBanner({ schoolId }) {
 

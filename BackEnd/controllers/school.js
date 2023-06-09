@@ -83,8 +83,7 @@ export async function getPageData(schoolId) {
 export async function modifyLike(schoolId, newLike, dispatch) {
   try {
 
-  dispatch(setSchoolLike({schoolId, newLike}));
-
+  dispatch( setSchoolLike({schoolId, newLike}) );
   const authData = await getAuthData();
   const {cursustype} = getUserSettingStatus();
 
