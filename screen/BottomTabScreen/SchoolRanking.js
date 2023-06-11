@@ -103,7 +103,7 @@ function SchoolRanking({ navigation, route }) {
     console.log(status);
     if (!status.granted) {
       const {granted} = await requestPermission(); 
-      granted ? onSaveImageAsync() : alertProvider("Impossible d'effectuer la capture d'écran sans autorisation.");
+      granted ? onSaveImageAsync() : alertProvider("Impossible d'effectuer la capture d'écran sans modifier les autorisations du smartphone.");
     } else {
       onSaveImageAsync();
     }

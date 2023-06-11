@@ -26,7 +26,13 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/logo/favicon512px.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      // "permissions": [
+      //   "ACCESS_NETWORK_STATE",
+      //   "INTERNET",
+      //   "READ_EXTERNAL_STORAGE",
+      //   "WRITE_EXTERNAL_STORAGE"
+      // ]
     },
     "web": {
       "favicon": "./assets/favicon.png"

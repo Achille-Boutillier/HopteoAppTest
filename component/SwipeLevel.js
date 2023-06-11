@@ -1,6 +1,15 @@
-import { FlatList, StyleSheet, View, ActivityIndicator, Text, Button, } from "react-native";
-import { useEffect, useState, useLayoutEffect, useRef } from "react";
+import { FlatList, StyleSheet, View, TouchableOpacity,ToastAndroid, TouchableWithoutFeedback, ActivityIndicator, Text, Button, Platform} from "react-native";
+import { useEffect, useState, useLayoutEffect, useRef, useCallback } from "react";
 import Modal from "react-native-modal";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Sharing from 'expo-sharing';
+import * as MediaLibrary from 'expo-media-library';
+// import Clipboard from "react-native-clipboard";
+import Clipboard from "react-native-clipboard";
+// import * as FileSystem from 'expo-file-system';
+import { documentDirectory } from "expo-file-system";
+// import Share from 'react-native-share'; 
+// import { ShareSingleOptions } from "react-native-share";
 
 
 import {Colors} from "../constant/Colors";
@@ -9,35 +18,49 @@ import PrimaryButton from "./buttons/PrimaryButton";
 import { useNavigation } from "@react-navigation/native";
 // import SecondaryButton from "./buttons/SecondaryButton";
 import TerciaryButton from "./buttons/TerciaryButton";
+import { alertProvider } from "../BackEnd/errorHandler";
 
 
 export default function SwipeLevel({absoluteIndex, minSwipeForRanking, progressBarColor, mainBarColor, setIsUndoPress}) {
   const navigation = useNavigation();
+  // console.log("[minSwipeForRanking ===============]", minSwipeForRanking);
 
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isFirstRanking, setIsFirstRanking ] = useState();
+  const [isNewRankModalVisible, setIsNewRankModalVisible] = useState(false);
+  // const [isNewRankModalVisible, setIsNewRankModalVisible] = useState(false);
+  const [isFirstRanking, setIsFirstRanking ] = useState(false);
+  // const [isShareModalVisible, setIsShareModalVisible ] = useState(false);
+  // const [isCloseEnabled, setIsCloseEnabled ] = useState(false);
 
 
-  const [levelNumber, setLevelNumber] = useState();
+
+  const [levelNumber, setLevelNumber] = useState(0);
   const [score, setScore] = useState();
   const [isUndoDisabled, setIsUndoDisabled] = useState(false);
   
   function onPressUndo() {
-    // (()=>setIsUndoDisabled(true))();
+    (()=>setIsUndoDisabled(true))();
     (()=>setIsUndoPress(true))();
-    // setTimeout(() => {
-    //   setIsUndoDisabled(false);
-    // }, 400);
+    setTimeout(() => {
+      setIsUndoDisabled(false);
+    }, 400);
 
   }
   
-  function calculNewScore() {
+  async function calculNewScore() {
+    // const shareAppPopupWasDisplayed = await getShareAppPopupWasDisplayed();
+    // console.log(shareAppPopupWasDisplayed)
     const newLevel = parseInt(absoluteIndex/minSwipeForRanking) + 1;
     const newScore = parseInt( (absoluteIndex/minSwipeForRanking + 1 - newLevel) *100 );  // on tronque la valeur car on veut atteindre 100% que si on dépasse 99.99999....% 
     if (levelNumber>=1 && newLevel>levelNumber) {
+    // if (newLevel>levelNumber) {
       setIsFirstRanking(newLevel===2);
-      handleLevelModal();
-    }
+      // if (newLevel===3) {
+        // shareAppPopupWasDisplayed ? handleNewRankModal() : handleShareModal() ;
+      // } else {
+        handleNewRankModal();
+      // } 
+
+    } 
     setLevelNumber(newLevel);
     setScore(newScore);
   }
@@ -48,14 +71,130 @@ export default function SwipeLevel({absoluteIndex, minSwipeForRanking, progressB
   }, [absoluteIndex])
 
 
-  function handleLevelModal() {
-    setIsModalVisible((bool) => (!bool));
+
+  async function handleNewRankModal() {
+    setIsNewRankModalVisible((bool) => (!bool));
+
   }
 
   function goToRanking() {
-    handleLevelModal();
+    handleNewRankModal();
     navigation.navigate("SchoolRanking");
   }
+
+
+  // ------------------ share app -------------------
+  // const [status, requestPermission] = MediaLibrary.usePermissions();
+
+
+
+  // function handleShareModal() {
+  //   setIsShareModalVisible((bool) => (!bool));
+  // }
+
+  // useEffect(()=> {
+  //   if (isShareModalVisible) {
+  //     setTimeout(() => {
+  //       setIsCloseEnabled(true);
+  //     }, 3000);
+  //   } else {
+  //     setIsCloseEnabled(false);
+  //   }
+  // }, [isShareModalVisible])
+
+  // async function setShareAppPopupWasDisplayed(bool) {
+  //   try {
+  //     const shareAppPopupWasDisplayed = JSON.stringify(bool);
+  //     console.log('@shareAppPopupWasDisplayed---------------------------', shareAppPopupWasDisplayed);
+  //     await AsyncStorage.setItem('@shareAppPopupWasDisplayed', shareAppPopupWasDisplayed);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
+  // async function getShareAppPopupWasDisplayed() {
+  //   try {
+  //     const shareAppPopupWasDisplayed = await AsyncStorage.getItem('@shareAppPopupWasDisplayed');
+  //     console.log("[shareAppPopupWasDisplayed ---*******************---------]", shareAppPopupWasDisplayed)
+  //     return shareAppPopupWasDisplayed ? Boolean(JSON.parse(shareAppPopupWasDisplayed)) : null;
+  //   } catch (error) {
+  //     console.log(error);
+  //     return null;
+  //   }
+  // };
+
+  
+  
+  // // function getAppUrl() {
+  // //   let url;
+  // //   if (Platform.OS === "ios") {
+  // //     url = "https://apps.apple.com/my/app/hopteo/id6447057343";
+  // //   }  else if (Platform.OS === "android") {
+  // //     url = "https://play.google.com/store/apps/details?id=com.hopteo.hopteoApp" ;
+  // //   } else {
+  // //     url = "https://linktr.ee/hopteo" ;
+  // //   }
+  // //   return url;
+  // // }
+
+  // // async function shareApp() {
+  // //   const url = "https://linktr.ee/hopteo" ;
+  // //   // const imageURI = require("../assets/images/sharingAppImage.jpeg");
+  // //   const imageURI = documentDirectory + "assets/images/sharingAppImage.jpeg";
+  // //   console.log(imageURI)
+  // //   const message = `Télécharge Hopteo, l'application qui aide les prépa scientifiques à trouver leur école d'ingénieur : \n ${url}`;
+  // //   const sharingOptions = {
+  // //     dialogTitle: message,
+  // //     // url: require("../assets/images/sharingAppImage.png"),
+  // //   };
+  // //   // handleShareModal();
+  // //   try {
+  // //   // const [status] = MediaLibrary.usePermissions();
+      
+  // //   console.log(status);
+  // //   if (!status.granted) {
+  // //     const {granted} = await requestPermission(); 
+  // //     // const { granted } = await MediaLibrary.requestPermissionsAsync();
+
+      
+  // //     // granted ? await Sharing.shareAsync(imageURI, sharingOptions) : alertProvider("Impossible de partager sans modifier les autorisations du smartphone.");
+  // //     granted ? await Sharing.shareAsync(imageURI) : alertProvider("Impossible de partager sans modifier les autorisations du smartphone.");
+  // //   } else {
+  // //     await Sharing.shareAsync(imageURI);
+  // //     // await Sharing.shareAsync(imageURI, sharingOptions);
+  // //   }
+      
+  // //   } catch (error) {
+  // //     console.log(error);
+  // //     alertProvider("Impossible de partager l'application ");
+  // //   }
+  // // }
+
+  // // ! ----------- marche encore moins celle là :
+  // // async function shareApp() {
+  // //   url = "https://linktr.ee/hopteo"
+  // //   const message = "Télécharge Hopteo, l'application qui aide les prépa scientifiques à trouver leur école d'ingénieur";
+  // //   // handleShareModal();
+  // //   try {
+
+  // //     // await Sharing.shareAsync(message);
+  // //     // await Share.open({ message });
+  // //     await shareSingle({message})
+  // //   } catch (error) {
+  // //     console.log(error);
+  // //     alertProvider("Impossible de partager l'application ");
+  // //   }
+  // // }
+
+  // // ! -------------------------
+
+  // async function closeShareAppPopup() {
+  //   console.log("je passe dans closeshareapp ++++++++++++++++++++++++++++")
+  //   handleShareModal();
+  //   await setShareAppPopupWasDisplayed(true);
+  // }
+
+  // ------------------------ fin share app ---------------------------------
 
   return (
     <View style={styles.mainContainer}>
@@ -74,13 +213,13 @@ export default function SwipeLevel({absoluteIndex, minSwipeForRanking, progressB
           disabled={isUndoDisabled}
         />
 
-      <Modal isVisible={isModalVisible}>
+      <Modal isVisible={isNewRankModalVisible}>
           <View style={styles.modal}>
             { isFirstRanking 
               ? null 
               : (
                 <View style={styles.modalCross}>
-                <PrimaryButton onPress={handleLevelModal} name="close-outline" size={60} color={Colors.orange500}/>
+                <PrimaryButton onPress={handleNewRankModal} name="close-outline" size={60} color={Colors.orange500}/>
                 </View>
               ) 
             }
@@ -93,9 +232,55 @@ export default function SwipeLevel({absoluteIndex, minSwipeForRanking, progressB
           </View>
       </Modal>
 
+
+
+
+      {/* <Modal isVisible={isShareModalVisible}>
+          <View style={styles.modal}>
+            <View style={styles.modalCross}> */}
+              {/* <PrimaryButton onPress={closeShareAppPopup} name="close-outline" size={60} color={Colors.orange500}/> */}
+
+              {/* isCloseEnabled 
+                ? <PrimaryButton onPress={closeShareAppPopup} name="close-outline" size={60} color={Colors.orange500}/>
+                : <WaitingBar/>
+              */}
+              {/* </View>
+            <View style={styles.modalBody}>
+            <Text style={{fontSize:20, textAlign: 'center', width: "80%", marginTop: -20}}> */}
+              {/* L'appli te plaît ? \n Partage la pour aider d'autres élèves de CPGE à trouver leur école 😉 */}
+            {/* </Text>
+            <CopyableText text = "https://linktr.ee/hopteo" /> */}
+            {/* <TerciaryButton title="Partager" onPress={shareApp} color={Colors.orange500} isFullColor={true} fontSize={20} /> */}
+            {/* </View>
+          </View>
+      </Modal> */}
+
     </View>
   );
 }
+
+// function WaitingBar() {
+//   return (
+//     <View></View>
+//   );
+// };
+
+
+// const CopyableText = ({ text }) => {
+//   const handleLongPress = () => {
+//     Clipboard.setString(text);
+//     ToastAndroid.show('Texte copié dans le presse-papiers !', ToastAndroid.SHORT);
+//   };
+
+//   return (
+//     <TouchableWithoutFeedback onLongPress={handleLongPress}>
+//       <View>
+//         <Text>{text}</Text>
+//       </View>
+//     </TouchableWithoutFeedback>
+//   );
+// };
+
 
 
 const styles = StyleSheet.create({
@@ -146,7 +331,11 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   modalCross: {
-    alignItems: "flex-end",
+    top: 0,
+    right: 0,
+    // alignItems: "flex-end",
+    position: "absolute",
+    zIndex: 2,
   },
   modalBody: {
     // borderWidth:1,

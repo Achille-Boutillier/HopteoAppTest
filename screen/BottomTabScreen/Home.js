@@ -176,7 +176,7 @@ export default function Home({ navigation, route }) {
   function calculNextCardsToAsk() {
     const answeredCards = Object.keys(latestSwipeReducer.swipeTypeObj);
     const notAnsweredCards = latestSwipeReducer.idCardsList.filter(item => !(answeredCards.includes(item)));
-    return notAnsweredCards.slice(0,12);
+    return notAnsweredCards.slice(0,13);
   }
 
   useEffect(() => {
