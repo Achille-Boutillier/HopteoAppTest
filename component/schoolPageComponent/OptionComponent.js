@@ -28,7 +28,7 @@ export default function OptionComponent({optionSynthese, optionDetail}) {
       // setOptionToSchow(optionSynthese);
       setButtonName("Voir le détail");
       setTitle("Synthèse")
-      console.log(optionSynthese);
+      // console.log(optionSynthese);
 
     } 
   }, [isPressed])

@@ -61,9 +61,9 @@ export async function getPageData(schoolId) {
 
   try {
     const response = await fetch(route + "/page/" + schoolId, requestOptions);
-    console.log(response.status);
+    console.log("[getPageData()]", response.status);
     const data = await response.json();
-    console.log("[getPageData()]",data);
+    // console.log("[getPageData()]",data);
     if (response.status===200) {
       return data;
     } else {

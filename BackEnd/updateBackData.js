@@ -12,8 +12,8 @@ export async function updateBackData(dispatch) {
   const {notSentToBackAnswers, sentToBackAnswers, swipeTypeObj, removedIdStillInBackEnd} = store.getState().swipeReducer;
   // console.log("[removedIdStillInBackEnd]", removedIdStillInBackEnd);
   if (notSentToBackAnswers.length>0 || removedIdStillInBackEnd.length>0) {   //todo: revoir la logique
-    console.log("it needs to be upgraded ===================");
-    console.log("[removedIdStillInBackEnd]", removedIdStillInBackEnd);
+    console.log("backData needs to be upgraded ===================");
+    // console.log("[removedIdStillInBackEnd]", removedIdStillInBackEnd);
     const filteredSwipeTypeObj = notSentToBackAnswers.reduce((obj, key) => {
       if (key in swipeTypeObj) {
         obj[key] = swipeTypeObj[key];

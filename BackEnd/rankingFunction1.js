@@ -203,7 +203,7 @@ function prepareAndCalcul(cards, schoolIdObj, setReadyToDisplayRank, dispatch) {
     };
     
     const ranking = generateRanking(swipe, cards, schoolIdObj, minSwipeForRanking, themeObj, swipeSettings);
-    console.log("[generateRanking ----------------]", ranking);
+    // console.log("[generateRanking ----------------]", ranking);
     // todo : les datas des écoles ne s'affichent pas dans le classement 
 
 
@@ -232,11 +232,11 @@ function prepareAndCalcul(cards, schoolIdObj, setReadyToDisplayRank, dispatch) {
 export async function loadMissingSchoolData(rankIdList, setReadyToDisplayRank, dispatch) {
 const schoolsData = store.getState().schoolReducer.schoolsData;
 const notMissingSchoolId = Object.keys(schoolsData).filter((item)=> schoolsData[item].nomEcole);
-console.log("[notMissingSchoolId]", notMissingSchoolId);
+// console.log("[notMissingSchoolId]", notMissingSchoolId);
 const missingSchoolId = rankIdList.filter((item)=>!notMissingSchoolId.includes(item));
 if (missingSchoolId.length>0) {
-    console.log("va t'il y avoir un beeuuuug mntn ?");
-    console.log("missingSchoolData", missingSchoolId);
+    // console.log("va t'il y avoir un beeuuuug mntn ?");
+    // console.log("missingSchoolData", missingSchoolId);
     const data = await getBannerData(missingSchoolId, dispatch);
     if (data.success) {
     setReadyToDisplayRank(true);

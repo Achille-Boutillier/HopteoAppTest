@@ -77,7 +77,7 @@ export default function RecoveryCodeComponent({setIsEditing, isCharging, setIsCh
   }
 
   function onSubmit() {
-    console.log(firstInput, secondInput);
+    // console.log(firstInput, secondInput);
     const answered = areAllAnswered();
     if (answered) {
       setErrorMessage();
@@ -126,8 +126,8 @@ export default function RecoveryCodeComponent({setIsEditing, isCharging, setIsCh
 // todo: s'assurer que les fonction suivantes fonctionnent : -----------------------------------------------
 
   async function verifyCode() {
-    console.log(dataToRemember.email);
-    console.log(firstInput);
+    // console.log(dataToRemember.email);
+    // console.log(firstInput);
     const data = await verifyRecoveryCode(dataToRemember.email, firstInput);
     if (data.success) {
       setInnerComponentType("newPasswordInput");
@@ -139,9 +139,9 @@ export default function RecoveryCodeComponent({setIsEditing, isCharging, setIsCh
   }
 
   async function modifyPassword() {
-    console.log(dataToRemember.recoveryToken);
-    console.log(firstInput);
-    console.log(secondInput);
+    // console.log(dataToRemember.recoveryToken);
+    // console.log(firstInput);
+    // console.log(secondInput);
     if (firstInput===secondInput) {
       const data = await recoverAccount(dataToRemember.recoveryToken, firstInput);
       if (data.success) {

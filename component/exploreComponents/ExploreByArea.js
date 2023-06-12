@@ -27,7 +27,7 @@ export default function ExploreByArea({scrollWidth, scrollHeight}) {
 
   useEffect(()=> {
     setSchoolByAreaState(schoolByArea);
-    console.log("on passe dans usefect pour setSchoolByAreaState -------------------------------");
+    // console.log("on passe dans usefect pour setSchoolByAreaState -------------------------------");
     // console.log("[schoolByArea]", schoolByArea);
     // console.log(schoolByArea?.listFormation);
   }, [schoolByArea])
@@ -38,8 +38,8 @@ export default function ExploreByArea({scrollWidth, scrollHeight}) {
     const schoolsData = store.getState().schoolReducer.schoolsData;
     const notMissingSchoolId = Object.keys(schoolsData).filter((item)=> schoolsData[item].nomEcole);
     const missingSchoolId = idList.filter((item)=>!notMissingSchoolId.includes(item));
-    console.log("[missingSchoolId length]", missingSchoolId.length);
-    console.log("[notMissingSchoolId length]", notMissingSchoolId.length);
+    // console.log("[missingSchoolId length]", missingSchoolId.length);
+    // console.log("[notMissingSchoolId length]", notMissingSchoolId.length);
     if (missingSchoolId.length>0) {
       const data = await getBannerData(missingSchoolId, dispatch);
       if (data.success) {
@@ -58,7 +58,7 @@ export default function ExploreByArea({scrollWidth, scrollHeight}) {
       // console.log("[liste d'Id par section]",schoolByAreaState.schoolPack[item])
       idList = idList.concat(schoolByAreaState.schoolPack[item]);   //list1.concat(list2) concatène (=aditionne) les 2 listes
     }
-    console.log("[idList] : ", idList)
+    console.log("[missing idList] : ", idList);
     loadMissingSchoolData(idList);
   }
 
@@ -79,7 +79,7 @@ export default function ExploreByArea({scrollWidth, scrollHeight}) {
       <FlatList
         data={schoolByAreaState.listFormation}
         extraData={schoolByAreaState}
-        keyExtractor={(item) => item}
+        keyExtractor={(item) => item + "explore"}
         showsVerticalScrollIndicator={false}
         ListHeaderComponent={() => <ExploreByAreaFlatListHeader scrollHeight={scrollHeight} scrollWidth={scrollWidth} />}
         // style={{paddingLeft: 5}}
@@ -90,7 +90,7 @@ export default function ExploreByArea({scrollWidth, scrollHeight}) {
           return (
             <View style={{ marginBottom: 20, }}>
               <View style={{ marginBottom: 5, marginLeft: 10 }}><Text style={styles.subTitle}> {section.item} </Text></View>
-              <HorizontalAreaScroll areaIdList={schoolByAreaState.schoolPack[section.item]} scrollWidth={scrollWidth} scrollHeight={scrollHeight} emptyAreaMessage="Cette section est vide" />
+              <HorizontalAreaScroll areaIdList={schoolByAreaState.schoolPack[section.item]} sectionName={section.item} scrollWidth={scrollWidth} scrollHeight={scrollHeight} emptyAreaMessage="Cette section est vide" />
             </View>
           );
           

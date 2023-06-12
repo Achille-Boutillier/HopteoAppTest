@@ -38,11 +38,11 @@ export default function InputComponent({title, inputType, setInput, input, onSub
   function onFocus() {
     setIsEditing ? setIsEditing(true) : null ;
     // setIsEditing(true);
-    console.log("in")
+    // console.log("in")
   }
 
   function onBlur(){
-    console.log("dismissed")
+    // console.log("dismissed")
     setIsEditing ? setIsEditing(false) : null ;
   }
 

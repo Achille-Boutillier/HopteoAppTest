@@ -16,10 +16,10 @@ export async function getLikedSchool() {
 
   try {
     const response = await fetch(route + `/likedSchool`, requestOptions);
-    console.log("passe dans getLikeSchools()");
+    // console.log("passe dans getLikedSchools()");
     console.log(response.status);
     const data = await response.json();
-    console.log(data);
+    // console.log(data);
     return data;
   } catch (error) {
     console.log("echec du bloc try :");

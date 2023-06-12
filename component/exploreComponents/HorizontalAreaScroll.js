@@ -8,7 +8,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 
 
-export default function HorizontalAreaScroll({areaIdList, scrollWidth, scrollHeight, emptyAreaMessage}) {
+export default function HorizontalAreaScroll({areaIdList, sectionName, scrollWidth, scrollHeight, emptyAreaMessage}) {
 
   const schoolsData = useSelector((state) => state.schoolReducer.schoolsData);
   const [sortedAreaList, setSortedAreaList] = useState(areaIdList);
@@ -32,6 +32,9 @@ export default function HorizontalAreaScroll({areaIdList, scrollWidth, scrollHei
       
       return rankA - rankB    // comparaison normale si les deux sont definis
     });
+
+    // uniqueSortedList = [...new Set(sortedList)];      // eviter les doublons qui apparaîssent jsp pk (que quand click classement puis explore tres rapidemment)
+  
     setSortedAreaList(sortedList);
     
   }, [schoolsData, areaIdList])
@@ -39,10 +42,10 @@ export default function HorizontalAreaScroll({areaIdList, scrollWidth, scrollHei
 
   if (sortedAreaList.length > 0) {
     return (
-      <HorizontalScroll scrollViewSize={{ width: scrollWidth, height: scrollHeight,}}>
+      <HorizontalScroll scrollViewSize={{ width: scrollWidth, height: scrollHeight}}>
         {sortedAreaList.map(
           (schoolId, index) => (
-            <View key={schoolId} style={[styles.innerScrollViewContainer, { width: scrollWidth / 2.3, height: scrollHeight },]}>
+            <View key={schoolId + sectionName} style={[styles.innerScrollViewContainer, { width: scrollWidth / 2.3, height: scrollHeight },]}>
               <ExploreSchoolBanner schoolId={schoolId} />
             </View>
           )

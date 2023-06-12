@@ -19,9 +19,9 @@ export async function getUserInfo() {
 
   try {
     let response = await fetch(route + "/userInfo", requestOptions);
-    console.log(response.status);
+    console.log("[getUserInfo]", response.status);
     const data = await response.json();
-    console.log(data);
+    // console.log(data);
     return data;
   } catch (error) {
     console.log("bloc try failed :");

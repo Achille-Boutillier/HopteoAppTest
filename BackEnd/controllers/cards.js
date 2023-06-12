@@ -13,7 +13,7 @@ export async function nextPile(nextIdCardList) {
 
     const authData = await getAuthData();
     const nextIdCardString = nextIdCardList.join(",");
-    console.log("[nextIdCardsString]", nextIdCardString);
+    // console.log("[nextIdCardsString]", nextIdCardString);
 
     const {cursustype, filiere} = getUserSettingStatus();
     
@@ -29,7 +29,7 @@ export async function nextPile(nextIdCardList) {
     };
 
     const response = await fetch(route + `/nextPile/${nextIdCardString}`, requestOptions);
-    console.log(response.status);
+    // console.log(response.status);
     const data = await response.json();
     if (response.status===200) {
       return data;
@@ -60,9 +60,9 @@ export async function getDetails(idCard) {
 
   try {
     const response = await fetch(route + `/detail/${idCard}`, requestOptions);
-    console.log(response.status);
+    // console.log(response.status);
     const data = await response.json();
-    console.log(data);
+    // console.log(data);
 
     return data;
   } catch (error) {
@@ -96,9 +96,9 @@ export async function updateSwipe(idCardList, swipeTypeObj, removedIdStillInBack
     };
 
     const response = await fetch("https://app.hopteo.com/api/v1/cards/addSwipes", requestOptions);
-    console.log(response.status);
+    // console.log(response.status);
     const data = await response.json();
-    console.log(data);
+    // console.log(data);
     if (response.status===200) {
       return true;
     } else {
@@ -135,7 +135,7 @@ export async function undoSwipe(id, idTheme, dispatch) {
     };
 
     const response = await fetch(route + "/undoSwipe", requestOptions);
-    console.log(response.status);
+    // console.log(response.status);
     const data = await response.json();
     // console.log(data);
     if (response.status===200) {

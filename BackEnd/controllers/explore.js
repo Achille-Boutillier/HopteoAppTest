@@ -86,7 +86,7 @@ export async function searchSchool(enteredText) {
     },
   };  
     const response = await fetch(route + "/searchSchool/" + enteredText, requestOptions);
-    console.log(response.status);
+    console.log("[searchSchool]", response.status);
     const data = await response.json();
     // console.log(data);
     if (response.status===200) {

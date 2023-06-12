@@ -14,7 +14,7 @@ export default function ExploreByAreaFlatListHeader({scrollWidth, scrollHeight})
     <>
       <MainTitle>Mes favoris</MainTitle>
           
-      <HorizontalAreaScroll areaIdList={likedSchoolList} scrollWidth={scrollWidth} scrollHeight={scrollHeight} emptyAreaMessage="Like des écoles, elles apparaîtront ici" />
+      <HorizontalAreaScroll areaIdList={likedSchoolList} sectionName={"favoris"} scrollWidth={scrollWidth} scrollHeight={scrollHeight} emptyAreaMessage="Like des écoles, elles apparaîtront ici" />
 
       <MainTitle>Par spécialité</MainTitle>
       

@@ -9,8 +9,8 @@ import { getUserSettingStatus } from "../../BackEnd/controllers/userData";
 
 const width = Dimensions.get("window").width;
 // const height = Dimensions.get('window').height;
-const parcoursSize = { width: 0.3 * width, height: 38 }; // faciliter la gestion des container swipables
-const figureSize = { width: 0.6 * width, height: 50 };
+const parcoursSize = { width: 0.5 * width, height: 38 }; // faciliter la gestion des container swipables
+const figureSize = { width: 0.70 * width, height: 50 };
 
 function DotComponent({ list, currentNumber }) {
   const [dotContent, setDotContent] = useState(null); ;
@@ -226,7 +226,7 @@ const styles = StyleSheet.create({
   // ------------------------------------
 
   mainContainer: {
-    width: 0.7 * width,
+    width: 0.9 * width,
     // height: 180,
     // height: "20%",
     backgroundColor: Colors.grey300,

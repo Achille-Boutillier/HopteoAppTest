@@ -10,7 +10,7 @@ function PrimaryButton({onPress, name, size, color = { orange500 }, bigButton, s
   const verticalHitSlop = bigButton ? 25 : 15; // size + 20 pour une meilleure cliquabilité
 
   useEffect(()=> {
-    console.log("[disabled =========================]", disabled)  
+    disabled ? console.log("[button disabled =====]", disabled) : null;
   }, [disabled])
 
   return (

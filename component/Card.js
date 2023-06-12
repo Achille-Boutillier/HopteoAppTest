@@ -29,7 +29,7 @@ export default function Card({ cardValue, currentTheme, setSwipeButtonZIndex, sw
 
 
   useEffect(()=> {
-    console.log("----------------- changement de taille ------------")
+    // console.log("----------------- changement de taille ------------")
     setSwipeButtonZIndex(isCardDetailVisible ? 0 : 2);
     if (isCardDetailVisible && !cardDetail) {
       getCardDetail();
@@ -47,7 +47,7 @@ export default function Card({ cardValue, currentTheme, setSwipeButtonZIndex, sw
         {
           backgroundColor: currentTheme?.color,
           height: isCardDetailVisible ? "80%" : swipeCardHeigth,
-          marginTop: isCardDetailVisible ? "-44%" : "-19%",
+          marginTop: isCardDetailVisible ? "-50%" : "-19%",
           width: isCardDetailVisible ? "110%" : "95%",
           // borderColor: currentTheme?.color,
         },

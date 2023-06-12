@@ -65,7 +65,7 @@ export default function SearchedComponent({searchInput, isResearchSubmited, setI
           <FlatList
             data={schoolIdList}
             extraData={schoolIdList}      // mettre une 2eme data en liste ?
-            keyExtractor={(item) => item}
+            keyExtractor={(item) => item + "explore"}
             showsVerticalScrollIndicator={false}
             scrollEnabled={false}
             numColumns={2}

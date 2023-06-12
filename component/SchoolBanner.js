@@ -21,7 +21,7 @@ export default function SchoolBanner({schoolId}) {    //id, rank, nomEcole, type
 
   useEffect(()=>{
     if (singleSchoolData?.rank<3) {
-    console.log( "[singleSchoolData]" , singleSchoolData);
+    // console.log( "[singleSchoolData]" , singleSchoolData);
     }
   }, [singleSchoolData])
 

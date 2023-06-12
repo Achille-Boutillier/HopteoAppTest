@@ -33,24 +33,24 @@ export default function AppInfo({navigation, route}) {
       </View>
         { appInfo ? (
           <View style={styles.bodyContainer}>
-            <Text style={styles.titleText}>A propos d'Hopteo :</Text> 
+            <Text style={styles.titleText}>A propos d'Hopteo</Text> 
             <Text style={styles.infoText}>{appInfo?.description}</Text>
             
-            <View style={styles.websiteContainer}>
-              <Text style={styles.titleText}>Site web :</Text>
-              <TouchableOpacity onPress={() => Linking.openURL(appInfo.webSite)}>
-                <Text style={styles.websiteText}>hopteo.com</Text>
-              </TouchableOpacity>
-              
+            <View style={{flexDirection: "row", justifyContent: "space-evenly"}}>
+
+              <View style={{alignItems: "center"}}>
+                <PrimaryButton name="logo-instagram" onPress={()=> Linking.openURL("https://instagram.com/hopteo_cpge?igshid=MjEwN2IyYWYwYw==")} size={40}/>
+                <Text style={styles.linkText}>@hopteo_cpge</Text>
+              </View>
+
+              <View style={{alignItems: "center"}}>
+                <PrimaryButton name="logo-dribbble" onPress={()=> Linking.openURL(appInfo.webSite)} size={40}/>
+                <Text style={styles.linkText}>@hopteo.com</Text>
+              </View>
+
             </View>
     
-            <View style={{width: "80%", alignSelf: "center"}} >
-              {/* <SecondaryButton
-                onPress={onPressPolicy}
-                buttonText = "Politique de Confidentialité"
-                fontSize={15}
-                preSized={false}
-              /> */}
+            <View style={{width: "80%", alignSelf: "center", marginTop: "10%"}} >
               <TerciaryButton
               title = "Politique de Confidentialité"
               onPress={onPressPolicy}
@@ -88,13 +88,18 @@ const styles = StyleSheet.create({
   bodyContainer: {
     flex: 1,
     // alignItems:"center",
-    padding: "5%",
+    paddingHorizontal: "5%",
   },
   titleText: {
-    fontSize: 18, 
-    fontWeight: "500", 
+    fontSize: 22, 
+    fontWeight: "600", 
+    alignSelf: "center",
     // marginBottom: 20, 
     // textAlign: "center"
+  },
+  linkText: {
+    fontSize: 16, 
+    fontWeight: "500",
   },
 
   infoText: {

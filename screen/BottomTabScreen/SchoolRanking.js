@@ -6,7 +6,7 @@ import { Colors } from "../../constant/Colors";
 import * as MediaLibrary from 'expo-media-library';
 import * as Sharing from "expo-sharing";
 // import {MediaLibrary} from "expo";
-// import * as Permissions from "expo"
+// import * as Permissions from "expo";
 // import * as Permissions from "expo-permissions"
 import { GLView } from "expo-gl";
 import { captureRef } from 'react-native-view-shot';
@@ -40,7 +40,7 @@ function SchoolRanking({ navigation, route }) {
     const rankIdList = store.getState().schoolReducer.rankIdList;
     if (!swipeStateHasChanged ){
       if ( Array.isArray(rankIdList) ){
-        console.log("[rankIdList]", rankIdList);
+        // console.log("[rankIdList]", rankIdList);
         loadMissingSchoolData(rankIdList, setReadyToDisplayRank, dispatch);
       } else {
         setReadyToDisplayRank(true);
@@ -64,11 +64,10 @@ function SchoolRanking({ navigation, route }) {
 
   useEffect(()=> {
     console.log("je passe dans le reclassement")
-    console.log("[rankIdList]", schoolReducer.rankIdList);
+    // console.log("[rankIdList]", schoolReducer.rankIdList);
     if (schoolReducer.rankIdList && readyToDisplayRank) {
       (()=>setReadyToDisplayRank(false))();
       setTimeout(function() {
-        console.log("Delayed message");
       }, 500);
       (()=>setReadyToDisplayRank(true))();
     }   
@@ -100,7 +99,7 @@ function SchoolRanking({ navigation, route }) {
   }
 
   async function handlePressCapture() {
-    console.log(status);
+    console.log("[peut capturer screen ?]", status);
     if (!status.granted) {
       const {granted} = await requestPermission(); 
       granted ? onSaveImageAsync() : alertProvider("Impossible d'effectuer la capture d'écran sans modifier les autorisations du smartphone.");
@@ -115,6 +114,7 @@ function SchoolRanking({ navigation, route }) {
     try {
       const localUri = await captureRef(viewRef, {
         // height: 440,
+        format: "png",
         quality: 1,
       });
 
@@ -166,6 +166,7 @@ function SchoolRanking({ navigation, route }) {
 // ---------------fin button header -------------------------------------
 
   return (
+    // <View style={styles.mainContainer}>
     <View style={styles.mainContainer} ref={viewRef}>
       {forRankingReducer.showRankingPopup && !isScreenshotMode
         ? <InfoPopup message="Retourne swiper pour affiner ton classement" />
@@ -192,7 +193,7 @@ function SchoolRanking({ navigation, route }) {
                   data={schoolReducer.rankIdList}
                   // data={schoolReducer.rankIdList.slice(0, 40)}
                   // extraData={schoolReducer.rankIdList} 
-                  keyExtractor={(item) => item}
+                  keyExtractor={(item) => item + "rank"}
                   showsVerticalScrollIndicator={false}
                   renderItem={({item}) => {
                     return (<SchoolBanner schoolId={item} />);
@@ -212,6 +213,7 @@ function SchoolRanking({ navigation, route }) {
       </View>
       
     </View>
+    // </View>
   );
 
   // return (
@@ -231,6 +233,10 @@ const styles = StyleSheet.create({
     mainContainerColor: Colors.backgroundColor,
     // alignItems: "center",
     // padding: 10,
+  },
+
+  capturedContainer: {
+    flex: 1,
   },
 
   topContainer: {

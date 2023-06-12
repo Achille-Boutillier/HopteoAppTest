@@ -10,7 +10,7 @@ import PrimaryButton from "./buttons/PrimaryButton";
 
 export default function ComparedSchool({oneSchoolData}) {      
  console.log("okkkkkk ---------------------")  
-console.log(oneSchoolData);
+// console.log(oneSchoolData);
 
   return (
     <View style={styles.schoolContainer}>

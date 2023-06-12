@@ -18,6 +18,7 @@ import MessageContainer from "../../component/MessageContainer";
 import { storeNewSwipe, removeSwipe, setSwipeStateHasChanged } from "../../core/reducers/swipeReducer";
 import SwipeButton from "../../component/buttons/SwipeButton";
 import { updateBackData } from "../../BackEnd/updateBackData";
+import ActivityComponent from "../../component/ActivityComponent";
 import store from "../../core";
 // import store from "../../core";
 const swiperRef = createRef();
@@ -157,14 +158,9 @@ export default function Home({ navigation, route }) {
     unableCard();
     const data = await nextPile(nextIdCardList);
     console.log("Je passe dans getCards");
-    setAllCardsPile((pile) => pile.concat(data.cardsPile));       // ! redundant ?
-    // console.log( "[redundent ? ========]" ,findDuplicate(allCardsPile));    // ! redundent ?
-    console.log( "[allCardsPile]" ,allCardsPile);    // ! redundent ?
-
-    // console.log( "[cardsObject]" ,data);
+    setAllCardsPile((pile) => pile.concat(data.cardsPile)); 
     if (data.cardsPile) {
       setListIndex(0);
-      console.log("[cardList]", data.cardsPile);
       setCardList(data.cardsPile);
       setIsCardListLoaded(true);  
     } else {
@@ -176,7 +172,8 @@ export default function Home({ navigation, route }) {
   function calculNextCardsToAsk() {
     const answeredCards = Object.keys(latestSwipeReducer.swipeTypeObj);
     const notAnsweredCards = latestSwipeReducer.idCardsList.filter(item => !(answeredCards.includes(item)));
-    return notAnsweredCards.slice(0,13);
+    return notAnsweredCards.slice(0,latestSwipeReducer.minSwipeForRanking);
+    // return notAnsweredCards.slice(0,13);
   }
 
   useEffect(() => {
@@ -207,8 +204,8 @@ export default function Home({ navigation, route }) {
 
   async function getPreviousCard(){
     const {notSentToBackAnswers, sentToBackAnswers} = latestSwipeReducer;
-    console.log("[notSentToBackAnswers]", notSentToBackAnswers);
-    console.log("[sentToBackAnswers]", sentToBackAnswers);
+    // console.log("[notSentToBackAnswers]", notSentToBackAnswers);
+    // console.log("[sentToBackAnswers]", sentToBackAnswers);
     let previousCardId;
     if (notSentToBackAnswers.length===0){
       previousCardId = sentToBackAnswers[sentToBackAnswers.length-1];
@@ -245,13 +242,7 @@ export default function Home({ navigation, route }) {
   }
 
 
-  useEffect(()=> {
-    console.log("id card", cardList[listIndex]);      // !!! pbm de key  
-    console.log("[cardList]", cardList); 
-  }, [cardList])
-
   function handleUndoPress() {
-    console.log("je passe dans handleUndoPress");
     if (absoluteIndex === 0) {
       Alert.alert("Impossible !", "Tu te trouves déjà sur la première carte", [
         { text: "Ok", style: "cancel" },
@@ -302,8 +293,8 @@ export default function Home({ navigation, route }) {
 
   useEffect(() => {
     length = Object.keys(latestSwipeReducer.swipeTypeObj).length;
-    console.log(length);
-    console.log("[absoluteIndex]", length);
+    // console.log(length);
+    // console.log("[absoluteIndex]", length);
     setAbsoluteIndex(length);
   }, [latestSwipeReducer.swipeTypeObj]);
 
@@ -327,7 +318,6 @@ function onSwiping(x, y){
 
   function onSwipedAll() {
     setTimeout(() => {
-      console.log("[=====================]" , "action performed");
       setIsPileOver(true);
     }, 300);
   }
@@ -339,9 +329,10 @@ function onSwiping(x, y){
 
   //------------------------------------------
 
-  if (isCardListLoaded && cardList instanceof Array) {
+  
     return (
       <View style={styles.mainContainer}>
+
         <SwipeLevel
           absoluteIndex={absoluteIndex}
           minSwipeForRanking={latestSwipeReducer.minSwipeForRanking} // 'pas' des levels
@@ -361,153 +352,159 @@ function onSwiping(x, y){
           <SwipeButton swiperRef={swiperRef} swipeDir={swipeDir}/>
         </View> */}
 
-        <View style={[styles.swipeContainer, { zIndex: swipeButtonZIndex===2 ? 0 : 2 }]}>
-          <Swiper
-            ref={swiperRef}
-            cards={cardList}
-            extraData={cardList}
-            cardIndex={0} // 0 si premier elem tt le temps
-            keyExtractor={(item)=>item.id}
-            // keyExtractor2={(item)=> `${item}-2`}
-            renderCard={(currentCard) => (
-              <Card
-                key = {currentCard.id}
-                cardValue={currentCard}
-                currentTheme={theme[currentCard.idTheme]}
-                setSwipeButtonZIndex={setSwipeButtonZIndex}
-                swipeCardHeigth={swipeCardHeigth}
-                // isCardDetailVisible={bool}
-                // setIsDetailVisible={setIsDetailVisible}
-              />
-            )}
-            stackSize={2} // Nombre de cartes supperpopsées visibles
-            stackScale={10} // largeur des cartes en dessous (0 => même taille que la 1ere ; 10 => de plus en plus petit en dessous)
-            stackSeparation={-5} // éloignement des cartes les unes en dessous
-            // onSwiped={onSwiped}
-            onSwipedRight={(index) => onSwiped(index, "like")}
-            onSwipedLeft={(index) => onSwiped(index, "dislike")}
-            onSwipedTop={(index) => onSwiped(index, "superlike")}
-            onSwipedBottom={(index) => onSwiped(index, "dontKnow")}
-            // infinite // repars sur les premières cartes quand c'est fini => à changer
-            // onSwipedAll={() => {}}  // function à appeler quand toutes les cartes ont été swipées
-            onSwiping={onSwiping}
-            onSwipedAll={() => onSwipedAll()}
-            // dragStart={setSwipeButtonZIndex.bind(this, 0)}
-            dragEnd={()=>{
-              // setSwipeButtonZIndex(2);
-              setSwipeDir(null);
-            }}
-            backgroundColor={"transparent"}
-            animateCardOpacity // crée le changement d'opacité de la carte quand on swipe
-            animateOverlayLabelsOpacity // opacité sur le "nope", "yes"
+        { isCardListLoaded 
+          ? ( 
+            typeof cardList === "string" 
+            ? (
+              <View style={[styles.mainContainer, { alignItems: "center" }]}>
+                <MessageContainer>{cardList}</MessageContainer>
+              </View>
+            ) : (
+              <View style= {styles.swipeAndButtonContainer}>
+                <View style={[styles.swipeContainer, { zIndex: swipeButtonZIndex===2 ? 0 : 2 }]}>
+                  <Swiper
+                    ref={swiperRef}
+                    cards={cardList}
+                    extraData={cardList}
+                    cardIndex={0} // 0 si premier elem tt le temps
+                    keyExtractor={(item)=>item.id}
+                    renderCard={(currentCard) => (
+                      <Card
+                        key = {currentCard.id}
+                        cardValue={currentCard}
+                        currentTheme={theme[currentCard.idTheme]}
+                        setSwipeButtonZIndex={setSwipeButtonZIndex}
+                        swipeCardHeigth={swipeCardHeigth}
+                        // isCardDetailVisible={bool}
+                        // setIsDetailVisible={setIsDetailVisible}
+                      />
+                    )}
+                    stackSize={2} // Nombre de cartes supperpopsées visibles
+                    stackScale={10} // largeur des cartes en dessous (0 => même taille que la 1ere ; 10 => de plus en plus petit en dessous)
+                    stackSeparation={-5} // éloignement des cartes les unes en dessous
+                    // onSwiped={onSwiped}
+                    onSwipedRight={(index) => onSwiped(index, "like")}
+                    onSwipedLeft={(index) => onSwiped(index, "dislike")}
+                    onSwipedTop={(index) => onSwiped(index, "superlike")}
+                    onSwipedBottom={(index) => onSwiped(index, "dontKnow")}
+                    // infinite // repars sur les premières cartes quand c'est fini => à changer
+                    // onSwipedAll={() => {}}  // function à appeler quand toutes les cartes ont été swipées
+                    onSwiping={onSwiping}
+                    onSwipedAll={() => onSwipedAll()}
+                    // dragStart={setSwipeButtonZIndex.bind(this, 0)}
+                    dragEnd={()=>{
+                      // setSwipeButtonZIndex(2);
+                      setSwipeDir(null);
+                    }}
+                    backgroundColor={"transparent"}
+                    animateCardOpacity // crée le changement d'opacité de la carte quand on swipe
+                    animateOverlayLabelsOpacity // opacité sur le "nope", "yes"
 
-            // fonctionne vraimment ?
-            // overlayOpacityRange={[0, 0.25, 0.5, 1]} // adjust overlay opacity range
-            // overlayOpacityVerticalRange={[0, 0.25, 0.5, 1]} // adjust overlay vertical position range
+                    // fonctionne vraimment ?
+                    // overlayOpacityRange={[0, 0.25, 0.5, 1]} // adjust overlay opacity range
+                    // overlayOpacityVerticalRange={[0, 0.25, 0.5, 1]} // adjust overlay vertical position range
 
 
-            // overlayOpacityVerticalThreshold={}   //todo: existe aussi pour horizontal
-            overlayLabels={{
-              left: {
-                // top et bottom si necessaire
-                title: "J'AIME PAS",
-                style: {
-                  label: {
-                    backgroundColor: "white",
-                    color: Colors.dislike,
-                    fontSize: 24,
-                    borderColor: Colors.dislike,
-                    borderWidth: 2,
-                  },
-                  wrapper: {
-                    alignItems: "flex-end",
-                    justifyContent: "flex-start",
-                    marginTop: "7%",
-                    marginLeft: "-6%",
-                  },
-                },
-              },
-              right: {
-                // top et bottom si necessaire
-                title: "J'AIME",
-                style: {
-                  label: {
-                    backgroundColor: "white",
-                    color: Colors.like,
-                    fontSize: 24,
-                    borderColor: Colors.like,
-                    borderWidth: 2,
-                  },
-                  wrapper: {
-                    alignItems: "flex-start",
-                    justifyContent: "flex-start",
-                    marginTop: "7%",
-                    marginLeft: "6%",
-                  },
-                },
-              },
-              top: {
-                // top et bottom si necessaire
-                title: "J'ADORE !",
-                style: {
-                  label: {
-                    backgroundColor: "white",
-                    color: Colors.superLike,
-                    fontSize: 24,
-                    borderColor: Colors.superLike,
-                    borderWidth: 2,
-                  },
-                  wrapper: {
-                    alignItems: "center",
-                    justifyContent: "center",
-                    marginTop: "-20%",
-                  },
-                },
-              },
-              bottom: {
-                title: "NEUTRE",
-                // title: "INDECIS.E",
-                style: {
-                  label: {
-                    backgroundColor: "white",
-                    color: Colors.dontKnow,
-                    fontSize: 24,
-                    borderColor: Colors.dontKnow,
-                    borderWidth: 2,
-                  },
-                  wrapper: {
-                    alignItems: "center",
-                    justifyContent: "flex-start",
-                    marginTop: "10%",
-                  },
-                },
-              },
-            }}
-          />
-        </View>
+                    // overlayOpacityVerticalThreshold={}   //todo: existe aussi pour horizontal
+                    overlayLabels={{
+                      left: {
+                        // top et bottom si necessaire
+                        title: "J'AIME PAS",
+                        style: {
+                          label: {
+                            backgroundColor: "white",
+                            color: Colors.dislike,
+                            fontSize: 24,
+                            borderColor: Colors.dislike,
+                            borderWidth: 2,
+                          },
+                          wrapper: {
+                            alignItems: "flex-end",
+                            justifyContent: "flex-start",
+                            marginTop: "7%",
+                            marginLeft: "-6%",
+                          },
+                        },
+                      },
+                      right: {
+                        // top et bottom si necessaire
+                        title: "J'AIME",
+                        style: {
+                          label: {
+                            backgroundColor: "white",
+                            color: Colors.like,
+                            fontSize: 24,
+                            borderColor: Colors.like,
+                            borderWidth: 2,
+                          },
+                          wrapper: {
+                            alignItems: "flex-start",
+                            justifyContent: "flex-start",
+                            marginTop: "7%",
+                            marginLeft: "6%",
+                          },
+                        },
+                      },
+                      top: {
+                        // top et bottom si necessaire
+                        title: "J'ADORE !",
+                        style: {
+                          label: {
+                            backgroundColor: "white",
+                            color: Colors.superLike,
+                            fontSize: 24,
+                            borderColor: Colors.superLike,
+                            borderWidth: 2,
+                          },
+                          wrapper: {
+                            alignItems: "center",
+                            justifyContent: "center",
+                            marginTop: "-20%",
+                          },
+                        },
+                      },
+                      bottom: {
+                        title: "NEUTRE",
+                        // title: "INDECIS.E",
+                        style: {
+                          label: {
+                            backgroundColor: "white",
+                            color: Colors.dontKnow,
+                            fontSize: 24,
+                            borderColor: Colors.dontKnow,
+                            borderWidth: 2,
+                          },
+                          wrapper: {
+                            alignItems: "center",
+                            justifyContent: "flex-start",
+                            marginTop: "10%",
+                          },
+                        },
+                      },
+                    }}
+                  />
+                </View>
 
-        <View style={[styles.bottomContainer, 
-          { zIndex: swipeButtonZIndex },
-          // { zIndex: 2 },
-          ]}>
-          <SwipeButton swiperRef={swiperRef} swipeDir={swipeDir}/>
-        </View>
+                <View style={[styles.bottomContainer, 
+                  { zIndex: swipeButtonZIndex },
+                  // { zIndex: 2 },
+                  ]}>
+                  <SwipeButton swiperRef={swiperRef} swipeDir={swipeDir}/>
+                </View>
+              </View>
+            )
+            
 
+          ) : (
+            <ActivityComponent/>
+            // <View style={styles.loadingContainer}>
+            //   <ActivityIndicator size="large" color={Colors.orange500} />
+            // </View>
+          )
+        }
       </View>
     );
-  } else if (isCardListLoaded && typeof cardList === "string") {
-    return (
-      <View style={[styles.mainContainer, { alignItems: "center" }]}>
-        <MessageContainer>{cardList}</MessageContainer>
-      </View>
-    );
-  } else {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={Colors.orange500} />
-      </View>
-    );
-  }
+  
 }
 
 const styles = StyleSheet.create({
@@ -515,7 +512,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.backgroundColor,
     flexDirection: "column",
-    justifyContent: "space-evenly"
+    // justifyContent: "space-evenly"
+  },
+  swipeAndButtonContainer: {
+    justifyContent: "space-evenly",
+    flex: 1,
+    // borderWidth: 1,
+// 
   },
   swipeContainer: {
     height: swipeCardHeigth,

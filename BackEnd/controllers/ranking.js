@@ -27,7 +27,7 @@ export async function getSchoolRanking() {
     };
 
     const response = await fetch(route + "/generate", requestOptions);
-    console.log(response.status)
+    // console.log(response.status)
     const data = await response.json();
     // console.log("[getSchoolRanking()]",data);
     if (response.status===200) {
@@ -61,7 +61,7 @@ export async function getRankingAlgoData() {
     };
 
     const response = await fetch(route + "/data", requestOptions);
-    console.log(response.status)
+    // console.log(response.status)
     const data = await response.json();
     // console.log("[getSchoolRanking()]",data);
     if (response.status===200) {

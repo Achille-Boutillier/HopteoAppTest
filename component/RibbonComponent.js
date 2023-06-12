@@ -42,11 +42,11 @@ export default function RibbonComponent({rank, circleSize=22, fontSize=14, iconS
       default : 
         setBannerColor(null);
         setRibbonIcon(
-            <View style={[styles.rankContainer, {borderRadius: circleSize, width: circleSize, height: circleSize, }]}>
-              <Text style={[{color: Colors.white, fontWeight: "700", marginTop: -2,}, {fontSize: fontSize}]}>
-                {rank}
-              </Text>
-            </View>
+          <View style={[styles.rankContainer, {borderRadius: circleSize, width: circleSize, height: circleSize, }]}>
+            <Text style={[{color: Colors.white, fontWeight: "700", marginTop: -2,}, {fontSize: fontSize}]} adjustsFontSizeToFit={true} numberOfLines={1}>
+              {rank}
+            </Text>
+          </View>
         )
         break;
     }
