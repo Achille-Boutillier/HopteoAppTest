@@ -100,7 +100,7 @@ function FirstQuestionsScreen({ navigation }) {
     }
     
   }
-
+  
   useEffect(() => {
     if (allQuestionsAnswered) {
       submitAnswers();
