@@ -16,7 +16,7 @@ import MainNumberComponent from "../component/schoolPageComponent/MainNumberComp
 import OptionComponent from "../component/schoolPageComponent/OptionComponent";
 import ProfessionalOpportunities from "../component/schoolPageComponent/ProfessionalOpportunities";
 import { useSelector, useDispatch } from "react-redux";
-import {setSchoolLikeFailure, setSchoolLike, getSchoolPageRequest, getSchoolPageSuccess, getSchoolPageFailure, } from "../core/reducers/schoolReducer";
+import {getSchoolPageRequest, getSchoolPageSuccess, getSchoolPageFailure, } from "../core/reducers/schoolReducer";
 import { getPageData } from "../BackEnd/controllers/school";
 import RibbonComponent from "../component/RibbonComponent";
 import { BrandComponent } from "../component/TopBar";
@@ -24,6 +24,8 @@ import { BrandComponent } from "../component/TopBar";
 export default function SchoolPage({ navigation, route }) {
   const schoolId = route.params.schoolId;
   const singleSchoolData = useSelector((state) => state.schoolReducer.schoolsData[schoolId]);
+  const currentLike = useSelector((state) => state.schoolReducer.likedSchoolObject[schoolId]);
+
   const [readyToDisplay, setReadyToDisplay] = useState(false);
   
   console.log("[hahahahahha --------------------]", singleSchoolData);
@@ -68,8 +70,8 @@ export default function SchoolPage({ navigation, route }) {
   // --------------- like ecole -------------------------------------
   
   async function handleLikePress() {
-    const newLike = !singleSchoolData.like;
-    const success = modifyLike(schoolId, newLike, dispatch);
+    // const newLike = !singleSchoolData.like;
+    const success = modifyLike(schoolId, !currentLike, dispatch);
     if (!success) {
       alertProvider("Un problème est survenu... Le like n'a pas été pris en compte.");
     }
@@ -93,7 +95,7 @@ export default function SchoolPage({ navigation, route }) {
           <BrandComponent logoSize={30} fontSize={17}/>
           <PrimaryButton
             onPress={handleLikePress}
-            name={singleSchoolData.like ? "heart" : "heart-outline"}
+            name={currentLike ? "heart" : "heart-outline"}
             size={30}
             color={Colors.orange500}
           />

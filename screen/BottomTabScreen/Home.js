@@ -4,7 +4,9 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { useState, useEffect, useLayoutEffect, createRef, useRef  } from "react";
 // import VersionCheck from 'react-native-version-check-expo';
-import VersionCheck from "react-native-version-check";
+// import VersionCheck from "react-native-version-check";
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import Swiper from "react-native-deck-swiper";
 
@@ -328,6 +330,18 @@ function onSwiping(x, y){
   // () => swiperRef.current.swipeBack();
 
   //------------------------------------------
+
+  // useEffect(()=> {
+  //   resetShareAppPopupWasDisplayed();
+  // }, [absoluteIndex])
+
+  // async function resetShareAppPopupWasDisplayed() {
+  //   try {
+  //     await AsyncStorage.removeItem('@shareAppPopupWasDisplayed');
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   
     return (

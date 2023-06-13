@@ -2,14 +2,12 @@ import { FlatList, StyleSheet, View, TouchableOpacity,ToastAndroid, TouchableWit
 import { useEffect, useState, useLayoutEffect, useRef, useCallback } from "react";
 import Modal from "react-native-modal";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as Sharing from 'expo-sharing';
-import * as MediaLibrary from 'expo-media-library';
-// import Clipboard , { useClipboard } from "@react-native-clipboard/clipboard";
+// import * as Sharing from 'expo-sharing';
+// import * as MediaLibrary from 'expo-media-library';
 import * as Clipboard from 'expo-clipboard';
 // import Clipboard from "react-native-clipboard";
-// import Clipboard from "react-native-clipboard";
 // import * as FileSystem from 'expo-file-system';
-import { documentDirectory } from "expo-file-system";
+// import { documentDirectory } from "expo-file-system";
 // import Share from 'react-native-share'; 
 // import { ShareSingleOptions } from "react-native-share";
 
@@ -135,7 +133,7 @@ export default function SwipeLevel({absoluteIndex, minSwipeForRanking, progressB
   // const [data, setString] = useClipboard();
 
   const copyToClipboard = async () => {
-    await Clipboard.setStringAsync('hello world');
+    await Clipboard.setStringAsync("https://linktr.ee/hopteo");
   };
   
   // function getAppUrl() {
@@ -202,14 +200,9 @@ export default function SwipeLevel({absoluteIndex, minSwipeForRanking, progressB
   // ! -------------------------
 
   async function closeShareAppPopup() {
-    // console.log("je passe dans closeshareapp ++++++++++++++++++++++++++++")
     handleShareModal();
     await setShareAppPopupWasDisplayed(true);
     // await resetShareAppPopupWasDisplayed();
-  }
-
-  function copyLink() {
-
   }
 
   // ------------------------ fin share app ---------------------------------
@@ -273,7 +266,6 @@ export default function SwipeLevel({absoluteIndex, minSwipeForRanking, progressB
               </Text>
             </TouchableOpacity>
             
-            {/* <CopyableText text = "https://linktr.ee/hopteo" /> */}
             <TerciaryButton title="Copier le lien" onPress={copyToClipboard} color={Colors.orange500} isFullColor={true} fontSize={20} />
             </View>
           </View>
@@ -283,25 +275,25 @@ export default function SwipeLevel({absoluteIndex, minSwipeForRanking, progressB
   );
 }
 
-function WaitingBar({totalWaitingTime}) {
+// function WaitingBar({totalWaitingTime}) {
 
-  const [currentTime, setCurrentTime] = useState(0);
-  const [progressBarSize, setProgressBarSize ] = useState("0%");
+//   const [currentTime, setCurrentTime] = useState(0);
+//   const [progressBarSize, setProgressBarSize ] = useState("0%");
 
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setCurrentTime(prevTime => prevTime + 100);
-    }, 100);
+//   useEffect(() => {
+//     const intervalId = setInterval(() => {
+//       setCurrentTime(prevTime => prevTime + 100);
+//     }, 100);
 
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, []);
+//     return () => {
+//       clearInterval(intervalId);
+//     };
+//   }, []);
 
-  useEffect(()=> {
-    const width = (100*currentTime/totalWaitingTime).toString()+"%" ;
-    setProgressBarSize(width) ;
-  }, [currentTime])
+//   useEffect(()=> {
+//     const width = (100*currentTime/totalWaitingTime).toString()+"%" ;
+//     setProgressBarSize(width) ;
+//   }, [currentTime])
 
 
 
@@ -311,7 +303,7 @@ function WaitingBar({totalWaitingTime}) {
   //     <View style={{width: progressBarSize , height: "100%", backgroundColor: Colors.orange500 }}></View>
   //   </View>
   // );
-};
+// };
 
 
 

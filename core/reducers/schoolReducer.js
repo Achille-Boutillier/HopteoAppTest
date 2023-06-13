@@ -18,10 +18,13 @@ export const schoolSlice = createSlice({
       //   state.schoolsData[item] = {...state.schoolsData[item] , ...action.payload[item]} 
       // }) 
       for (const schoolId in action.payload) {
-        state.schoolsData[schoolId] = {...state.schoolsData[schoolId] , ...action.payload[schoolId]} 
         if (action.payload[schoolId].like) {
-          state.likedSchoolList.push(schoolId);
+          state.likedSchoolObject[schoolId] = true;
+          // state.likedSchoolList.push(schoolId);
         }
+        delete action.payload[schoolId].like;
+        state.schoolsData[schoolId] = {...state.schoolsData[schoolId] , ...action.payload[schoolId]} 
+
       }    
       state.loading = false;
       state.error = null;
@@ -57,18 +60,18 @@ export const schoolSlice = createSlice({
 
     setSchoolLike: (state, action) => {
       const {schoolId, newLike } = action.payload;
-      state.schoolsData[schoolId].like = newLike ;
-      newLike ? state.likedSchoolList.push(schoolId) : state.likedSchoolList = state.likedSchoolList.filter(item => item !== schoolId) ;
+      newLike ? state.likedSchoolObject[schoolId] = true : delete state.likedSchoolObject[schoolId];
+      // state.schoolsData[schoolId].like = newLike ;
       state.error = false;
     },
     
-    setSchoolLikeFailure: (state, action) => {
-      const {schoolId, newLike } = action.payload;
-      state.schoolsData[schoolId].like = !newLike ;
-      newLike ? state.likedSchoolList.push(schoolId) : state.likedSchoolList = state.likedSchoolList.filter(item => item !== schoolId) ;
-      state.loading = false;
-      state.error = true; 
-    },
+    // setSchoolLikeFailure: (state, action) => {
+    //   const {schoolId, newLike } = action.payload;
+    //   // state.schoolsData[schoolId].like = !newLike ;
+    //   // newLike ? state.likedSchoolList.push(schoolId) : state.likedSchoolList = state.likedSchoolList.filter(item => item !== schoolId);
+    //   state.loading = false;
+    //   state.error = true; 
+    // },
 
     // --------------------rank----------------------------
 
@@ -158,7 +161,7 @@ export const schoolSlice = createSlice({
 
 export const {
   calculNewRank, calculNewRankSuccess, calculNewRankFailure, resetRank, 
-  setSchoolLike, setSchoolLikeFailure, 
+  setSchoolLike, 
   getSchoolBannerRequest, getSchoolBannerSuccess, getSchoolBannerFailure, 
   getSchoolPageRequest, getSchoolPageSuccess, getSchoolPageFailure,
   getSchoolByAreaRequest, getSchoolByAreaSuccess, getSchoolByAreaFailure,

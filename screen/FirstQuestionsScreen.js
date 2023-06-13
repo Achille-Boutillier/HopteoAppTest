@@ -100,7 +100,7 @@ function FirstQuestionsScreen({ navigation }) {
     }
     
   }
-  
+
   useEffect(() => {
     if (allQuestionsAnswered) {
       submitAnswers();
@@ -125,7 +125,6 @@ function FirstQuestionsScreen({ navigation }) {
         navigation.setOptions({ initialRouteName: "Main Screens" }); //todo Verifier que ça fonctionne pour pas pouvoir revenir en arrière vers firstQuestions
         // navigation.navigate("Main Screens");
         resetNavigationScreen("Main Screens");
-
       } else {
         alertProvider();
       }

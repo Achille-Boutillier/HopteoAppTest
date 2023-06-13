@@ -81,7 +81,7 @@ export default function ExploreByArea({scrollWidth, scrollHeight}) {
         extraData={schoolByAreaState}
         keyExtractor={(item) => item + "explore"}
         showsVerticalScrollIndicator={false}
-        ListHeaderComponent={() => <ExploreByAreaFlatListHeader scrollHeight={scrollHeight} scrollWidth={scrollWidth} />}
+        ListHeaderComponent={() => <ExploreByAreaFlatListHeader scrollHeight={scrollHeight} scrollWidth={scrollWidth} />}    //! à remettre
         // style={{paddingLeft: 5}}
         // contentContainerStyle={{ paddingHorizontal: 0, borderWidth: 1  }}
         renderItem={(section) => {

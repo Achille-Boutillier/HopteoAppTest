@@ -4,6 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { modifyLike } from "../../BackEnd/controllers/school";
 import { useDispatch, useSelector } from "react-redux";
 import RibbonComponent from "../RibbonComponent";
+// import { setSchoolLike } from "../../core/reducers/schoolReducer";
 
 // import PrimaryButton from "./buttons/PrimaryButton";
 import { useEffect, useState} from "react";
@@ -15,6 +16,8 @@ export default function ExploreSchoolBanner({ schoolId }) {
   const [bannerColor, setBannerColor] = useState(null);
   const navigation = useNavigation();
   const singleSchoolData = useSelector((state) => state.schoolReducer.schoolsData[schoolId]);
+  const currentLike = useSelector((state) => state.schoolReducer.likedSchoolObject[schoolId]);
+
   const dispatch = useDispatch();
 
   function onPressSchool() {
@@ -22,8 +25,9 @@ export default function ExploreSchoolBanner({ schoolId }) {
   }
 
   async function handleLikePress() {
-    const newLike = !singleSchoolData.like;
-    const success = await modifyLike(schoolId, newLike, dispatch);
+    // const newLike = !singleSchoolData.like;
+    // dispatch( setSchoolLike({schoolId, newLike}) );
+    const success = await modifyLike(schoolId, !currentLike, dispatch);
     if (!success) {
       alertProvider("Un problème est survenu... Le like n'a pas été pris en compte.");
     }
@@ -69,7 +73,7 @@ export default function ExploreSchoolBanner({ schoolId }) {
           hitSlop={{top: 30, bottom: 30, left: 10, right: 10}}
           >
           <Ionicons 
-            name={singleSchoolData.like ? "heart" : "heart-outline"} 
+            name={currentLike ? "heart" : "heart-outline"} 
             size={24} 
             color={bannerColor ? bannerColor : Colors.orange500} 
           />

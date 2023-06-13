@@ -2,19 +2,20 @@
 import { View, StyleSheet, Text } from "react-native";
 import HorizontalAreaScroll from "./HorizontalAreaScroll";
 import { useSelector } from "react-redux";
+import { useEffect } from "react";
 // import { Colors } from "../../constant/Colors";
 
 
 export default function ExploreByAreaFlatListHeader({scrollWidth, scrollHeight}) {
 
-  const likedSchoolList = useSelector((state) => state.schoolReducer.likedSchoolList);
-  
+  const likedSchoolObject = useSelector((state) => state.schoolReducer.likedSchoolObject);
+
 
   return (
     <>
       <MainTitle>Mes favoris</MainTitle>
           
-      <HorizontalAreaScroll areaIdList={likedSchoolList} sectionName={"favoris"} scrollWidth={scrollWidth} scrollHeight={scrollHeight} emptyAreaMessage="Like des écoles, elles apparaîtront ici" />
+      <HorizontalAreaScroll areaIdList={Object.keys(likedSchoolObject) } sectionName={"favoris"} scrollWidth={scrollWidth} scrollHeight={scrollHeight} emptyAreaMessage="Like des écoles, elles apparaîtront ici" />
 
       <MainTitle>Par spécialité</MainTitle>
       

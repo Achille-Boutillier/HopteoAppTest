@@ -17,6 +17,7 @@ export default function SchoolBanner({schoolId}) {    //id, rank, nomEcole, type
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const singleSchoolData = useSelector((state) => state.schoolReducer.schoolsData[schoolId]);
+  const currentLike = useSelector((state) => state.schoolReducer.likedSchoolObject[schoolId]);
   const [bannerColor, setBannerColor] = useState(null);
 
   useEffect(()=>{
@@ -32,11 +33,10 @@ export default function SchoolBanner({schoolId}) {    //id, rank, nomEcole, type
   // --------------- like ecole -------------------------------------
   
   async function handleLikePress() {
-    const newLike = !singleSchoolData.like;
+    // const newLike = !singleSchoolData.like;
     // dispatch(setSchoolLikeSuccess({schoolId, newLike}));
-    const success = await modifyLike(schoolId, newLike, dispatch);
+    const success = await modifyLike(schoolId, !currentLike, dispatch);
     if (!success) {
-      // dispatch(setSchoolLikeFailure({schoolId, newLike}));
       alertProvider("Un problème est survenu... Le like n'a pas été pris en compte.");
     }
   }
@@ -69,7 +69,7 @@ export default function SchoolBanner({schoolId}) {    //id, rank, nomEcole, type
           <PrimaryButton
             onPress={handleLikePress}
             // name={isSchoolLiked ? "heart" : "heart-outline"}  
-            name={singleSchoolData.like ? "heart" : "heart-outline"}  
+            name={currentLike ? "heart" : "heart-outline"}  
             size={30}
             // color={Colors.orange500}
             color={bannerColor ? bannerColor : Colors.orange500}

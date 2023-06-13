@@ -6,6 +6,7 @@ import AuthComponent from "../../component/AuthComponent";
 import ActivityComponent from "../../component/ActivityComponent";
 import { storeAllFiliereList } from "../../core/reducers/userSettingReducer";
 import { useDispatch } from "react-redux";
+import validator from "validator";
 // import { ScrollView } from "react-native-gesture-handler";
 
 

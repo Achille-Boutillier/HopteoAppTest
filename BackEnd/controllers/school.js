@@ -2,7 +2,7 @@ import { getAuthData } from "./userData";
 // import {getRankRequest, getRankSuccess, getRankFailure} from "../../core/reducers/schoolReducer";
 import { mainUrl, getUserSettingStatus } from "./userData";
 import store from "../../core";
-import {getSchoolBannerRequest, getSchoolBannerSuccess, getSchoolBannerFailure, setSchoolLike, setSchoolLikeFailure } from "../../core/reducers/schoolReducer";
+import {getSchoolBannerRequest, getSchoolBannerSuccess, getSchoolBannerFailure, setSchoolLike} from "../../core/reducers/schoolReducer";
 const route = mainUrl + "/schools";
 
 
@@ -103,12 +103,9 @@ export async function modifyLike(schoolId, newLike, dispatch) {
     if (response.status===200) {
       return true;
     } else {
-      dispatch(setSchoolLikeFailure({schoolId, newLike}));
       return false;
     }
   } catch (error) {
-    dispatch(setSchoolLikeFailure({schoolId, newLike}));
-
     console.log("echec du bloc try :");
     console.log(error);
 
