@@ -29,7 +29,7 @@ export default function OnBoardScreen({ navigation }) {
     {
       backgroundColor: '#fff',
       image: <OnBoardImageComponent screenType={"rank"} />,
-      subtitle: "Consulte ton classement d'écoles d'ingénieurs personnalisé",
+      subtitle: "Consulte ton classement personnalisé d'écoles d'ingénieurs ",
       title: '',
     },
     {

@@ -5,6 +5,7 @@ import { signup, storeNewAuthData } from "../../BackEnd/controllers/userData";
 import AuthComponent from "../../component/AuthComponent";
 import ActivityComponent from "../../component/ActivityComponent";
 import { storeAllFiliereList } from "../../core/reducers/userSettingReducer";
+import { useDispatch } from "react-redux";
 // import { ScrollView } from "react-native-gesture-handler";
 
 
@@ -12,6 +13,8 @@ export default function SignUp({ navigation, route }) {
 
   const [errorMessage, setErrorMessage] = useState();
   const [ischarging, setIscharging] = useState(false);
+
+  const dispatch = useDispatch();
 
   function handleIsCharging(){
     setIscharging(true);
@@ -22,9 +25,9 @@ export default function SignUp({ navigation, route }) {
     if (email==="" || password==="") {
       setErrorMessage("Tous les champs doivent être remplis");
       return false;
-    } else if (!email.includes("@") || !email.includes(".")) {
+    } else if (!validator.isEmail(email)) {
       setErrorMessage("Le format de l'email est invalide");
-      return false
+      return false;
     } else {
       return true;
     }
@@ -41,7 +44,7 @@ export default function SignUp({ navigation, route }) {
     if (signUpAnswer?.success) {
       setErrorMessage(); // éviter d'avoir un msg d'erreur si on revient sur la page de connexion plus tard
       storeNewAuthData(signUpAnswer.authData);
-      storeAllFiliereList(signUpAnswer.filiereList);
+      dispatch(storeAllFiliereList(signUpAnswer.filiereList));
       navigation.navigate("OnBoardScreen");
     } else {
       if (signUpAnswer.errorMessage) {

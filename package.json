@@ -16,6 +16,7 @@
     "@react-navigation/native-stack": "^6.9.0",
     "@reduxjs/toolkit": "^1.9.3",
     "expo": "^48.0.0",
+    "expo-clipboard": "~4.1.2",
     "expo-file-system": "~15.2.2",
     "expo-gl": "~12.4.0",
     "expo-media-library": "~15.2.3",
@@ -38,7 +39,8 @@
     "react-native-view-shot": "3.5.0",
     "react-redux": "^8.0.5",
     "redux": "^4.2.1",
-    "redux-thunk": "^2.4.2"
+    "redux-thunk": "^2.4.2",
+    "validator": "^13.9.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

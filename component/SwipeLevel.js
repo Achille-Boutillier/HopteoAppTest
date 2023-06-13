@@ -4,6 +4,8 @@ import Modal from "react-native-modal";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Sharing from 'expo-sharing';
 import * as MediaLibrary from 'expo-media-library';
+// import Clipboard , { useClipboard } from "@react-native-clipboard/clipboard";
+import * as Clipboard from 'expo-clipboard';
 // import Clipboard from "react-native-clipboard";
 // import Clipboard from "react-native-clipboard";
 // import * as FileSystem from 'expo-file-system';
@@ -48,18 +50,18 @@ export default function SwipeLevel({absoluteIndex, minSwipeForRanking, progressB
   
   async function calculNewScore() {
     const shareAppPopupWasDisplayed = await getShareAppPopupWasDisplayed();
-    // console.log(shareAppPopupWasDisplayed)
+    console.log("[shareAppPopupWasDisplayed]", shareAppPopupWasDisplayed);
     const newLevel = parseInt(absoluteIndex/minSwipeForRanking) + 1;
     const newScore = parseInt( (absoluteIndex/minSwipeForRanking + 1 - newLevel) *100 );  // on tronque la valeur car on veut atteindre 100% que si on dépasse 99.99999....% 
     if (levelNumber>=1 && newLevel>levelNumber) {
+      console.log("[newLevel]", newLevel);
     // if (newLevel>levelNumber) {
       setIsFirstRanking(newLevel===2);
-      if (newLevel===3) {
+      if (newLevel>=3) {
         shareAppPopupWasDisplayed ? handleNewRankModal() : handleShareModal() ;
       } else {
-        handleNewRankModal();
+         handleNewRankModal();
       } 
-
     } 
     setLevelNumber(newLevel);
     setScore(newScore);
@@ -74,7 +76,6 @@ export default function SwipeLevel({absoluteIndex, minSwipeForRanking, progressB
 
   async function handleNewRankModal() {
     setIsNewRankModalVisible((bool) => (!bool));
-
   }
 
   function goToRanking() {
@@ -84,7 +85,7 @@ export default function SwipeLevel({absoluteIndex, minSwipeForRanking, progressB
 
 
   // ------------------ share app -------------------
-  const [status, requestPermission] = MediaLibrary.usePermissions();
+  // const [status, requestPermission] = MediaLibrary.usePermissions();
 
 
 
@@ -112,10 +113,18 @@ export default function SwipeLevel({absoluteIndex, minSwipeForRanking, progressB
     }
   };
 
+  // async function resetShareAppPopupWasDisplayed() {
+  //   try {
+  //     await AsyncStorage.removeItem('@shareAppPopupWasDisplayed');
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
   async function getShareAppPopupWasDisplayed() {
     try {
       const shareAppPopupWasDisplayed = await AsyncStorage.getItem('@shareAppPopupWasDisplayed');
-      // console.log("[shareAppPopupWasDisplayed ---*******************---------]", shareAppPopupWasDisplayed)
+      // console.log("[shareAppPopupWasDisplayed ---*******************---------]", shareAppPopupWasDisplayed);
       return shareAppPopupWasDisplayed ? Boolean(JSON.parse(shareAppPopupWasDisplayed)) : null;
     } catch (error) {
       console.log(error);
@@ -123,7 +132,11 @@ export default function SwipeLevel({absoluteIndex, minSwipeForRanking, progressB
     }
   };
 
-  
+  // const [data, setString] = useClipboard();
+
+  const copyToClipboard = async () => {
+    await Clipboard.setStringAsync('hello world');
+  };
   
   // function getAppUrl() {
   //   let url;
@@ -192,6 +205,7 @@ export default function SwipeLevel({absoluteIndex, minSwipeForRanking, progressB
     // console.log("je passe dans closeshareapp ++++++++++++++++++++++++++++")
     handleShareModal();
     await setShareAppPopupWasDisplayed(true);
+    // await resetShareAppPopupWasDisplayed();
   }
 
   function copyLink() {
@@ -229,7 +243,7 @@ export default function SwipeLevel({absoluteIndex, minSwipeForRanking, progressB
             }
             <View style={styles.modalBody}>
             <Text style={{fontSize:20, textAlign: 'center', width: "80%"}}>
-              { isFirstRanking ? "Félicitation, ton premier classement est disponible !!" : "Ton classement d'écoles a changé ! \n \n Ça mérite p'tit coup d'œil 😉 "}
+              { isFirstRanking ? "Félicitation, ton premier classement est disponible !!" : "Ton classement d'écoles a changé ! \n \n Ça mérite un p'tit coup d'œil 😉 "}
             </Text>
             <TerciaryButton title="Voir le classement" onPress={goToRanking} color={Colors.orange500} isFullColor={true} fontSize={20} />
             </View>
@@ -242,20 +256,25 @@ export default function SwipeLevel({absoluteIndex, minSwipeForRanking, progressB
       <Modal isVisible={isShareModalVisible}>
           <View style={styles.modal}>
             <View style={styles.modalCross}>
-              <PrimaryButton onPress={closeShareAppPopup} name="close-outline" size={60} color={Colors.orange500}/>
-
+              {/* <WaitingBar totalWaitingTime = {3000}/> */}
               { isCloseEnabled 
                 ? <PrimaryButton onPress={closeShareAppPopup} name="close-outline" size={60} color={Colors.orange500}/>
                 : null
-                // : <WaitingBar/>
+                // : <WaitingBar totalWaitingTime = {3000}/>
               }
-              </View>
+            </View>
             <View style={styles.modalBody}>
-            <Text style={{fontSize:20, textAlign: 'center', width: "80%", marginTop: -20}}>
-              L'appli te plaît ? \n Partage le lien de téléchargement pour aider d'autres élèves de CPGE à trouver leur école 😉
+            <Text style={{fontSize:20, textAlign: 'center', width: "80%"}}>
+              {"L'appli a l'air de te plaire ! \n \n Partage ce lien pour soutenir hopteo 😉"}
             </Text>
+            <TouchableOpacity style={{borderRadius: 5, backgroundColor: Colors.grey300, paddingHorizontal: 10, paddingVertical: 5}} onPress={copyToClipboard}>
+              <Text style={{fontSize:15, textAlign: 'center', width: "80%"}}>
+                {"https://linktr.ee/hopteo"}
+              </Text>
+            </TouchableOpacity>
+            
             {/* <CopyableText text = "https://linktr.ee/hopteo" /> */}
-            <TerciaryButton title="Copier le lien" onPress={copyLink} color={Colors.orange500} isFullColor={true} fontSize={20} />
+            <TerciaryButton title="Copier le lien" onPress={copyToClipboard} color={Colors.orange500} isFullColor={true} fontSize={20} />
             </View>
           </View>
       </Modal>
@@ -264,27 +283,36 @@ export default function SwipeLevel({absoluteIndex, minSwipeForRanking, progressB
   );
 }
 
-// function WaitingBar() {
-//   return (
-//     <View></View>
-//   );
-// };
+function WaitingBar({totalWaitingTime}) {
+
+  const [currentTime, setCurrentTime] = useState(0);
+  const [progressBarSize, setProgressBarSize ] = useState("0%");
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrentTime(prevTime => prevTime + 100);
+    }, 100);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
+
+  useEffect(()=> {
+    const width = (100*currentTime/totalWaitingTime).toString()+"%" ;
+    setProgressBarSize(width) ;
+  }, [currentTime])
 
 
-// const CopyableText = ({ text }) => {
-//   const handleLongPress = () => {
-//     Clipboard.setString(text);
-//     ToastAndroid.show('Texte copié dans le presse-papiers !', ToastAndroid.SHORT);
-//   };
 
-//   return (
-//     <TouchableWithoutFeedback onLongPress={handleLongPress}>
-//       <View>
-//         <Text>{text}</Text>
-//       </View>
-//     </TouchableWithoutFeedback>
-//   );
-// };
+
+  // return (
+  //   <View style={{width: "90%", height: 10, borderWidth: 1}}>
+  //     <View style={{width: progressBarSize , height: "100%", backgroundColor: Colors.orange500 }}></View>
+  //   </View>
+  // );
+};
+
 
 
 
@@ -300,15 +328,6 @@ const styles = StyleSheet.create({
     // justifyContent: "space-between",
     alignSelf: "center",
   },
-
-  // mainScoreContainer: {
-  //   width: "100%",
-  //   // flex: 1,
-  //   height: 28,
-  //   flexDirection: "row",
-  //   alignItems: "center",
-  //   borderWidth: 1,
-  // },
   levelNumberContainer: {
     alignItems: "center",
     justifyContent: "center",
@@ -338,6 +357,7 @@ const styles = StyleSheet.create({
   modalCross: {
     top: 0,
     right: 0,
+    // left: 5,
     // alignItems: "flex-end",
     position: "absolute",
     zIndex: 2,

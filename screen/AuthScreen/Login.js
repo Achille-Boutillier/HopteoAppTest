@@ -3,6 +3,7 @@ import { useState } from "react";
 
 import { login, storeNewAuthData, storeSplashData } from "../../BackEnd/controllers/userData";
 import { useDispatch } from "react-redux";
+import validator from "validator";
 
 import AuthComponent from "../../component/AuthComponent";
 import ActivityComponent from "../../component/ActivityComponent";
@@ -31,6 +32,9 @@ export default function Login({ navigation }) {
     if (email==="" || password==="") {
       setErrorMessage("Un des champs n'est pas rempli");
       return false;
+    } else if (!validator.isEmail(email)) {
+      setErrorMessage("Le format de l'email est invalide");
+      return false
     } else {
       return true;
     }

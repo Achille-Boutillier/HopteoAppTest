@@ -111,10 +111,10 @@ function FirstQuestionsScreen({ navigation }) {
 
   async function submitAnswers() {
     setAllQuestionsAnswered(false); // Au cas où il y a echec de la requete
-    if (isNaN(bacMean) || bacMean < 0 || bacMean > 20) {
+    if (isNaN(bacMean) || bacMean < 0 || bacMean > 22) {
       Alert.alert(
         "Moyenne invalide !",
-        "La moyenne doit être comprise entre 0 et 20",
+        "La moyenne doit être comprise entre 0 et 22",
         [{ text: "Ok", style: "destructive" }]
       );
     } else {
@@ -169,6 +169,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     width: "100%",
     paddingHorizontal: "6%",
+    marginTop: "5%",
     // borderWidth: 1,
   },
   backButtonContainer: {

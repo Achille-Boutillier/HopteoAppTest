@@ -19,14 +19,14 @@ export default function UserBacMean({bacMeanInputHandler, bacMean, nextPressed,}
       <View style={styles.bottomContainer}>
         <TextInput
           style={styles.bacMeanInput}
-          maxLength={2}
+          maxLength={4}
           keyboardType="number-pad"
           // autoCapitalize="none" //empêcher l'autocapitalisation ou autocorrection du phone
           // autoCorrect={false}
           onChangeText={bacMeanInputHandler}
           onSubmitEditing={nextPressed}
           value={bacMean}
-          placeholder="exemple : 15"
+          placeholder="exemple : 15.5"
         />
         <TouchableOpacity style={styles.buttonContainer} onPress={nextPressed}>
           <Text style={styles.textStyle}>Continuer</Text>
