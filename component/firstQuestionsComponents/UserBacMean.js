@@ -20,7 +20,7 @@ export default function UserBacMean({bacMeanInputHandler, bacMean, nextPressed,}
         <TextInput
           style={styles.bacMeanInput}
           maxLength={4}
-          keyboardType="number-pad"
+          keyboardType="numeric"      // ! si pas de point sur ios, utiliser "decimal-pad"
           // autoCapitalize="none" //empêcher l'autocapitalisation ou autocorrection du phone
           // autoCorrect={false}
           onChangeText={bacMeanInputHandler}

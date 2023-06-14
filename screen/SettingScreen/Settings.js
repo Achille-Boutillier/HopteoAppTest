@@ -180,16 +180,13 @@ const dispatch = useDispatch();
     const data = await deleteUser(password);
     // console.log(data);
     if (data?.success) {
-      togglePasswordModal(); 
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'Login Screen' }],
-      });
-      resetAllStore(dispatch);
+      togglePasswordModal();
+      disconnect("Signup Screen", navigation, dispatch ); 
+      
     } else if (data.errorMessage) {
       setModalErrorMessage(data.errorMessage);
     } else {
-      setModalErrorMessage("Une erreur est survenue");
+      setModalErrorMessage("Une erreur est survenue, la suppression du compte n'a pas aboutie");
     }
     setIsPasswordModalCharging(false);
   }
@@ -230,12 +227,7 @@ const dispatch = useDispatch();
 
   function onPressDisconnect() {
     updateBackData(dispatch);   // maj les info anvant de deconnecter
-    disconnect();
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'Login Screen' }],
-    });
-    resetAllStore(dispatch);
+    disconnect("Login Screen", navigation, dispatch);
   }
 
   return (

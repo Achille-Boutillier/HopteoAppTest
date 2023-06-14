@@ -5,6 +5,7 @@ const route = mainUrl + "/setting";
 import { getAuthData } from "./userData";
 import { resetRank } from "../../core/reducers/schoolReducer";
 import { removeAllSwipe } from "../../core/reducers/swipeReducer";
+import { resetAllStore } from "../updateBackData";
 
 export async function getUserInfo() {
   let authData = await getAuthData();
@@ -171,7 +172,13 @@ export async function deleteUser(password) {
   }
 }
 
-export async function disconnect() {
+export async function disconnect(screenToLand, navigation, dispatch) {
+  navigation.reset({
+    index: 0,
+    routes: [{ name: screenToLand }],
+  });
+  resetAllStore(dispatch);
+  
   try {
     // await AsyncStorage.removeItem("authData");
     await SecureStore.deleteItemAsync("authData");
@@ -179,6 +186,7 @@ export async function disconnect() {
   } catch (error) {
     return false;
   }
+  
 }
 
 

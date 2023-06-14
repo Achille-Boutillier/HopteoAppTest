@@ -236,7 +236,7 @@ export default function SwipeLevel({absoluteIndex, minSwipeForRanking, progressB
             }
             <View style={styles.modalBody}>
             <Text style={{fontSize:20, textAlign: 'center', width: "80%"}}>
-              { isFirstRanking ? "Félicitation, ton premier classement est disponible !!" : "Ton classement d'écoles a changé ! \n \n Ça mérite un p'tit coup d'œil 😉 "}
+              { isFirstRanking ? "Félicitations, ton premier classement est disponible !!" : "Ton classement d'écoles a changé ! \n \n Ça mérite un p'tit coup d'œil 😉 "}
             </Text>
             <TerciaryButton title="Voir le classement" onPress={goToRanking} color={Colors.orange500} isFullColor={true} fontSize={20} />
             </View>

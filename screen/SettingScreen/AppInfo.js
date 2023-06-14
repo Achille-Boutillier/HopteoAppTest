@@ -1,7 +1,8 @@
 // import { useState, useEffect } from "react";
 
-import { StyleSheet, View, Text, TouchableOpacity, Linking} from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity, Linking, ScrollView} from "react-native";
 import PrimaryButton from "../../component/buttons/PrimaryButton";
+import LogoDiscord from "../../assets/icons/commucation/logo-discord.svg"
 // import SecondaryButton from "../../component/buttons/SecondaryButton";
 
 
@@ -14,14 +15,26 @@ import TerciaryButton from "../../component/buttons/TerciaryButton";
 
 
 export default function AppInfo({navigation, route}) {
-  const appInfo = route.params?.appInfo
+  const appInfo = route.params?.appInfo;
 
   async function onPressPolicy() {
     navigation.navigate('Privacy Policy');
   }
 
+  function onWebsitePress(){
+    Linking.openURL(appInfo.webSite);
+  }
+
+  function onInstaPress() {
+    Linking.openURL("https://instagram.com/hopteo_cpge?igshid=MjEwN2IyYWYwYw==");
+  }
+
+  function onDiscordPress() {
+    Linking.openURL("https://discord.gg/GQ6ereZGVW");
+  }
+
   return (
-    <View style={styles.mainContainer}>
+    <ScrollView style={styles.mainContainer}>
       <View style={styles.headerContainer} >
         <PrimaryButton 
           onPress={() => navigation.goBack()}
@@ -36,29 +49,44 @@ export default function AppInfo({navigation, route}) {
             <Text style={styles.titleText}>A propos d'Hopteo</Text> 
             <Text style={styles.infoText}>{appInfo?.description}</Text>
             
-            <View style={{flexDirection: "row", justifyContent: "space-evenly"}}>
+            <View style={{ alignSelf: "center", marginBottom: "15%"}} >
+              <TerciaryButton
+                title = "Politique de Confidentialité"
+                onPress={onPressPolicy}
+                color={Colors.orange500}
+                isFullColor={true}
+                fontSize={15}
+              />
+            </View>
 
-              <View style={{alignItems: "center"}}>
-                <PrimaryButton name="logo-instagram" onPress={()=> Linking.openURL("https://instagram.com/hopteo_cpge?igshid=MjEwN2IyYWYwYw==")} size={40}/>
-                <Text style={styles.linkText}>@hopteo_cpge</Text>
+            <View style={{flexDirection: "row", justifyContent: "space-evenly", }}>
+
+              <View style={{alignItems: "center", width: "33%"}}>
+                <PrimaryButton name="logo-instagram" onPress={onInstaPress} size={30}/>
+                <TouchableOpacity onPress={onInstaPress} >
+                  <Text style={styles.linkText}>@hopteo_cpge</Text>
+                </TouchableOpacity>
               </View>
 
-              <View style={{alignItems: "center"}}>
-                <PrimaryButton name="logo-dribbble" onPress={()=> Linking.openURL(appInfo.webSite)} size={40}/>
-                <Text style={styles.linkText}>@hopteo.com</Text>
+              <View style={{alignItems: "center", width: "33%"}}>
+                <PrimaryButton name="logo-dribbble" onPress={onWebsitePress} size={30}/>
+                <TouchableOpacity onPress={onWebsitePress} >
+                  <Text style={styles.linkText}>hopteo.com</Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={{alignItems: "center", width: "33%"}}>
+                <TouchableOpacity style={{paddingTop: 3}} onPress={onDiscordPress}>
+                  <LogoDiscord width={30} height={30} fill={Colors.fullBlack}/>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={onDiscordPress} >
+                  <Text style={styles.linkText}>Discord</Text>
+                </TouchableOpacity>
               </View>
 
             </View>
     
-            <View style={{width: "80%", alignSelf: "center", marginTop: "10%"}} >
-              <TerciaryButton
-              title = "Politique de Confidentialité"
-              onPress={onPressPolicy}
-              color={Colors.orange500}
-              isFullColor={true}
-              fontSize={15}
-              />
-            </View>
+            
           </View>
 
         ) : <Text style={[styles.infoText]}>{"Erreur de chargement..."}</Text>
@@ -66,7 +94,7 @@ export default function AppInfo({navigation, route}) {
         }
         
 
-    </View>
+    </ScrollView>
   );
 }
 
@@ -98,14 +126,14 @@ const styles = StyleSheet.create({
     // textAlign: "center"
   },
   linkText: {
-    fontSize: 16, 
-    fontWeight: "500",
+    fontSize: 14, 
+    fontWeight: "600",
   },
 
   infoText: {
     fontSize: 15, 
     textAlign: "justify", 
-    marginVertical: 20,
+    marginTop: 20,
   },
   websiteContainer: {
     marginBottom: "10%",

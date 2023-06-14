@@ -44,11 +44,7 @@ export function HeaderButton({onSettingsPress}) {
 const styles = StyleSheet.create({
   brandContainer: {
     // flex: 1,
-    marginLeft: "4%",
-    // flexDirection: "row",
-    // alignItems: "center",
-    // borderWidth: 1,
-    // alignItems: "center",
+    paddingVertical: "4%",
   },
   text: {
     color: Colors.orange500,
@@ -63,7 +59,7 @@ const styles = StyleSheet.create({
   // },
   image: {
     // flex: 1,
-    width: logoAndNameWidth+1,
+    width: logoAndNameWidth,
     height: logoAndNameWidth*171/835,
     // borderWidth: 1,
     // aspectRatio: 1,

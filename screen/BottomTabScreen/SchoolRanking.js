@@ -1,14 +1,17 @@
-import {FlatList, StyleSheet, View, ActivityIndicator, Text,} from "react-native";
+import {FlatList, StyleSheet, View, ActivityIndicator, Text, Platform} from "react-native";
 import { useEffect, useState, useLayoutEffect, useRef } from "react";
 import { calculateNewRank, loadMissingSchoolData } from "../../BackEnd/rankingFunction1";
 import { Colors } from "../../constant/Colors";
 
 import * as MediaLibrary from 'expo-media-library';
 import * as Sharing from "expo-sharing";
+// import * as Share from "react-native-share";   //! fonctionne pas : "cannot read 'facebook' property"
+// import * as FileSystem from "expo-file-system";
+
 // import {MediaLibrary} from "expo";
 // import * as Permissions from "expo";
 // import * as Permissions from "expo-permissions"
-import { GLView } from "expo-gl";
+// import { GLView } from "expo-gl";
 import { captureRef } from 'react-native-view-shot';
 // import ViewShot from "react-native-view-shot";
 
@@ -23,7 +26,7 @@ import InfoPopup from "../../component/popup/InfoPopup";
 import { alertProvider } from "../../BackEnd/errorHandler";
 
 
-function SchoolRanking({ navigation, route }) {
+function SchoolRanking({ navigation}) {
   const schoolReducer = useSelector((state) => state.schoolReducer);
   const forRankingReducer = useSelector((state) => state.forRankingReducer);
 
@@ -79,15 +82,6 @@ function SchoolRanking({ navigation, route }) {
 
   // ---------------- capture & partage classement ------------------
 
-  
-
-  // const viewShotRef = useRef();
-
-  // async function onPressCapture() {
-  //  const imageURI = await viewShotRef.current.capture();   //! capture pas sur android
-  //  console.log("imageURI", imageURI);
-  //  Share.share({title: "Image", url: imageURI})
-  // };
 
 
   const viewRef = useRef();
@@ -99,12 +93,27 @@ function SchoolRanking({ navigation, route }) {
   }
 
   async function handlePressCapture() {
+
+    if (Platform.OS === "ios") {
+      alertProvider("Fonctionnalité pour l'instant indisponible sur IOS. \n \nN'hésite pas à screen manuellement pour partager ton classement à tes amis ou ta famille.", "Indisponible");
+      return;
+    }
+
     console.log("[peut capturer screen ?]", status);
     if (!status.granted) {
       const {granted} = await requestPermission(); 
-      granted ? onSaveImageAsync() : alertProvider("Impossible d'effectuer la capture d'écran sans modifier les autorisations du smartphone.");
+
+      if (granted) {
+        onSaveImageAsync();
+        // setIsScreenshotMode(false);
+      } else {
+        setIsScreenshotMode(false);
+        alertProvider("Impossible d'effectuer la capture d'écran sans modifier les autorisations du smartphone.");
+      }
+
     } else {
       onSaveImageAsync();
+      // setIsScreenshotMode(false);
     }
 
   }
@@ -120,14 +129,19 @@ function SchoolRanking({ navigation, route }) {
 
       await MediaLibrary.saveToLibraryAsync(localUri);
       if (localUri) {
+        setIsScreenshotMode(false);
         const isAvailable = await Sharing.isAvailableAsync();
         isAvailable ? Sharing.shareAsync(localUri) : alertProvider("La fonctionalité 'partage' est impossible avec cet appareil.");
-        // Share.share({url: localUri});
+        // Share.open({url: localUri, message: "Regarde mon classement d'école d'ingé sur Hopteo" })
+        
       } else {
+        setIsScreenshotMode(false);
         alertProvider("Une erreur est survenue, la capture d'écran n'a pas aboutie.");
       }
     } catch (e) {
       console.log(e);
+      setIsScreenshotMode(false);
+      alertProvider("Une erreur est survenue");
     }
   };
 
@@ -135,15 +149,8 @@ function SchoolRanking({ navigation, route }) {
   useEffect(() => {
     if (isScreenshotMode) {
       handlePressCapture();
-      setTimeout(() => {
-        setIsScreenshotMode(false);
-      }, 100);
     }
   }, [isScreenshotMode])
-
-  
-
-  
 
 
   // ---------------------- fin capture --------------------------------
@@ -167,20 +174,20 @@ function SchoolRanking({ navigation, route }) {
 
   return (
     // <View style={styles.mainContainer}>
-    <View style={styles.mainContainer} ref={viewRef}>
+    <View style={styles.mainContainer} ref={viewRef} pointerEvents= {isScreenshotMode ? "none" : "auto"}>
       {forRankingReducer.showRankingPopup && !isScreenshotMode
         ? <InfoPopup message="Retourne swiper pour affiner ton classement" />
         : null 
       }
       <View style={styles.topContainer}>
-        <Text style={styles.titleText}>Ton classement personnalisé</Text>
-        <View style={styles.screenshotButtonContainer}  >
+        <Text style={styles.titleText}>Ton classement</Text>
+        <View style={styles.screenshotButtonContainer} >
           <PrimaryButton onPress={onPressCapture} name="share-social" size={30} color={Colors.orange500}/>
         </View>
       </View>
 
       {isScreenshotMode 
-        ? <View style={styles.brandForScreenshot}><BrandComponent/></View>
+        ? <View style={styles.brandForScreenshot}><BrandComponent marginLeft={0}/></View>
         : null
       }
 
@@ -242,17 +249,20 @@ const styles = StyleSheet.create({
   topContainer: {
     marginHorizontal: "5%",
     marginBottom: "5%",
-    marginTop: "2%",
+    marginTop: "4%",
     flexDirection: "row",
     justifyContent: "space-between",
   }, 
   brandForScreenshot: {
     position: "absolute",
     top: 0,
-    width: "100%",
+    bottom: 0,
+    right: 0,
+    left: 0,
+    // width: "100%",
     backgroundColor: Colors.backgroundColor,
     alignItems: "center",
-    paddingVertical: "4%",
+    // paddingTop: "4%",
     // borderWidth: 1
 
   },
