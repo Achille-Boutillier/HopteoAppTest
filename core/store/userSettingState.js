@@ -4,7 +4,7 @@ export const initialUserSettingState = {
   cursustype: "",
   filiereList: [],    //liste de toutes les filières possibles
   lastAppVersion: "",
-  currentAppVersion: "1.0.17",
+  currentAppVersion: "1.0.18",
   loading: null,
   error: null,
 };

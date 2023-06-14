@@ -17,7 +17,7 @@ export default function ExploreByAreaFlatListHeader({scrollWidth, scrollHeight})
           
       <HorizontalAreaScroll areaIdList={Object.keys(likedSchoolObject) } sectionName={"favoris"} scrollWidth={scrollWidth} scrollHeight={scrollHeight} emptyAreaMessage="Like des écoles, elles apparaîtront ici" />
 
-      <MainTitle>Par spécialité</MainTitle>
+      <MainTitle marginTop={10}>Par spécialité</MainTitle>
       
     </>
   )
@@ -25,9 +25,9 @@ export default function ExploreByAreaFlatListHeader({scrollWidth, scrollHeight})
 }
 
 
-function MainTitle({children}) {
+function MainTitle({children, marginTop}) {
   return (
-    <View style={styles.mainTitle} > 
+    <View style={[styles.mainTitle, {marginTop: marginTop}]} > 
       <Text style={styles.mainTitleText}>{children}</Text>  
     </View>
   )

@@ -1,8 +1,9 @@
 import { View, StyleSheet, Image, Text, ActivityIndicator, Dimensions } from "react-native";
 import { useEffect, useState } from "react";
 import { Colors } from "../constant/Colors";
+import ActivityComponent from "./ActivityComponent";
 
-const screenHeigth = Dimensions.get('window').height;
+// const screenHeigth = Dimensions.get('window').height;
 
 
 export default function CardDetail({ cardDetail }) {
@@ -44,7 +45,8 @@ export default function CardDetail({ cardDetail }) {
             {cardDetail}
           </Text>
         ) : (
-          <ActivityIndicator size="large" color={Colors.smoothBlack} />
+          // <ActivityComponent/>
+          <ActivityIndicator size="small" color={Colors.smoothBlack} />
         )}
       </View>
     </View>
