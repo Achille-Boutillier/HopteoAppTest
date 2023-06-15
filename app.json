@@ -4,7 +4,7 @@
     "slug": "Hopteo",
     "version": "1.0.19",
     "orientation": "portrait",
-    "icon": "./assets/logo/squareIcon.png",   // 595x595
+    "icon": "./assets/logo/favicon595px.png",   // 595x595
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/logo/splashHopteo.png",
@@ -18,7 +18,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.hopteo.hopteoApp",
-      "icon": "./assets/logo/squareIcon.png"    // 595x595
+      "icon": "./assets/logo/favicon595px.png"    // 595x595
     },
     "android": {
       "package": "com.hopteo.hopteoApp",
