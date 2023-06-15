@@ -92,7 +92,7 @@ export default function SplashScreen({ navigation }) {
   return (
     <View style={styles.mainContainer}>
       <Image
-        source={require("../assets/images/splashHopteo.png")}
+        source={require("../assets/logo/splashHopteo.png")}
         style={{ height: "100%", width: "100%" }}
         resizeMode="contain"
       />
