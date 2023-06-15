@@ -62,9 +62,10 @@ export default function Home({ navigation, route }) {
   // ----------- pop up mise a jour ----------------------------------------------------
   async function checkAppVersion() {
     const {lastAppVersion, currentAppVersion} = store.getState().userSettingReducer;
+    const lastVersionNumber = parseInt(lastAppVersion.slice(-2));
+    const currentVersionNumber = parseInt(currentAppVersion.slice(-2));
 
-
-    if (lastAppVersion!==currentAppVersion) {
+    if (lastVersionNumber > currentVersionNumber) {
       Alert.alert(
         "Mise à jour disponible",
         "Une nouvelle version de l'application est disponible. Veux-tu la mettre à jour ?",
@@ -152,7 +153,7 @@ export default function Home({ navigation, route }) {
   async function getCards(nextIdCardList) {
     setIsPileOver(false);
     if (nextIdCardList.length===0) {
-      setCardList("Tu as swipé toutes les cartes disponibles. \n Nos équipes travaillent pour t'en proposer d'autres");
+      setCardList("Tu as swipé toutes les cartes disponibles. \nNos équipes travaillent pour t'en proposer d'autres");
       setIsCardListLoaded(true);
       return
     }

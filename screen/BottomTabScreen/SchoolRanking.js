@@ -95,7 +95,8 @@ function SchoolRanking({ navigation}) {
   async function handlePressCapture() {
 
     if (Platform.OS === "ios") {
-      alertProvider("Fonctionnalité pour l'instant indisponible sur IOS. \n \nN'hésite pas à screen manuellement pour partager ton classement à tes amis ou ta famille.", "Indisponible");
+      setIsScreenshotMode(false);
+      alertProvider("Fonctionnalité pour l'instant indisponible sur IOS. \n \nN'hésite pas à screen manuellement pour partager ton classement à tes amis ou à ta famille.", "Indisponible");
       return;
     }
 

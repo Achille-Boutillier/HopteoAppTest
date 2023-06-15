@@ -111,7 +111,8 @@ function FirstQuestionsScreen({ navigation }) {
 
   async function submitAnswers() {
     setAllQuestionsAnswered(false); // Au cas où il y a echec de la requete
-    if (isNaN(bacMean) || bacMean < 0 || bacMean > 22) {
+    const bacMeanNumber = parseFloat(bacMean.replace(",", "."));
+    if (isNaN(bacMeanNumber) || bacMeanNumber < 0 || bacMeanNumber > 22) {
       Alert.alert(
         "Moyenne invalide !",
         "La moyenne doit être comprise entre 0 et 22",
@@ -119,7 +120,7 @@ function FirstQuestionsScreen({ navigation }) {
       );
     } else {
       
-      const data = await storeUserSetting("ingenieur", studyField, bacMean);
+      const data = await storeUserSetting("ingenieur", studyField, bacMeanNumber);
       if (data.success) {
         storeSplashData(data.splashData, dispatch);
         navigation.setOptions({ initialRouteName: "Main Screens" }); //todo Verifier que ça fonctionne pour pas pouvoir revenir en arrière vers firstQuestions

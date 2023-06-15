@@ -27,7 +27,7 @@ export default function MainNumberComponent({ moyenneBac, salaireMoyen, fraisSco
 
       <OneNumber
         number={`${fraisScolarite} €`}
-        numberName={"COÛT ANNUEL \n (non boursier)"}
+        numberName={"COÛT ANNUEL\n(non boursier)"}
         width="26%"
       />
       

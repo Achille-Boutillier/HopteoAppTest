@@ -46,9 +46,10 @@ export default function Card({ cardValue, currentTheme, setSwipeButtonZIndex, sw
         styles.card,
         {
           backgroundColor: currentTheme?.color,
-          height: isCardDetailVisible ? "80%" : swipeCardHeigth,
-          marginTop: isCardDetailVisible ? "-50%" : "-19%",
-          width: isCardDetailVisible ? "110%" : "95%",
+          height: isCardDetailVisible ? "79%" : swipeCardHeigth,
+          marginTop: isCardDetailVisible ? "-48%" : "-19%",
+          // marginTop: isCardDetailVisible ? "-50%" : "-19%",
+          width: isCardDetailVisible ? "107%" : "95%",
           // borderColor: currentTheme?.color,
         },
       ]}
