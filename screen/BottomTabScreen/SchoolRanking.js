@@ -1,6 +1,6 @@
 import {FlatList, StyleSheet, View, ActivityIndicator, Text, Platform} from "react-native";
 import { useEffect, useState, useLayoutEffect, useRef } from "react";
-import { calculateNewRank, loadMissingSchoolData } from "../../BackEnd/rankingFunction1";
+import { calculateNewRank, loadMissingSchoolData } from "../../BackEnd/rankingFunction";
 import { Colors } from "../../constant/Colors";
 
 import * as MediaLibrary from 'expo-media-library';
@@ -10,7 +10,7 @@ import * as Sharing from "expo-sharing";
 
 // import {MediaLibrary} from "expo";
 // import * as Permissions from "expo";
-// import * as Permissions from "expo-permissions"
+// import * as Permissions from "expo-permissions";
 // import { GLView } from "expo-gl";
 import { captureRef } from 'react-native-view-shot';
 // import ViewShot from "react-native-view-shot";
@@ -19,7 +19,7 @@ import SchoolBanner from "../../component/SchoolBanner";
 import MessageContainer from "../../component/MessageContainer";
 import { BrandComponent, HeaderButton } from "../../component/TopBar";
 import { useSelector, useDispatch } from "react-redux";
-import { setSwipeStateHasChanged} from "../../core/reducers/swipeReducer";
+import { setSwipeStateHasChanged} from "../../core/reducers/swipeReducer"; 
 import store from "../../core";
 import PrimaryButton from "../../component/buttons/PrimaryButton";
 import InfoPopup from "../../component/popup/InfoPopup";
@@ -99,6 +99,8 @@ function SchoolRanking({ navigation}) {
       alertProvider("Fonctionnalité pour l'instant indisponible sur IOS. \n \nN'hésite pas à screen manuellement pour partager ton classement à tes amis ou à ta famille.", "Indisponible");
       return;
     }
+
+    // ! Utiliser expo-camera ? ou un truc similaire
 
     console.log("[peut capturer screen ?]", status);
     if (!status.granted) {

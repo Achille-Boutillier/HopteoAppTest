@@ -11,16 +11,33 @@ import {BrandComponent} from "../component/TopBar";
 import NotCoveredField from "../component/firstQuestionsComponents/NotCoveredField";
 import { disconnect } from "../BackEnd/controllers/setting";
 import PrimaryButton from "../component/buttons/PrimaryButton";
+import QuestionComponent from "../component/firstQuestionsComponents/QuestionComponent";
+
+const screenNameList = ["yearNumber", "studyField"];
+const questionList = [
+  "Quelle est ta situation actuelle ?",
+  "Selectionne ta filière",
+];
+
+const buttonLists = [
+  [`Prépa 1re Année`, "Prépa 2ème Année", "Autre"],
+  ["MP", "PC", "PSI", "Autre"]
+]
 
 
-function FirstQuestionsScreen({ navigation }) {
+export default function FirstQuestionsScreen({ navigation }) {
   const [studyField, setStudyField] = useState();
   const [bacMean, setBacMean] = useState("");
   const [allQuestionsAnswered, setAllQuestionsAnswered] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState("studyField");
-
-  const [screenToShow, setScreenToShow] = useState(<UserStudyField onPressField={onPressField} />);
   const [previousQuestion, setPreviousQuestion] = useState(null);
+  const [screenToShow, setScreenToShow] = useState(null);
+
+
+  // const [beforeOtherScreen, setBeforeOtherScreen] = useState(null);
+  const [isNotCovered, setIsNotCovered] = useState(false);
+  const [screenNumber, setScreenNumber] = useState(0);
+
 
   const dispatch = useDispatch();
 
@@ -31,74 +48,88 @@ function FirstQuestionsScreen({ navigation }) {
     });
   }
 
+
+  // useEffect(()=> {
+
+  // }, [screenNumber])
+
+
   useEffect(()=> {
-    switch (currentQuestion) {
-      case "studyField" :
-        setScreenToShow(<UserStudyField onPressField={onPressField} />);
-        setPreviousQuestion(null);
-        break;
-      case "userBacMean" :
-        setScreenToShow(
-          <UserBacMean
-            bacMeanInputHandler={(enteredNumber) => setBacMean(enteredNumber)}
-            bacMean={bacMean}
-            nextPressed={() => setAllQuestionsAnswered(true)}
-          />
-        );
-        setPreviousQuestion("studyField");
-        break;
-      case "notCoveredField" :
-        setScreenToShow(<NotCoveredField/>);
-        setPreviousQuestion("studyField");
-        break;
+    // switch (currentQuestion) {
+    //   case "studyField" :
+    //     setScreenToShow(<UserStudyField onPressField={onPressButton} />);
+    //     setPreviousQuestion(null);
+    //     break;
+    //   case "userBacMean" :
+    //     setScreenToShow(
+    //       <UserBacMean
+    //         bacMeanInputHandler={(enteredNumber) => setBacMean(enteredNumber)}
+    //         bacMean={bacMean}
+    //         nextPressed={() => setAllQuestionsAnswered(true)}
+    //       />
+    //     );
+    //     setPreviousQuestion("studyField");
+    //     break;
+    //   case "notCoveredField" :
+    //     setScreenToShow(<NotCoveredField/>);
+    //     setPreviousQuestion("studyField");
+    //     break;
+    // }
+
+    if (screenNameList.length === screenNumber) {
+      setScreenToShow(
+        <UserBacMean
+          bacMeanInputHandler={(enteredNumber) => setBacMean(enteredNumber)}
+          bacMean={bacMean}
+          nextPressed={() => setAllQuestionsAnswered(true)}
+        />
+      );
+    } else {
+      setScreenToShow(<QuestionComponent onPressField={onPressButton} question={questionList[screenNumber]} buttonList={buttonLists[screenNumber]}/>)
     }
-  }, [currentQuestion])
+
+  }, [screenNumber])
 
 
 
 
-  useLayoutEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
-      setStudyField();
-      setBacMean();
-      setAllQuestionsAnswered(false);
-      setPreviousQuestion(null);
-      setCurrentQuestion("studyField");
-    });
-    return unsubscribe;
-  }, [navigation]);
+  // useLayoutEffect(() => {
+  //   const unsubscribe = navigation.addListener("focus", () => {
+  //     setStudyField();
+  //     setBacMean();
+  //     setAllQuestionsAnswered(false);
+  //     setPreviousQuestion(null);
+  //     setCurrentQuestion("studyField");
+  //   });
+  //   return unsubscribe;
+  // }, [navigation]);
 
 
 
 
   function onBackPress() {
-    if (previousQuestion) {
-      setCurrentQuestion(previousQuestion);
-    } else {
+    if (isNotCovered) {
+      setIsNotCovered(false);
+    } else if (screenNumber===0) {
       disconnect();
       resetNavigationScreen("Login Screen");
       // navigation.navigate("Login Screen");
+    } else {
+      setScreenNumber((number) => number - 1);
     }
   }
 
 
 
-  function onPressField(field) {
-    if (field==="Autre") {
-      setCurrentQuestion("notCoveredField");
-      // setScreenToShow(<NotCoveredField/>);
+  function onPressButton(buttonName) {
+    if (buttonName==="Autre") {
+      setIsNotCovered(true);
     } else {
-      setStudyField(field);
-      setCurrentQuestion("userBacMean");
-    //   setScreenToShow(
-    //     <UserBacMean
-    //       bacMeanInputHandler={(enteredNumber) => setBacMean(enteredNumber)}
-    //       bacMean={bacMean}
-    //       nextPressed={() => setAllQuestionsAnswered(true)}
-    //     />
-    // );
+      //! function backend
+      setScreenNumber((number)=> number + 1);
+      // setStudyField(buttonName);
+      // setCurrentQuestion("userBacMean");
     }
-    
   }
 
   useEffect(() => {
@@ -123,8 +154,6 @@ function FirstQuestionsScreen({ navigation }) {
       const data = await storeUserSetting("ingenieur", studyField, bacMeanNumber);
       if (data.success) {
         storeSplashData(data.splashData, dispatch);
-        navigation.setOptions({ initialRouteName: "Main Screens" }); //todo Verifier que ça fonctionne pour pas pouvoir revenir en arrière vers firstQuestions
-        // navigation.navigate("Main Screens");
         resetNavigationScreen("Main Screens");
       } else {
         alertProvider();
@@ -148,14 +177,17 @@ function FirstQuestionsScreen({ navigation }) {
       </View>
       
       <View style={styles.bodyContainer}>
-        {screenToShow}
+        {isNotCovered 
+          ? <NotCoveredField/>
+          : screenToShow
+        }
+        {/* <QuestionComponent/> */}
       </View>
       
     </View>
     );
 }
 
-export default FirstQuestionsScreen;
 
 const styles = StyleSheet.create({
   mainContainer: {

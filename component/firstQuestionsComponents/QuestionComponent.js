@@ -5,12 +5,11 @@ import { Colors } from "../../constant/Colors";
 import SecondaryButton from "../buttons/SecondaryButton";
 import { useSelector } from "react-redux";
 
-export default function UserStudyField({ onPressField }) {
+export default function QuestionComponent({ onPressField, question, buttonList }) {
 
-  let filiere = useSelector((state) => state.userSettingReducer.filiereList);
-  filiere = [...new Set(filiere)];      // enlève les duplicats
-  const leftField = filiere.slice(0, Math.round(filiere.length/2));
-  const rightField = filiere.slice(Math.round(filiere.length/2), filiere.length);
+  
+  // const leftField = buttonList.slice(0, Math.round(buttonList.length/2));
+  // const rightField = buttonList.slice(Math.round(buttonList.length/2), buttonList.length);
 
 
   return (
@@ -21,14 +20,17 @@ export default function UserStudyField({ onPressField }) {
 
       <View style={styles.questionContainer}>
         <Text style={styles.textStyle}>
-          {"Sélectionne ta filière"}
+          {question}
         </Text>
       </View>
 
 
       <View style={styles.buttonContainer}>
-
-        <View style={styles.ButtonColumnContainer}>
+        {buttonList.map( (item) => {
+            return <SecondaryButton key={item} onPress={onPressField.bind(this, item)} buttonText={item} />
+          }
+        )}
+        {/* <View style={styles.ButtonColumnContainer}>
           {leftField.map( (item) => {
               return <SecondaryButton key={item} onPress={onPressField.bind(this, item)} buttonText={item} />
             }
@@ -40,12 +42,11 @@ export default function UserStudyField({ onPressField }) {
               return <SecondaryButton key={item} onPress={onPressField.bind(this, item)} buttonText={item} />
             }
           )}
-          {/* <SecondaryButton onPress={onPressField.bind(this, "Autre")} buttonText="Autre" />           */}
-        </View>
-        
+          <SecondaryButton onPress={onPressField.bind(this, "Autre")} buttonText="Autre" />          
+        </View> */}
       </View>
       
-      <SecondaryButton onPress={onPressField.bind(this, "Autre")} buttonText="Autre" preSized={false}/>
+      {/* <SecondaryButton onPress={onPressField.bind(this, "Autre")} buttonText="Autre" preSized={false}/> */}
 
       {/* </ScrollView> */}
 
@@ -58,6 +59,10 @@ export default function UserStudyField({ onPressField }) {
 const styles = StyleSheet.create({
   mainContainer: {
     alignItems: "center",
+    width: "90%",
+    // padding: 10,
+    borderWidth: 1,
+    flex: 1,
     // justifyContent: "center",
     // width: "90%",
   },
@@ -66,6 +71,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginTop: 40,
+    paddingHorizontal: 10,
     // borderWidth: 1
   },
   textStyle: {
@@ -74,11 +80,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   buttonContainer: {
-    // borderWidth: 1,
+    borderWidth: 1,
     // flex: 1,
-    width: "95%",
+    // width: "95%",
     marginTop: "5%",
-    flexDirection: "row",
+    // flexDirection: "row",
   },
   ButtonColumnContainer: {
     width: "50%", 

@@ -7,6 +7,7 @@ import validator from "validator";
 
 import AuthComponent from "../../component/AuthComponent";
 import ActivityComponent from "../../component/ActivityComponent";
+import { storeAllFiliereList } from "../../core/reducers/userSettingReducer";
 
 
 export default function Login({ navigation }) {

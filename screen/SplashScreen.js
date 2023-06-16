@@ -8,7 +8,7 @@ import { useDispatch } from "react-redux";
 // import store from "../core";
 // import store from "../core";
 
-import * as SecureStore from "expo-secure-store"; // voir doc expo pour ios (peut etre une props a set to false)
+// import * as SecureStore from "expo-secure-store"; // voir doc expo pour ios (peut etre une props a set to false)
 
 import { Colors } from "../constant/Colors";
 import {getAuthData, refreshAuth, tryAuth, storeNewAuthData, storeSplashData} from "../BackEnd/controllers/userData";

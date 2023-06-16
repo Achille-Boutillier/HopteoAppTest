@@ -7,15 +7,19 @@
 //                                                answerByTheme : {theme1 : 2, theme2: 5}}
 // minSwipeForRanking envoyé via splashData
 // Calculer et retourner une liste d'id triés avec le rang pour chaque ecole
+
+
 import store from "../core";
-import {getForRankingFailure, getForRankingRequest, getForRankingSuccess } from "../core/reducers/forRankingReducer";
+import {getForRankingFailure, getForRankingRequest, getForRankingSuccess,  } from "../core/reducers/forRankingReducer";
 import { calculNewRank, calculNewRankSuccess, calculNewRankFailure } from "../core/reducers/schoolReducer";
 import { getRankingAlgoData } from "./controllers/ranking";
 import { alertProvider } from "./errorHandler";
 import { getBannerData } from "./controllers/school";
 
-export function generateRanking(swipe, cards, schools, minSwipeForRanking, themeDetail, swipeSettings) {
-    try{
+
+
+function generateRanking(swipe, cards, schools, minSwipeForRanking, themeDetail, swipeSettings) {
+    try {
         if (swipe.answeredList.length>=minSwipeForRanking) {  // Si l'utilisateur a swipé un certain nb de proposition
             // Récupérer les écoles
             let schoolIdList = [];
@@ -40,7 +44,7 @@ export function generateRanking(swipe, cards, schools, minSwipeForRanking, theme
                 if (!Object.values(schoolGroupObj[schoolId]).includes(0)) {  // Si l'école est concernée par le nouveau classement
                     schoolGradeObj[schoolId] = {};
                     schoolGradeObj[schoolId].grade = 0;  // Initialiser la note à 0
-                    schoolGradeObj[schoolId].schoolName = schoolName[schoolId];
+                    //schoolGradeObj[schoolId].schoolName = schoolName[schoolId];
                     // Calcul de la note
                     for (let idCard of swipe.answeredList) {
                         let weight = 0;
@@ -48,7 +52,7 @@ export function generateRanking(swipe, cards, schools, minSwipeForRanking, theme
                             const themeWeight = themeDetail[cardObj[idCard].idTheme].themeWeight;
                             weight = themeWeight * swipe.answerByTheme[cardObj[idCard].idTheme] / nbAnswer;
                         }
-
+    
                         const swipeType = swipe.swipeObj[idCard];
                         const swipeBonus = swipeSettings[swipeType];
                         schoolGradeObj[schoolId].grade += weight * swipeBonus.bonus;
@@ -57,13 +61,14 @@ export function generateRanking(swipe, cards, schools, minSwipeForRanking, theme
             }
             //---------------------------------------------------------------------------//
             // Calculer le rang pour chaque école et créer l'objet ecole
-            const sortedSchoolGradeList = createSchoolGradeList(schoolGradeObj, schoolIdList);
+            const sortedSchoolGradeList = createSchoolGradeList(schoolGradeObj, schoolName);
             if (sortedSchoolGradeList) {
                 let rank = 1;
                 let sortedSchool = [];
                 let previousSchoolGrade = 0;
                 for (let schoolGradeList of sortedSchoolGradeList) {
-                    const schoolId = schoolGradeList.schoolName;
+                    //const schoolId = schoolGradeList.schoolName;
+                    const schoolId = schoolGradeList.id;
                     let grade = schoolGradeList.grade;
                     //grade = Math.round(grade);
                     // Si la note est positive, on prend en compte l'école dans le classement
@@ -85,17 +90,19 @@ export function generateRanking(swipe, cards, schools, minSwipeForRanking, theme
                 if (schoolRank.rankObj.empty && Object.keys(schoolRank.rankObj).length > 1) {
                     delete schoolRank.rankObj.empty;
                 }
+                // return sortedSchool;
                 return {sortedSchoolList: sortedSchool};
             } else {
                 throw "Impossible d'accéder au classement des écoles";
             }
         } else {
-            return {message : "Continue de swiper pour voir apparaître ton premier classement"};
+            return {message : "Continue de swiper pour voir apparaitre ton premier classement"};
         }
     } catch(error) {
         console.log("[generateRANKING ERROR]", error);
         return {error}
     }
+    
 }
 
 //---------------------------------------- Fonctions secondaires --------------------------------------------//
@@ -147,15 +154,19 @@ function createSchoolGroupObj(schoolIdList, cardObj, swipe) {
     return schoolGroupObj
 }
 
+//---------------------------------------- Fonctions secondaires --------------------------------------------//
 // Appelé dans generateRanking. Renvoie une liste triée d'école en fonction de leur rang
-function createSchoolGradeList(schoolGradeObj, schoolIdList) {
+function createSchoolGradeList(schoolGradeObj, schoolName) {
     // Transformer l'objet en une liste contenant des éléments de type [clé, valeur]
+    const schoolIdList = Object.keys(schoolGradeObj);
     let schoolGradeList = schoolIdList.map(function(schoolId) {
-        return { id: schoolId, grade: schoolGradeObj[schoolId].grade, schoolName: schoolGradeObj[schoolId].schoolName };
+        return { id: schoolId, grade: schoolGradeObj[schoolId].grade };
     });
     schoolGradeList.sort(function(firstElem, secondElem) {
         if (secondElem.grade - firstElem.grade === 0) {
-            return firstElem.schoolName.localeCompare(secondElem.schoolName);
+            const firstSchoolName = schoolName[firstElem.id].toLowerCase();
+            const secondSchoolName = schoolName[secondElem.id].toLowerCase();
+            return firstSchoolName.localeCompare(secondSchoolName);
         } else {
             return secondElem.grade - firstElem.grade;
         }
@@ -165,11 +176,15 @@ function createSchoolGradeList(schoolGradeObj, schoolIdList) {
 
 
 
+
+
+
+
 // =================== fonctions pour front (schoolRanking.js + explore.js) ========================================
 
+export async function calculateNewRank(setReadyToDisplayRank, dispatch, currentScreen ) {
+    (()=>setReadyToDisplayRank(false))();
 
-export async function calculateNewRank(setReadyToDisplayRank, dispatch ) {
-    setReadyToDisplayRank(false);
     const {cards, schoolIdObj } = store.getState().forRankingReducer;
     let doesCardsExist = cards instanceof Object;
     doesCardsExist ? doesCardsExist = Object.keys(cards)>0 : null;
@@ -205,7 +220,7 @@ function prepareAndCalcul(cards, schoolIdObj, setReadyToDisplayRank, dispatch) {
     };
     
     const ranking = generateRanking(swipe, cards, schoolIdObj, minSwipeForRanking, themeObj, swipeSettings);
-    // console.log("[generateRanking ----------------]", ranking);
+    console.log("[generateRanking ----------------]", ranking);
     // todo : les datas des écoles ne s'affichent pas dans le classement 
 
 
@@ -231,12 +246,14 @@ function prepareAndCalcul(cards, schoolIdObj, setReadyToDisplayRank, dispatch) {
 
   }
 
-async function loadMissingSchoolData(rankIdList, setReadyToDisplayRank, dispatch) {
+export async function loadMissingSchoolData(rankIdList, setReadyToDisplayRank, dispatch) {
 const schoolsData = store.getState().schoolReducer.schoolsData;
 const notMissingSchoolId = Object.keys(schoolsData).filter((item)=> schoolsData[item].nomEcole);
 // console.log("[notMissingSchoolId]", notMissingSchoolId);
 const missingSchoolId = rankIdList.filter((item)=>!notMissingSchoolId.includes(item));
 if (missingSchoolId.length>0) {
+    // console.log("va t'il y avoir un beeuuuug mntn ?");
+    // console.log("missingSchoolData", missingSchoolId);
     const data = await getBannerData(missingSchoolId, dispatch);
     if (data.success) {
     setReadyToDisplayRank(true);
@@ -248,5 +265,3 @@ if (missingSchoolId.length>0) {
 }
 }
 
-  
- 

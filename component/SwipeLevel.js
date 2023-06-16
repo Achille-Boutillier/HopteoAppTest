@@ -16,7 +16,6 @@ import {Colors} from "../constant/Colors";
 import ScoreBar from "./ScoreBar";
 import PrimaryButton from "./buttons/PrimaryButton";
 import { useNavigation } from "@react-navigation/native";
-// import SecondaryButton from "./buttons/SecondaryButton";
 import TerciaryButton from "./buttons/TerciaryButton";
 import { alertProvider } from "../BackEnd/errorHandler";
 

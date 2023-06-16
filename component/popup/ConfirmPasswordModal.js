@@ -5,7 +5,6 @@ import { View, StyleSheet, Text, TextInput, ActivityIndicator } from "react-nati
 import { Colors } from "../../constant/Colors";
 import Modal from "react-native-modal";
 import PrimaryButton from "../buttons/PrimaryButton";
-// import SecondaryButton from "./buttons/SecondaryButton";
 import TerciaryButton from "../buttons/TerciaryButton";
 import { useState } from "react";
 import InputComponent from "../InputComponent";

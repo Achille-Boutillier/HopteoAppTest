@@ -5,7 +5,7 @@ function SecondaryButton({onPress, buttonText, fontSize=25, preSized=true}) {
   
 
   return (
-    <TouchableOpacity style={[styles.buttonContainer, preSized ?{width: "90%"}: {paddingHorizontal: 30}]} onPress={onPress}>
+    <TouchableOpacity style={styles.buttonContainer} onPress={onPress}>
       <Text style={[styles.textStyle, {fontSize: fontSize}]}>{buttonText}</Text>
     </TouchableOpacity>
   );
@@ -18,10 +18,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 10,
-    // paddingHorizontal: 15,
+    paddingHorizontal: 20,
     paddingVertical: 10,
-    marginBottom: 20,
-    // height: 60,
+    marginVertical: 10,
     backgroundColor: Colors.white,
     // borderWidth: 1,
     

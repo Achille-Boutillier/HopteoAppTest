@@ -3,7 +3,6 @@ import { StyleSheet, View, Text, TouchableOpacity, } from "react-native";
 import { Colors } from "../../constant/Colors";
 import Chip from "../Chip";
 import TerciaryButton from "../buttons/TerciaryButton";
-// import SecondaryButton from "../SecondaryButton";
 
 export default function OptionComponent({optionSynthese, optionDetail}) {
   const [isPressed, setIsPressed ] = useState(false);

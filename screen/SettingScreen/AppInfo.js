@@ -3,7 +3,6 @@
 import { StyleSheet, View, Text, TouchableOpacity, Linking, ScrollView} from "react-native";
 import PrimaryButton from "../../component/buttons/PrimaryButton";
 import LogoDiscord from "../../assets/icons/commucation/logo-discord.svg"
-// import SecondaryButton from "../../component/buttons/SecondaryButton";
 
 
 

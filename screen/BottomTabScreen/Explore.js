@@ -12,17 +12,17 @@ import SearchBar from "../../component/SearchBar";
 import { getSchoolByArea, searchSchool } from "../../BackEnd/controllers/explore";
 import { alertProvider } from "../../BackEnd/errorHandler";
 import { HeaderButton } from "../../component/TopBar";
-import ActivityComponent from "../../component/ActivityComponent.js"
+import ActivityComponent from "../../component/ActivityComponent.js";
 
 import { useDispatch} from "react-redux";
 import { getSchoolByAreaFailure, getSchoolByAreaRequest, getSchoolByAreaSuccess } from "../../core/reducers/schoolReducer";
 import { setSwipeStateHasChanged } from "../../core/reducers/swipeReducer";
-import { loadMissingSchoolData } from "../../BackEnd/rankingFunction1";
+import { loadMissingSchoolData } from "../../BackEnd/rankingFunction";
 import store from "../../core";
 
 import SearchedComponent from "../../component/exploreComponents/SearchedComponent";
 import ExploreByArea from "../../component/exploreComponents/ExploreByArea";
-import { calculateNewRank } from "../../BackEnd/rankingFunction1";
+import { calculateNewRank } from "../../BackEnd/rankingFunction";
 // import { ActivityIndicator } from "react-native";
 
 const width = Dimensions.get("window").width;
