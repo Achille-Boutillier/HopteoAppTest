@@ -10,7 +10,7 @@ import SecondaryHeader from "../component/secondaryHeader";
 
 
 import { useState, useEffect } from "react";
-import { modifyLike } from "../BackEnd/controllers/school";
+import { setSchoolLike } from "../core/reducers/schoolReducer";
 import SCEIComponent from "../component/schoolPageComponent/SCEIComponent";
 import MainNumberComponent from "../component/schoolPageComponent/MainNumberComponent";
 import OptionComponent from "../component/schoolPageComponent/OptionComponent";
@@ -70,12 +70,7 @@ export default function SchoolPage({ navigation, route }) {
   // --------------- like ecole -------------------------------------
   
   async function handleLikePress() {
-    // const newLike = !singleSchoolData.like;
-    const success = modifyLike(schoolId, !currentLike, dispatch);
-    if (!success) {
-      alertProvider("Un problème est survenu... Le like n'a pas été pris en compte.");
-    }
-
+    dispatch( setSchoolLike({schoolId, newLike: !currentLike}) );
   }
   // --------------- fin like ecole -------------------------------------
 
@@ -92,7 +87,7 @@ export default function SchoolPage({ navigation, route }) {
             size={28}
             color={Colors.orange500}
           />
-          <BrandComponent logoSize={30} fontSize={17}/>
+          <BrandComponent style={{marginVertical: 10}}/>
           <PrimaryButton
             onPress={handleLikePress}
             name={currentLike ? "heart" : "heart-outline"}

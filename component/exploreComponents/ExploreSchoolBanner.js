@@ -1,10 +1,9 @@
 import { StyleSheet, View, Text, TouchableOpacity, Button, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
-import { modifyLike } from "../../BackEnd/controllers/school";
 import { useDispatch, useSelector } from "react-redux";
 import RibbonComponent from "../RibbonComponent";
-// import { setSchoolLike } from "../../core/reducers/schoolReducer";
+import { setSchoolLike } from "../../core/reducers/schoolReducer";
 
 // import PrimaryButton from "./buttons/PrimaryButton";
 import { useEffect, useState} from "react";
@@ -25,12 +24,7 @@ export default function ExploreSchoolBanner({ schoolId }) {
   }
 
   async function handleLikePress() {
-    // const newLike = !singleSchoolData.like;
-    // dispatch( setSchoolLike({schoolId, newLike}) );
-    const success = await modifyLike(schoolId, !currentLike, dispatch);
-    if (!success) {
-      alertProvider("Un problème est survenu... Le like n'a pas été pris en compte.");
-    }
+    dispatch( setSchoolLike({schoolId, newLike: !currentLike}) );
   }
 
   // ! ----- manage minimal fontSize (Android) -----------------

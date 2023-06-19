@@ -74,7 +74,7 @@ export async function getDetails(idCard) {
 
 // updateSwipe
 
-export async function updateSwipe(idCardList, swipeTypeObj, removedIdStillInBackEnd, userSettingStatus) {
+export async function updateSwipe(notSentToBackAnswers, filteredSwipeTypeObj, removedIdStillInBackEnd, userSettingStatus, filteredSchoolLikeObj) {
   try {
     const authData = await getAuthData();
     const {cursustype, filiere} = userSettingStatus;
@@ -89,13 +89,14 @@ export async function updateSwipe(idCardList, swipeTypeObj, removedIdStillInBack
         filiere,
       },
       body: JSON.stringify({
-        idCardList, 
-        swipeTypeObj,
+        idCardList : notSentToBackAnswers, 
+        swipeTypeObj : filteredSwipeTypeObj,
         unSwipedCardId : removedIdStillInBackEnd,
+        schoolLikeObj: filteredSchoolLikeObj,
       }),
     };
 
-    const response = await fetch("https://app.hopteo.com/api/v1/cards/addSwipes", requestOptions);
+    const response = await fetch("https://app.hopteo.com/api/v1/user/storeUserAction", requestOptions);
     // console.log(response.status);
     const data = await response.json();
     // console.log(data);

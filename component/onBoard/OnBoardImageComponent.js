@@ -49,14 +49,14 @@ export default function OnBoardImageComponent({screenType, stroke=false}) {
     return (
       <View style={styles.introContainer}>
         <Text style = {styles.introHeaderText}>Bienvenue sur</Text>
-        <BrandComponent logoSize={60} fontSize={30} marginLeft='-0.5%'/>
+        <BrandComponent />
         <Text style={[styles.title, styles.introTitle]}>{title}</Text>
       </View>
     );
   } else {
     return (
       <View style={styles.mainContainer}>
-        <BrandComponent logoSize={50} fontSize={25} marginLeft='-0.5%'/>
+        <BrandComponent />
         <Text style={styles.title}>{title}</Text>
         <Image source={path} style={styles.image} />
       </View>

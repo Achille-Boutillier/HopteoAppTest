@@ -9,21 +9,31 @@ import { reinitialiseUserSettingReducer } from "../core/reducers/userSettingRedu
 
 export async function updateBackData(dispatch) {
   const userSettingReducer = store.getState().userSettingReducer;
-  const {notSentToBackAnswers, sentToBackAnswers, swipeTypeObj, removedIdStillInBackEnd} = store.getState().swipeReducer;
-  // console.log("[removedIdStillInBackEnd]", removedIdStillInBackEnd);
-  if (notSentToBackAnswers.length>0 || removedIdStillInBackEnd.length>0) {   //todo: revoir la logique
-    console.log("backData needs to be upgraded ===================");
-    // console.log("[removedIdStillInBackEnd]", removedIdStillInBackEnd);
+  const {notSentToBackAnswers, swipeTypeObj, removedIdStillInBackEnd} = store.getState().swipeReducer;
+  const {schoolLikeToUpdate, likedSchoolObject} = store.getState().schoolReducer;
+
+  const isUpdateNeeded = notSentToBackAnswers.length>0 || removedIdStillInBackEnd.length>0 || schoolLikeToUpdate.length > 0 ;
+
+  if (isUpdateNeeded) {
+    console.log("backData needs to be updated ===================");
+
     const filteredSwipeTypeObj = notSentToBackAnswers.reduce((obj, key) => {
-      if (key in swipeTypeObj) {
+      if (swipeTypeObj.hasOwnProperty(key)) {
         obj[key] = swipeTypeObj[key];
       }
       return obj;
     }, {});
+
+    const filteredSchoolLikeObj = schoolLikeToUpdate.reduce((obj, key) => {
+      if (likedSchoolObject.hasOwnProperty(key)) {
+        obj[key] = likedSchoolObject[key];
+      }
+      return obj;
+    }, {});
+
   // console.log("[removedIdStillInBackEnd]", filteredSwipeTypeObj);
 
-    const success = await updateSwipe(notSentToBackAnswers, filteredSwipeTypeObj, removedIdStillInBackEnd, userSettingReducer);
-    //todo : handle les removedIdStillInBackEnd
+    const success = await updateSwipe(notSentToBackAnswers, filteredSwipeTypeObj, removedIdStillInBackEnd, userSettingReducer, filteredSchoolLikeObj);
 
     if (success) {
       dispatch(handleAllSwipeSent());

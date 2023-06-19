@@ -72,6 +72,7 @@ export const swipeSlice = createSlice({
       state.rankingAbsoluteIndex= -1;  
       state.loading= null;
       state.error= null;
+      state.swipeStateHasChanged = true;
     },
 
     handleAllSwipeSent : (state) => {

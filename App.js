@@ -53,7 +53,7 @@ function ScreensWithBottomTab() {
         options={{
           // headerStyle: {borderWidth: 5, borderColor: Colors.fullBlack, },  // s'applique à la view contenant le header
 
-          headerTitle: () => <BrandComponent />,
+          headerTitle: () => <BrandComponent style={{marginLeft: "4%"}} />,
           // header
           title: "Swipe",
           tabBarLabel: "Swipe",
@@ -68,7 +68,7 @@ function ScreensWithBottomTab() {
         name="SchoolRanking"
         component={SchoolRanking}
         options={{
-          headerTitle: () => <BrandComponent />,
+          headerTitle: () => <BrandComponent style={{marginLeft: "4%"}}/>,
           title: "School Ranking",
           tabBarLabel: "Classement",
           tabBarIcon: ({ color, size }) => (
@@ -80,7 +80,7 @@ function ScreensWithBottomTab() {
         name="Explore"
         component={Explore}
         options={{
-          headerTitle: () => <BrandComponent />,
+          headerTitle: () => <BrandComponent style={{marginLeft: "4%"}}/>,
           title: "Explore",
           tabBarLabel: "Explore",
           tabBarIcon: ({ color, size }) => (

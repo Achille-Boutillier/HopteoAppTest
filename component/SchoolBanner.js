@@ -6,10 +6,10 @@ import { Colors } from "../constant/Colors";
 import { useEffect, useState } from "react";
 
 
-import { alertProvider } from "../BackEnd/errorHandler";
+// import { alertProvider } from "../BackEnd/errorHandler";
 import { useSelector, useDispatch } from "react-redux";
-import { modifyLike } from "../BackEnd/controllers/school";
 import RibbonComponent from "./RibbonComponent";
+import { setSchoolLike } from "../core/reducers/schoolReducer";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -33,12 +33,7 @@ export default function SchoolBanner({schoolId}) {    //id, rank, nomEcole, type
   // --------------- like ecole -------------------------------------
   
   async function handleLikePress() {
-    // const newLike = !singleSchoolData.like;
-    // dispatch(setSchoolLikeSuccess({schoolId, newLike}));
-    const success = await modifyLike(schoolId, !currentLike, dispatch);
-    if (!success) {
-      alertProvider("Un problème est survenu... Le like n'a pas été pris en compte.");
-    }
+    dispatch(setSchoolLike({schoolId, newLike: !currentLike}));
   }
   // --------------- fin like ecole -------------------------------------
 

@@ -3,23 +3,16 @@ import { useState } from "react";
 import { Dimensions, View, StyleSheet, Text, Image } from "react-native";
 import { Colors } from "../constant/Colors";
 import PrimaryButton from "./buttons/PrimaryButton";
-import Logo from "../assets/icons/logo.svg";
+// import Logo from "../assets/icons/logo.svg";
 
 const buttonSize = 30;
 
 const logoAndNameWidth = 130;
 
-export function BrandComponent({marginLeft="4%", logoSize=52, fontSize=25}) {
+export function BrandComponent({style={}}) {
   return (
-    <View style={[styles.brandContainer, { marginLeft: marginLeft}]}>
-      {/* <View style={styles.imageContainer}> */}
-      {/* <Logo
-        width={logoSize}
-        height={logoSize}
-      />
-      <Text style={[styles.text, {fontSize: fontSize}]}>Hopteo</Text> */}
-      <Image source={require('../assets/logo/logoAndName.png')} style={styles.image} />
-      {/* </View> */}
+    <View style={[styles.brandContainer, style]}>
+      <Image source={require('../assets/logo/logo_without_baseline_small_margin.png')} style={styles.image} />
     </View>
   );
 }
@@ -44,7 +37,8 @@ export function HeaderButton({onSettingsPress}) {
 const styles = StyleSheet.create({
   brandContainer: {
     // flex: 1,
-    paddingVertical: "4%",
+    // paddingVertical: "4%",
+    // borderWidth: 1,
   },
   text: {
     color: Colors.orange500,
@@ -60,7 +54,7 @@ const styles = StyleSheet.create({
   image: {
     // flex: 1,
     width: logoAndNameWidth,
-    height: logoAndNameWidth*171/835,
+    height: logoAndNameWidth*216/910,
     // borderWidth: 1,
     // aspectRatio: 1,
   },

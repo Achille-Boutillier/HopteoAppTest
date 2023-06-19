@@ -1,8 +1,8 @@
 import { getAuthData } from "./userData";
 // import {getRankRequest, getRankSuccess, getRankFailure} from "../../core/reducers/schoolReducer";
 import { mainUrl, getUserSettingStatus } from "./userData";
-import store from "../../core";
-import {getSchoolBannerRequest, getSchoolBannerSuccess, getSchoolBannerFailure, setSchoolLike} from "../../core/reducers/schoolReducer";
+// import store from "../../core";
+import {getSchoolBannerRequest, getSchoolBannerSuccess, getSchoolBannerFailure} from "../../core/reducers/schoolReducer";
 const route = mainUrl + "/schools";
 
 
@@ -80,37 +80,37 @@ export async function getPageData(schoolId) {
 
 
 
-export async function modifyLike(schoolId, newLike, dispatch) {
-  try {
+// export async function modifyLike(schoolId, newLike, dispatch) {
+//   try {
 
-  dispatch( setSchoolLike({schoolId, newLike}) );
-  const authData = await getAuthData();
-  const {cursustype} = getUserSettingStatus();
+//   // dispatch( setSchoolLike({schoolId, newLike}) );
+//   const authData = await getAuthData();
+//   const {cursustype} = getUserSettingStatus();
 
-  const requestOptions = {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      authorization: "Bearer " + authData.token,
-      cursustype: cursustype,
-    },
-    body: JSON.stringify({
-      bool: newLike,
-    }),
-  };
+//   const requestOptions = {
+//     method: "PUT",
+//     headers: {
+//       "Content-Type": "application/json",
+//       authorization: "Bearer " + authData.token,
+//       cursustype: cursustype,
+//     },
+//     body: JSON.stringify({
+//       bool: newLike,
+//     }),
+//   };
 
-    const response = await fetch(route + "/modifyLike/" + schoolId, requestOptions);
-    if (response.status===200) {
-      return true;
-    } else {
-      return false;
-    }
-  } catch (error) {
-    console.log("echec du bloc try :");
-    console.log(error);
+//     const response = await fetch(route + "/modifyLike/" + schoolId, requestOptions);
+//     if (response.status===200) {
+//       return true;
+//     } else {
+//       return false;
+//     }
+//   } catch (error) {
+//     console.log("echec du bloc try :");
+//     console.log(error);
 
-    return false;
-  }
+//     return false;
+//   }
 
 
-}
+// }

@@ -29,7 +29,7 @@ export default function RecoveryCodeComponent({setIsEditing, isCharging, setIsCh
       let inputTitle2;
       let inputType;
     if (innerComponentType ==="emailInput") {
-      textInfo = "Récupérer mon compte Hopteo.";
+      textInfo = "Récupérer mon compte Hopteo";
       buttonTitle = "M'envoyer un code" ;
       inputNumber = 1;
 
@@ -206,6 +206,8 @@ const styles = StyleSheet.create({
   },
   
   textInfo: {
+    fontSize: 17,
+    fontWeight: "500",
     textAlign: "center",
   },
 

@@ -135,7 +135,7 @@ export default function AuthComponent({typeScreen ,onSubmit, onChangeTypeScreen,
 
           
         {!isEditing ? <TerciaryButton title={secondButtonTitle} onPress={onChangeTypeScreen} color={Colors.orange500} /> : null}
-        {!isEditing ? <BrandComponent marginLeft={0} logoSize={60} fontSize={30}/> : null}
+        {!isEditing ? <BrandComponent  /> : null}
         
         
         

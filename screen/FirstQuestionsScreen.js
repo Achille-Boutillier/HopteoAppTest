@@ -173,7 +173,7 @@ export default function FirstQuestionsScreen({ navigation }) {
             color={Colors.orange500}
           />
         </View>
-        <BrandComponent logoSize={30} fontSize={17}/>
+        <BrandComponent />
       </View>
       
       <View style={styles.bodyContainer}>

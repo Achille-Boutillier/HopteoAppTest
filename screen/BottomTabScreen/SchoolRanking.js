@@ -178,7 +178,7 @@ function SchoolRanking({ navigation}) {
   return (
     // <View style={styles.mainContainer}>
     <View style={styles.mainContainer} ref={viewRef} pointerEvents= {isScreenshotMode ? "none" : "auto"}>
-      {forRankingReducer.showRankingPopup && !isScreenshotMode
+      {forRankingReducer.showRankingPopup && !isScreenshotMode //! modif
         ? <InfoPopup message="Retourne swiper pour affiner ton classement" />
         : null 
       }
@@ -189,8 +189,8 @@ function SchoolRanking({ navigation}) {
         </View>
       </View>
 
-      {isScreenshotMode 
-        ? <View style={styles.brandForScreenshot}><BrandComponent marginLeft={0}/></View>
+      {isScreenshotMode //! modif
+        ? <View style={styles.brandForScreenshot}><BrandComponent /></View>
         : null
       }
 
@@ -209,7 +209,7 @@ function SchoolRanking({ navigation}) {
                     return (<SchoolBanner schoolId={item} />);
                   } }
                 />
-              ): (
+              ) : (
                 <MessageContainer>{schoolReducer.rankIdList}</MessageContainer>
               )
             
@@ -265,7 +265,7 @@ const styles = StyleSheet.create({
     // width: "100%",
     backgroundColor: Colors.backgroundColor,
     alignItems: "center",
-    // paddingTop: "4%",
+    paddingTop: "4%",
     // borderWidth: 1
 
   },

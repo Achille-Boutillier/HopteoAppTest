@@ -10,11 +10,11 @@ import { alertProvider } from "../../BackEnd/errorHandler.js";
 
 import ConfirmPasswordModal from "../../component/popup/ConfirmPasswordModal";
 import { useDispatch } from "react-redux";
-import { reinitialiseSchoolReducer } from "../../core/reducers/schoolReducer";
-import { reinitialiseForRankingReducer } from "../../core/reducers/forRankingReducer";
+// import { reinitialiseSchoolReducer } from "../../core/reducers/schoolReducer";
+// import { reinitialiseForRankingReducer } from "../../core/reducers/forRankingReducer";
 import { reinitialiseSwipeReducer, setSwipeStateHasChanged } from "../../core/reducers/swipeReducer";
 import { reinitialiseUserSettingReducer } from "../../core/reducers/userSettingReducer";
-import { resetAllStore, updateBackData } from "../../BackEnd/updateBackData";
+import {updateBackData } from "../../BackEnd/updateBackData";
 
 
 const deviceHeight = Dimensions.get("window").height;

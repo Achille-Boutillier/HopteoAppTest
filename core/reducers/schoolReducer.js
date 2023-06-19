@@ -60,19 +60,14 @@ export const schoolSlice = createSlice({
 
     setSchoolLike: (state, action) => {
       const {schoolId, newLike } = action.payload;
-      newLike ? state.likedSchoolObject[schoolId] = true : delete state.likedSchoolObject[schoolId];
+      state.likedSchoolObject[schoolId] = newLike;
+      if (!state.schoolLikeToUpdate.includes(schoolId)) {
+        state.schoolLikeToUpdate.push(schoolId);
+      }
       // state.schoolsData[schoolId].like = newLike ;
       state.error = false;
     },
     
-    // setSchoolLikeFailure: (state, action) => {
-    //   const {schoolId, newLike } = action.payload;
-    //   // state.schoolsData[schoolId].like = !newLike ;
-    //   // newLike ? state.likedSchoolList.push(schoolId) : state.likedSchoolList = state.likedSchoolList.filter(item => item !== schoolId);
-    //   state.loading = false;
-    //   state.error = true; 
-    // },
-
     // --------------------rank----------------------------
 
     calculNewRank: (state) => {
@@ -84,7 +79,7 @@ export const schoolSlice = createSlice({
       }
     },
     calculNewRankSuccess: (state, action) => { 
-      console.log("storing new rank -----------------")  ;
+      console.log("storing new rank -----------------") ;
       const {sortedSchoolList, message} = action.payload;  
       console.log("[sortedSchoolList]", sortedSchoolList);
       if (Array.isArray(sortedSchoolList)) {
@@ -151,7 +146,9 @@ export const schoolSlice = createSlice({
     reinitialiseSchoolReducer: (state) => {
       state.rankIdList= null;     // lite d'id ordonnés pour classement
       state.schoolByArea= null;   // {schoolPack: null, listFormation: null},
-      state.schoolsData= {};      
+      state.schoolsData= {};  
+      state.likedSchoolObject = {};    
+      state.schoolLikeToUpdate = [];
       state.loading= null;
       state.error= false;
     }
