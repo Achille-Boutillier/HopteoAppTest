@@ -1,9 +1,12 @@
 import { StyleSheet, View, Text, ScrollView, Dimensions } from "react-native";
 import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
+import DotComponent from "./DotComponent";
 
-import { Colors } from "../../constant/Colors";
-import { getUserSettingStatus } from "../../BackEnd/controllers/userData";
+import { Colors } from "../../../constant/Colors";
+import { getUserSettingStatus } from "../../../BackEnd/controllers/userData";
+import SwipeableBanner from "./SwipeableBanner";
+import store from "../../../core";
 // import { SwipeListView } from "react-native-swipe-list-view";
 // import { Swipeable } from "react-native-gesture-handler";
 
@@ -11,33 +14,6 @@ const width = Dimensions.get("window").width;
 // const height = Dimensions.get('window').height;
 const parcoursSize = { width: 0.5 * width, height: 38 }; // faciliter la gestion des container swipables
 const figureSize = { width: 0.70 * width, height: 50 };
-
-function DotComponent({ list, currentNumber }) {
-  const [dotContent, setDotContent] = useState(null); ;
-
-  useEffect(()=> {
-    let newDotContent = null;
-    if (list.length > 1) {
-      newDotContent = list.map((item, index) => (
-        // <View key={item} style={{}} >
-          <Text key={item} style={currentNumber == index ? styles.ActivatedDot : styles.dot}>
-            {"\u2022"}{" "}
-          </Text>
-          // <Text style={styles.dot}>{" "}</Text>
-        // </View>
-      ));
-    } else {
-      newDotContent= <View style={styles.emptyDotContent} ></View>
-    }
-
-    setDotContent(newDotContent);
-  }, [currentNumber])
-
-
-  return <View style={styles.dotContainer}>{dotContent}</View>;
-}
-
-
 
 
 
@@ -55,13 +31,17 @@ export default function SCEIComponent({ parcoursChoix, admission }) {
 
 
   function getSortedList() {
+
+    const {userFiliere, secondYearFiliere} = store.getState().userSettingReducer
+    console.log("[secondYearFiliere]", secondYearFiliere); //     ["PT"] pour PT, []
+    // !!!!!!! reprendre ici (ordonner par filière)
     let filiereList = Object.keys(admission).filter(
       (key) => Object.keys(admission[key]).length !== 0
     );
-    console.log(1, filiereList); //
-    const userFiliere = getUserSettingStatus().filiere;
+    // console.log(1, filiereList); //
+    // const userFiliere = getUserSettingStatus().userFiliere;
     console.log(userFiliere);
-    const isUserFieliereIncluded = filiereList.includes(userFiliere)
+    const isUserFieliereIncluded = filiereList.includes(userFiliere);
     isUserFieliereIncluded ? filiereList = filiereList.filter((item)=> item !== userFiliere) : null;
     console.log(2, filiereList); //
     alphabeticOrderedList = filiereList.sort((a, b)=> a.localeCompare(b));
@@ -102,77 +82,53 @@ export default function SCEIComponent({ parcoursChoix, admission }) {
     <View style={styles.mainContainer}>
       <Text style={styles.mainTitle}>Inscription SCEI</Text>
 
-      <View style={styles.swipeableContainer}>
-        <View style={[parcoursSize, {zIndex: 1}]}>
-          <ScrollView
-            onScroll={({ nativeEvent }) => onScrollParcours(nativeEvent)}
-            showsHorizontalScrollIndicator={false}
-            pagingEnabled // scroll de page en page au lieu de continuellement
-            horizontal
-            style={parcoursSize}
-          >
-            {parcoursChoixKeys.map(
-              (item) => (
-                <View key={item} style={styles.parcoursContainer}>
-                  <Text style={styles.subTitle} adjustsFontSizeToFit={true}>
-                    {parcoursChoix[item]}
-                  </Text>
-                </View>
-              )
-              // <Text  style={{width: 50, height: 50, borderWidth: 1}}>{item}</Text>
-            )}
-          </ScrollView>
-        </View>
+      <SwipeableBanner bannerSize={parcoursSize} onScroll={onScrollParcours} scrollList={parcoursChoixKeys} currentNumber={parcoursSlide}>
+        {parcoursChoixKeys.map(
+          (item) => (
+            <View key={item} style={[styles.parcoursContainer, parcoursSize]}>
+              <Text style={styles.subTitle} adjustsFontSizeToFit={true}>
+                {parcoursChoix[item]}
+              </Text>
+            </View>
+          )
+        )}
+      </SwipeableBanner>
 
-        <DotComponent list={parcoursChoixKeys} currentNumber={parcoursSlide} />
-      </View>
-      
-      <View style={styles.swipeableContainer}>
-        <View style={[figureSize, {zIndex: 1}]}>
-          <ScrollView
-            onScroll={({ nativeEvent }) => onScrollFigure(nativeEvent)}
-            showsHorizontalScrollIndicator={false}
-            pagingEnabled // scroll de page en page au lieu de continuellement
-            horizontal
-            style={figureSize}
-          >
-            {sortedFiliereList.map((item, index) => (
-              <View key={item} style={styles.figureContainer}>
-                <View style={styles.leftContainer}>
-                  <View style={styles.fieldContainer}>
-                    <Text
-                      style={styles.figureText}
-                      adjustsFontSizeToFit={true}
-                      numberOfLines={1}
-                    >
-                      {item}
-                    </Text>
-                  </View>
-                </View>
-              
-                <View style={styles.middleContainer}>
-                  <Text style={styles.subTitle}>Rang médian</Text>
-                  <Text style={styles.subTitle}>Places</Text>
-                </View>
-                <View style={styles.rightContainer}>
-                  <Text style={styles.figureText}>
-                    {admission[item][currentParcours]
-                      ? admission[item][currentParcours].rangMedian
-                      : "-"}
-                  </Text>
-                  <Text style={styles.figureText}>
-                    {admission[item][currentParcours]
-                      ? admission[item][currentParcours].nombrePlace
-                      : "-"}
-                  </Text>
-                </View>
+      <SwipeableBanner bannerSize={figureSize} onScroll={onScrollFigure} scrollList={sortedFiliereList} currentNumber={figureSlide}>
+        {sortedFiliereList.map((item, index) => (
+          <View key={item} style={styles.figureContainer}>
+            <View style={styles.leftContainer}>
+              <View style={styles.fieldContainer}>
+                <Text
+                  style={styles.figureText}
+                  adjustsFontSizeToFit={true}
+                  numberOfLines={1}
+                >
+                  {item}
+                </Text>
               </View>
-            ))}
-          </ScrollView>
-        </View>
-
-        <DotComponent list={sortedFiliereList} currentNumber={figureSlide} />
-      </View>
+            </View>
+          
+            <View style={styles.middleContainer}>
+              <Text style={styles.subTitle}>Rang médian</Text>
+              <Text style={styles.subTitle}>Places</Text>
+            </View>
+            <View style={styles.rightContainer}>
+              <Text style={styles.figureText}>
+                {admission[item][currentParcours]
+                  ? admission[item][currentParcours].rangMedian
+                  : "-"}
+              </Text>
+              <Text style={styles.figureText}>
+                {admission[item][currentParcours]
+                  ? admission[item][currentParcours].nombrePlace
+                  : "-"}
+              </Text>
+            </View>
+          </View>
+        ))}
+      </SwipeableBanner>
+      
 
       <View style={styles.currentConcoursContainer}>
 
@@ -183,7 +139,7 @@ export default function SCEIComponent({ parcoursChoix, admission }) {
           <Text style={[styles.subTitle, {}]}>
             {admission[sortedFiliereList[figureSlide]][currentParcours]?.concours 
             ? admission[sortedFiliereList[figureSlide]][currentParcours].concours
-            : "-"}  {/* par exemple admission["MP"]["parcours1"].concours */}
+            : "-"}{/* par exemple admission["MP"]["parcours1"].concours */}
           </Text>                  
         </View>
         {/* <View style={{width: "10%", borderWidth: 1}}></View> */}
@@ -194,41 +150,9 @@ export default function SCEIComponent({ parcoursChoix, admission }) {
 }
 
 const styles = StyleSheet.create({
-  dotContainer: {
-    flexDirection: "row",
-    alignSelf: "center",
-    // borderWidth: 1,
-    alignItems: "center",
-    zIndex: 0,
-    marginTop: -7,
-    // padding: 0,
-    // position: 'absolute',
-    // height: 35,
-  },
-
-  ActivatedDot: {
-    color: Colors.orange500,
-    fontSize: 25,
-    // textAlign: "center",
-    // verticalAlign: "center",
-  },
-  dot: {
-    color: Colors.orange100,
-    fontSize: 20,
-    // textAlign: "center",
-    // verticalAlign: "center",
-  },
-  emptyDotContent: {
-    height: 30,
-  },
-
-
-  // ------------------------------------
 
   mainContainer: {
     width: 0.9 * width,
-    // height: 180,
-    // height: "20%",
     backgroundColor: Colors.grey300,
     alignSelf: "center",
     alignItems: "center",
@@ -257,29 +181,23 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
   },
 
-  swipeableContainer: {
-    alignItems: "center",
-    // borderWidth: 1,
-    // height: 56,
-    // padding: 1,
-  },
+  
 
   parcoursContainer: {
     backgroundColor: Colors.white,
-    // paddingHorizontal: 20,
-    // paddingVertical: 5,
+    // width: parcoursSize.width,
+    // height: parcoursSize.height,
     padding: 2,
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 10,
-    width: parcoursSize.width,
-    height: parcoursSize.height,
+   
   },
   figureContainer: {
+    backgroundColor: Colors.white,
     width: figureSize.width,
     height: figureSize.height,
     borderRadius: 10,
-    backgroundColor: Colors.white,
     flexDirection: "row",
     justifyContent: "center",
     // alignItems: "center",

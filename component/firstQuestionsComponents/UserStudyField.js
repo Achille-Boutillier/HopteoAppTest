@@ -7,10 +7,10 @@ import { useSelector } from "react-redux";
 
 export default function UserStudyField({ onPressField }) {
 
-  let filiere = useSelector((state) => state.userSettingReducer.filiereList);
-  filiere = [...new Set(filiere)];      // enlève les duplicats
-  const leftField = filiere.slice(0, Math.round(filiere.length/2));
-  const rightField = filiere.slice(Math.round(filiere.length/2), filiere.length);
+  let filiereList = useSelector((state) => state.userSettingReducer.filiereList);
+  filiereList = [...new Set(filiereList)];      // enlève les duplicats
+  const leftField = filiereList.slice(0, Math.round(filiereList.length/2));
+  const rightField = filiereList.slice(Math.round(filiereList.length/2), filiereList.length);
 
 
   return (

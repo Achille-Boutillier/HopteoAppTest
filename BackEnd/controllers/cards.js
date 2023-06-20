@@ -15,7 +15,7 @@ export async function nextPile(nextIdCardList) {
     const nextIdCardString = nextIdCardList.join(",");
     // console.log("[nextIdCardsString]", nextIdCardString);
 
-    const {cursustype, filiere} = getUserSettingStatus();
+    const {cursustype, userFiliere} = getUserSettingStatus();
     
     const requestOptions = {
       method: "GET",
@@ -23,7 +23,7 @@ export async function nextPile(nextIdCardList) {
         "Content-Type": "application/json",
         authorization: "Bearer " + authData.token,
         cursustype: cursustype,
-        filiere: filiere,
+        filiere: userFiliere,
         
       },
     };
@@ -46,7 +46,7 @@ export async function nextPile(nextIdCardList) {
 
 export async function getDetails(idCard) {
   const authData = await getAuthData();
-  const {cursustype, filiere} = getUserSettingStatus();
+  const {cursustype, userFiliere} = getUserSettingStatus();
   
   const requestOptions = {
     method: "GET",
@@ -54,7 +54,7 @@ export async function getDetails(idCard) {
       "Content-Type": "application/json",
       authorization: "Bearer " + authData.token,
       cursustype: cursustype,
-      filiere: filiere,
+      filiere: userFiliere,
     },
   };
 
@@ -72,45 +72,6 @@ export async function getDetails(idCard) {
   }
 }
 
-// updateSwipe
-
-export async function updateSwipe(notSentToBackAnswers, filteredSwipeTypeObj, removedIdStillInBackEnd, userSettingStatus, filteredSchoolLikeObj) {
-  try {
-    const authData = await getAuthData();
-    const {cursustype, filiere} = userSettingStatus;
-   
-
-    const requestOptions = {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: "Bearer " + authData.token,
-        cursustype,
-        filiere,
-      },
-      body: JSON.stringify({
-        idCardList : notSentToBackAnswers, 
-        swipeTypeObj : filteredSwipeTypeObj,
-        unSwipedCardId : removedIdStillInBackEnd,
-        schoolLikeObj: filteredSchoolLikeObj,
-      }),
-    };
-
-    const response = await fetch("https://app.hopteo.com/api/v1/user/storeUserAction", requestOptions);
-    // console.log(response.status);
-    const data = await response.json();
-    // console.log(data);
-    if (response.status===200) {
-      return true;
-    } else {
-      throw data;
-    }
-  } catch (error) {
-    console.log("[updateSwipe]", "bloc try failed :");
-    console.log(error);
-    return false;
-  }
-}
 
 
 
@@ -120,7 +81,7 @@ export async function undoSwipe(id, idTheme, dispatch) {
   try {
     dispatch(removeSwipe({id, idTheme}));
     const authData = await getAuthData();
-    const {cursustype, filiere} = getUserSettingStatus();
+    const {cursustype, userFiliere} = getUserSettingStatus();
 
     const requestOptions = {
       method: "PUT",
@@ -128,7 +89,7 @@ export async function undoSwipe(id, idTheme, dispatch) {
         "Content-Type": "application/json",
         authorization: "Bearer " + authData.token,
         cursustype,
-        filiere, 
+        filiere: userFiliere, 
       },
       body: JSON.stringify({
         idCard: id

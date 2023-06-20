@@ -1,5 +1,6 @@
 export const initialSchoolState = {
-  rankIdList: null,     // lite d'id ordonnés pour classement
+  rankIdList: null,     // [ingeSchool1, ingeSchool120, ingeSchool154, ...]
+  rankSchoolList: [],   // [{"id": "ingeSchool1", "rank": 1}, {"id": "ingeSchool120", "rank": 2}, {"id": "ingeSchool154", "rank": 3}, ...]
   schoolByArea: null,   // {schoolPack: null, listFormation: null},
   schoolsData: {},  
   likedSchoolObject: {},   // {ingeSchool5: true, ingeSchool22: true, ingeSchool2: true} 

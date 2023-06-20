@@ -11,7 +11,7 @@ import SecondaryHeader from "../component/secondaryHeader";
 
 import { useState, useEffect } from "react";
 import { setSchoolLike } from "../core/reducers/schoolReducer";
-import SCEIComponent from "../component/schoolPageComponent/SCEIComponent";
+import SCEIComponent from "../component/schoolPageComponent/SCEIComponent/SCEIComponent";
 import MainNumberComponent from "../component/schoolPageComponent/MainNumberComponent";
 import OptionComponent from "../component/schoolPageComponent/OptionComponent";
 import ProfessionalOpportunities from "../component/schoolPageComponent/ProfessionalOpportunities";

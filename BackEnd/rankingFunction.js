@@ -91,7 +91,7 @@ function generateRanking(swipe, cards, schools, minSwipeForRanking, themeDetail,
                     delete schoolRank.rankObj.empty;
                 }
                 // return sortedSchool;
-                return {sortedSchoolList: sortedSchool};
+                return {rankSchoolList: sortedSchool};
             } else {
                 throw "Impossible d'accéder au classement des écoles";
             }
@@ -221,13 +221,12 @@ function prepareAndCalcul(cards, schoolIdObj, setReadyToDisplayRank, dispatch) {
     
     const ranking = generateRanking(swipe, cards, schoolIdObj, minSwipeForRanking, themeObj, swipeSettings);
     console.log("[generateRanking ----------------]", ranking);
-    // todo : les datas des écoles ne s'affichent pas dans le classement 
 
 
-    if (ranking?.sortedSchoolList){
-      dispatch(calculNewRankSuccess({sortedSchoolList: ranking.sortedSchoolList}));
-      let rankIdList = [];
-      ranking.sortedSchoolList.map((item) => rankIdList.push(item.id));
+    if (ranking?.rankSchoolList){
+      dispatch(calculNewRankSuccess({rankSchoolList: ranking.rankSchoolList}));
+    //   let rankIdList = [];
+      const rankIdList = ranking.rankSchoolList.map(item => item.id);
       loadMissingSchoolData(rankIdList, setReadyToDisplayRank, dispatch);
       // dispatch();
     } else if (ranking?.message) {
@@ -240,7 +239,7 @@ function prepareAndCalcul(cards, schoolIdObj, setReadyToDisplayRank, dispatch) {
       return;
     } else {
       alertProvider();
-      dispatch(calculNewRankFailure());
+      dispatch(calculNewRankFailure("Une erreur est survenue lors du calcul du classement"));
       return;
     }
 

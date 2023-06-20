@@ -9,11 +9,10 @@ import {deleteUser, disconnect, getUserInfo, getAppContact, getAppInfo, resetSwi
 import { alertProvider } from "../../BackEnd/errorHandler.js";
 
 import ConfirmPasswordModal from "../../component/popup/ConfirmPasswordModal";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 // import { reinitialiseSchoolReducer } from "../../core/reducers/schoolReducer";
 // import { reinitialiseForRankingReducer } from "../../core/reducers/forRankingReducer";
-import { reinitialiseSwipeReducer, setSwipeStateHasChanged } from "../../core/reducers/swipeReducer";
-import { reinitialiseUserSettingReducer } from "../../core/reducers/userSettingReducer";
+import { setSwipeStateHasChanged } from "../../core/reducers/swipeReducer";
 import {updateBackData } from "../../BackEnd/updateBackData";
 
 
@@ -29,7 +28,9 @@ function SettingsSection({ onPress, iconName, optionTitle }) {
 }
 
 export default function Settings({ navigation }) {
-const dispatch = useDispatch();
+  const dispatch = useDispatch();
+
+  const userSettingReducer = useSelector((state)=> state.userSettingReducer)
 
   const [appMail, setAppMail] = useState(null);
   const [isContactUsModalVisible, setIsContactUsModalVisible] = useState(false);
@@ -154,10 +155,7 @@ const dispatch = useDispatch();
       togglePasswordModal();
       setSwipeStateHasChanged(true);
       navigation.navigate("Home", {jumpToFirstCard: true});
-      // navigation.reset({
-      //   index: 0,
-      //   routes: [{ name: "Home" }],
-      // });
+      
     } else {
       setModalErrorMessage("la réinitialisation a échouée");
       // alertProvider();
@@ -245,7 +243,7 @@ const dispatch = useDispatch();
         <View style={styles.UserInfoContainer}>
           <Text style={styles.userInfoTitle}>Ton profil :</Text>
           <Text style={styles.userInfoText}>Email : {userInfo?.email}</Text>
-          <Text style={styles.userInfoText}>Filière : {userInfo?.filiere}</Text>
+          <Text style={styles.userInfoText}>Filière : {userSettingReducer.userFiliere}</Text>
         </View>
 
         <SettingsSection

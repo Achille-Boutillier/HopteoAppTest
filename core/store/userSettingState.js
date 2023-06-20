@@ -1,5 +1,5 @@
 export const initialUserSettingState = {
-  filiere: "",
+  userFiliere: "",
   secondYearFiliere: [],
   cursustype: "",
   filiereList: [],    //liste de toutes les filières possibles

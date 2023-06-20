@@ -10,8 +10,8 @@ export const userSettingSlice = createSlice({
       state.error = null;
     },
     getUserSettingSuccess: (state, action) => {
-      const {filiere, secondYearFiliere, cursustype, lastAppVersion} = action.payload;
-      state.filiere = filiere;
+      const {userFiliere, secondYearFiliere, cursustype, lastAppVersion} = action.payload;
+      state.userFiliere = userFiliere;
       state.secondYearFiliere = secondYearFiliere;
       state.cursustype = cursustype;
       state.lastAppVersion = lastAppVersion;
@@ -25,7 +25,7 @@ export const userSettingSlice = createSlice({
 
 
     reinitialiseUserSettingReducer: (state) => {
-      state.filiere = "";
+      state.userFiliere = "";
       state.secondYearFiliere = [];
       state.cursustype = "";
       state.loading = false;

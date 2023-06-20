@@ -2,22 +2,32 @@
 import { View, StyleSheet, Text } from "react-native";
 import HorizontalAreaScroll from "./HorizontalAreaScroll";
 import { useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 // import { Colors } from "../../constant/Colors";
 
 
 export default function ExploreByAreaFlatListHeader({scrollWidth, scrollHeight}) {
 
   const likedSchoolObject = useSelector((state) => state.schoolReducer.likedSchoolObject);
+  // const [likeList, setLikeList] = useState([]);
+
+  // useEffect(()=> {
+  //   const likedSchoolList = Object.keys(likedSchoolObject);
+  //   const filteredSchool = likedSchoolList.filter(schoolId => {
+  //     return likedSchoolObject[schoolId] ;
+  //   });
+  //   setLikeList(filteredSchool);
+  // }, [likedSchoolObject])
+
 
 
   return (
     <>
       <MainTitle>Mes favoris</MainTitle>
           
-      <HorizontalAreaScroll areaIdList={Object.keys(likedSchoolObject) } sectionName={"favoris"} scrollWidth={scrollWidth} scrollHeight={scrollHeight} emptyAreaMessage="Like des écoles, elles apparaîtront ici" />
+      <HorizontalAreaScroll areaIdList={Object.keys(likedSchoolObject).filter(schoolId => likedSchoolObject[schoolId]) } sectionName={"favoris"} scrollWidth={scrollWidth} scrollHeight={scrollHeight} emptyAreaMessage="Like des écoles, elles apparaîtront ici" />
 
-      <MainTitle marginTop={10}>Par spécialité</MainTitle>
+      <MainTitle marginTop={20}>Par spécialité</MainTitle>
       
     </>
   )

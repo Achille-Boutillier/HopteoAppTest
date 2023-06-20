@@ -80,23 +80,27 @@ export const schoolSlice = createSlice({
     },
     calculNewRankSuccess: (state, action) => { 
       console.log("storing new rank -----------------") ;
-      const {sortedSchoolList, message} = action.payload;  
-      console.log("[sortedSchoolList]", sortedSchoolList);
-      if (Array.isArray(sortedSchoolList)) {
-        let idList = [];
-        sortedSchoolList.map((item) => {
-          idList.push(item.id);
+      const {rankSchoolList, message} = action.payload;  
+      console.log("[rankSchoolList]", rankSchoolList);
+      if (Array.isArray(rankSchoolList)) {
+        state.rankSchoolList = rankSchoolList;
+        // let idList = [];
+        const idList = rankSchoolList.map((item) => {
+          // idList.push(item.id);
           if (state.schoolsData[item.id]) {   // si ecole déjà storée
             state.schoolsData[item.id].rank = item.rank;
           } else {
             state.schoolsData[item.id]={};
             state.schoolsData[item.id].rank = item.rank;
           }
+          return item.id;
         });
         state.rankIdList = idList;
       } else if (message) {
+        state.rankSchoolList = [];
         state.rankIdList = message;
       } else {
+        state.rankSchoolList = [];
         state.rankIdList = "Un Problème est survenu";
       }
       // console.log("[rankIdList]" , state.rankIdList)
@@ -145,6 +149,7 @@ export const schoolSlice = createSlice({
 
     reinitialiseSchoolReducer: (state) => {
       state.rankIdList= null;     // lite d'id ordonnés pour classement
+      state.rankSchoolList= [];
       state.schoolByArea= null;   // {schoolPack: null, listFormation: null},
       state.schoolsData= {};  
       state.likedSchoolObject = {};    

@@ -2,8 +2,8 @@
 import * as SecureStore from "expo-secure-store"; // voir doc expo pour ios (peut etre une props a set to false)
 // import * as Keychain from "react-native-keychain";           // marche pas sur expo
 import store from "../../core";
-import { getThemeSuccess, getThemeRequest, getThemeFailure } from "../../core/reducers/themeReducer";
-import { getUserSettingRequest, getUserSettingSuccess, getUserSettingFailure } from "../../core/reducers/userSettingReducer";
+import { getThemeSuccess} from "../../core/reducers/themeReducer";
+import { getUserSettingSuccess } from "../../core/reducers/userSettingReducer";
 import { splashSwipeSuccess } from "../../core/reducers/swipeReducer";
 
 
@@ -18,8 +18,8 @@ export async function getAuthData() {
 }
 
 export function getUserSettingStatus() {
-  const {cursustype, filiere} = store.getState().userSettingReducer;
-  return {cursustype, filiere} 
+  const {cursustype, userFiliere} = store.getState().userSettingReducer;
+  return {cursustype, userFiliere} 
 }
 
 export async function storeNewAuthData(newAuthData) {
@@ -33,7 +33,7 @@ export function storeSplashData(splashData, dispatch) {
     answeredCardList, idCardsList, minSwipeForRanking, swipeTypeObj, answerByTheme, swipeSettings,
     lastAppVersion } = splashData;
   dispatch(getThemeSuccess(themeObj));
-  dispatch(getUserSettingSuccess({filiere, secondYearFiliere, cursustype, lastAppVersion}));
+  dispatch(getUserSettingSuccess({userFiliere: filiere, secondYearFiliere, cursustype, lastAppVersion}));
   dispatch(splashSwipeSuccess({answeredCardList, idCardsList, minSwipeForRanking, swipeTypeObj, answerByTheme, swipeSettings}));
 }
 
@@ -216,7 +216,7 @@ export async function signup(email, password) {
 }
 
 // Enregistrer le type de cursus et la moyenne au bac de l'utilisateur
-export async function storeUserSetting(cursustype, field, moyBac) {
+export async function storeUserSetting(cursustype, userFiliere, moyBac) {
   let authData = await getAuthData();
 
   const requestOptions = {
@@ -228,7 +228,7 @@ export async function storeUserSetting(cursustype, field, moyBac) {
     },
     body: JSON.stringify({
       cursusType: cursustype,
-      filiere: field,
+      filiere: userFiliere,
       moyBac: moyBac,
     }),
   };

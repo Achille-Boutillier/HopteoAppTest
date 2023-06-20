@@ -12,9 +12,9 @@ export async function getSchoolRanking() {
   try {
 
     const authData = await getAuthData();
-    const {cursustype, filiere} = getUserSettingStatus();
+    const {cursustype, userFiliere} = getUserSettingStatus();
     // console.log("cursusType", cursustype);
-    // console.log("filiere", filiere);
+    // console.log("userFiliere", userFiliere);
 
     const requestOptions = {
       method: "PUT",
@@ -22,7 +22,7 @@ export async function getSchoolRanking() {
         "Content-Type": "application/json",
         authorization: "Bearer " + authData.token,
         cursustype,
-        filiere,
+        filiere: userFiliere,
       },
     };
 
@@ -48,7 +48,7 @@ export async function getSchoolRanking() {
 export async function getRankingAlgoData() {
   try {
     const authData = await getAuthData();
-    const {cursustype, filiere} = getUserSettingStatus();
+    const {cursustype, userFiliere} = getUserSettingStatus();
 
     const requestOptions = {
       method: "GET",
@@ -56,7 +56,7 @@ export async function getRankingAlgoData() {
         "Content-Type": "application/json",
         authorization: "Bearer " + authData.token,
         cursustype,
-        filiere,
+        filiere: userFiliere,
       },
     };
 
