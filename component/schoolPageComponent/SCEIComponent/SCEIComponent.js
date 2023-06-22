@@ -32,23 +32,39 @@ export default function SCEIComponent({ parcoursChoix, admission }) {
 
   function getSortedList() {
 
-    const {userFiliere, secondYearFiliere} = store.getState().userSettingReducer
-    console.log("[secondYearFiliere]", secondYearFiliere); //     ["PT"] pour PT, []
+    const {userFiliere, secondYearFiliere} = store.getState().userSettingReducer;
+    console.log("[secondYearFiliere]", secondYearFiliere); //     ["PT"] pour PT
     // !!!!!!! reprendre ici (ordonner par filière)
     let filiereList = Object.keys(admission).filter(
       (key) => Object.keys(admission[key]).length !== 0
     );
+
+    filiereList.sort((a, b) => {
+      const aIsInSubList = secondYearFiliere.includes(a);
+      const bIsInSubList = secondYearFiliere.includes(b);
+    
+      if (aIsInSubList && !bIsInSubList) {
+        return -1; // Place a avant b
+      } else if (!aIsInSubList && bIsInSubList) {
+        return 1; // Place b avant a
+      } else {
+        return 0; // Ne change pas l'ordre
+      }
+    });
+
     // console.log(1, filiereList); //
     // const userFiliere = getUserSettingStatus().userFiliere;
-    console.log(userFiliere);
-    const isUserFieliereIncluded = filiereList.includes(userFiliere);
-    isUserFieliereIncluded ? filiereList = filiereList.filter((item)=> item !== userFiliere) : null;
-    console.log(2, filiereList); //
-    alphabeticOrderedList = filiereList.sort((a, b)=> a.localeCompare(b));
-    console.log(3, alphabeticOrderedList); //
-    const sortedList = isUserFieliereIncluded ? [userFiliere, ...alphabeticOrderedList] : alphabeticOrderedList ;
-    console.log(4, sortedList); //
-    return sortedList;
+    // console.log(userFiliere);
+    // const isUserFieliereIncluded = secondYearFiliere.some(item => filiereList.includes(item));
+    // const isUserFieliereIncluded = filiereList.includes(userFiliere);
+    // utiliser .sort (cf chat gpt)
+    // isUserFieliereIncluded ? filiereList = filiereList.filter((item)=> item !== userFiliere) : null;
+    // console.log(2, filiereList); //
+    // alphabeticOrderedList = filiereList.sort((a, b)=> a.localeCompare(b));
+    // console.log(3, alphabeticOrderedList); //
+    // const sortedList = isUserFieliereIncluded ? [userFiliere, ...alphabeticOrderedList] : alphabeticOrderedList ;
+    // console.log(4, sortedList); //
+    return filiereList;
   }
 
 
