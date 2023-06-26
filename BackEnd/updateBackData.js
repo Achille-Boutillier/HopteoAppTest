@@ -68,11 +68,11 @@ async function sendToBack(notSentToBackAnswers, filteredSwipeTypeObj, removedIdS
         swipeTypeObj : filteredSwipeTypeObj,
         unSwipedCardId : removedIdStillInBackEnd,
         schoolLikeObj: filteredSchoolLikeObj,
-        // schoolRankList: rankSchoolList,
+        schoolRankList: rankSchoolList,
       }),
     };
 
-    const response = await fetch("https://app.hopteo.com/api/v1/user/storeUserAction", requestOptions);
+    const response = await fetch("https://app.hopteo.fr/api/v1/user/storeUserAction", requestOptions);
     // console.log(response.status);
     const data = await response.json();
     // console.log(data);

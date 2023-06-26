@@ -67,7 +67,7 @@ export default function SearchedComponent({searchInput, isResearchSubmited, setI
             extraData={schoolIdList}      // mettre une 2eme data en liste ?
             keyExtractor={(item) => item + "explore"}
             showsVerticalScrollIndicator={false}
-            scrollEnabled={false}
+            scrollEnabled={true}
             numColumns={2}
             key={2} // obligatoire avec numColumns
             renderItem={({ item }) => {

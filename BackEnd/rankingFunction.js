@@ -182,10 +182,11 @@ function createSchoolGradeList(schoolGradeObj, schoolName) {
 
 // =================== fonctions pour front (schoolRanking.js + explore.js) ========================================
 
-export async function calculateNewRank(setReadyToDisplayRank, dispatch, currentScreen ) {
+export async function calculateNewRank(setReadyToDisplayRank, dispatch ) {
     (()=>setReadyToDisplayRank(false))();
 
     const {cards, schoolIdObj } = store.getState().forRankingReducer;
+    // console.log("[schoolIdObj]", schoolIdObj)
     let doesCardsExist = cards instanceof Object;
     doesCardsExist ? doesCardsExist = Object.keys(cards)>0 : null;
 

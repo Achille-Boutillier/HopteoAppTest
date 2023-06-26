@@ -15,6 +15,8 @@ import * as Sharing from "expo-sharing";
 import { captureRef } from 'react-native-view-shot';
 // import ViewShot from "react-native-view-shot";
 
+// import Matomo from 'react-native-matomo';
+// import MatomoTracker from "matomo-tracker-react-native";
 import SchoolBanner from "../../component/SchoolBanner";
 import MessageContainer from "../../component/MessageContainer";
 import { BrandComponent, HeaderButton } from "../../component/TopBar";
@@ -24,6 +26,7 @@ import store from "../../core";
 import PrimaryButton from "../../component/buttons/PrimaryButton";
 import InfoPopup from "../../component/popup/InfoPopup";
 import { alertProvider } from "../../BackEnd/errorHandler";
+import { useMatomo } from "matomo-tracker-react-native";
 
 
 function SchoolRanking({ navigation}) {
@@ -33,7 +36,7 @@ function SchoolRanking({ navigation}) {
   const [readyToDisplayRank, setReadyToDisplayRank] = useState(false);
   const [isScreenshotMode, setIsScreenshotMode] = useState(false);
   const dispatch = useDispatch();
-
+  const {trackAction} = useMatomo();
   
 
   // ---------- rank calcul -------------------------------------------
@@ -55,9 +58,10 @@ function SchoolRanking({ navigation}) {
   useEffect(() => {
     // 'focus' quand on atteri sur le screen; 'blur' quand on quitte
     const unsubscribe = navigation.addListener("focus", () => {
-    const swipeStateHasChanged = store.getState().swipeReducer.swipeStateHasChanged;
+      trackAction({name: "SchoolRanking"});
+      const swipeStateHasChanged = store.getState().swipeReducer.swipeStateHasChanged;
       if (swipeStateHasChanged){    // if new calcul needed
-        calculateNewRank(setReadyToDisplayRank, dispatch, "rankingScreen"); 
+        calculateNewRank(setReadyToDisplayRank, dispatch); 
         dispatch(setSwipeStateHasChanged(false));
       } 
     });
@@ -90,6 +94,9 @@ function SchoolRanking({ navigation}) {
 
   function onPressCapture() {
     setIsScreenshotMode(true);
+  }
+  function onPressFilterRank() {
+    return
   }
 
   async function handlePressCapture() {
@@ -184,6 +191,9 @@ function SchoolRanking({ navigation}) {
       }
       <View style={styles.topContainer}>
         <Text style={styles.titleText}>Ton classement</Text>
+        <View style={styles.screenshotButtonContainer} >
+          <PrimaryButton onPress={onPressFilterRank} name="options-outline" size={30} color={Colors.orange500}/>
+        </View>
         <View style={styles.screenshotButtonContainer} >
           <PrimaryButton onPress={onPressCapture} name="share-social" size={30} color={Colors.orange500}/>
         </View>

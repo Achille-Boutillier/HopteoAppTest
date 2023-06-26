@@ -22,6 +22,7 @@ import SwipeButton from "../../component/buttons/SwipeButton";
 import { updateBackData } from "../../BackEnd/updateBackData";
 import ActivityComponent from "../../component/ActivityComponent";
 import store from "../../core";
+import { useMatomo } from "matomo-tracker-react-native";
 // import store from "../../core";
 const swiperRef = createRef();
 
@@ -122,6 +123,17 @@ export default function Home({ navigation, route }) {
       updateBackData(dispatch); 
     }
   }, [appState])
+
+
+  const {trackAction} = useMatomo();
+   
+  useEffect(() => {
+    // 'focus' quand on atteri sur le screen; 'blur' quand on quitte
+    const unsubscribe = navigation.addListener("focus", () => {
+      trackAction({name: "Home"});
+    });
+    return unsubscribe;
+  }, [navigation]);
  
    // ----------- fin upgrade backEnd Data -------------------------
 

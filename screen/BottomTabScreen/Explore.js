@@ -24,6 +24,7 @@ import SearchedComponent from "../../component/exploreComponents/SearchedCompone
 import ExploreByArea from "../../component/exploreComponents/ExploreByArea";
 import { calculateNewRank } from "../../BackEnd/rankingFunction";
 // import { ActivityIndicator } from "react-native";
+import { useMatomo } from "matomo-tracker-react-native";
 
 const width = Dimensions.get("window").width;
 
@@ -32,6 +33,7 @@ export default function Explore({ navigation}) {
   const scrollWidth = width;
   const scrollHeight = 120;
   const dispatch = useDispatch();
+  const {trackAction} = useMatomo();
 
   const [readyToDisplayRank, setReadyToDisplayRank] = useState(false);
   const [isResearchSubmited, setIsResearchSubmited] = useState(false);
@@ -83,21 +85,14 @@ export default function Explore({ navigation}) {
   useEffect(() => {
     // 'focus' quand on atteri sur le screen; 'blur' quand on quitte
     const unsubscribe = navigation.addListener("focus", () => {
+      trackAction({name: "Explore"});
       const swipeStateHasChanged = store.getState().swipeReducer.swipeStateHasChanged;
-      const exploreScreenNeedReload = store.getState().swipeReducer.exploreScreenNeedReload;
+      // const exploreScreenNeedReload = store.getState().swipeReducer.exploreScreenNeedReload;
       if (swipeStateHasChanged){
         console.log("New rank calculating ...........................................");
-        // calculateNewRank(()=>{}, dispatch); 
-        calculateNewRank(setReadyToDisplayRank, dispatch, "exploreScreen"); 
+        calculateNewRank(setReadyToDisplayRank, dispatch); 
         dispatch(setSwipeStateHasChanged(false));
       } 
-      // else {
-      //   if (exploreScreenNeedReload) {      // pour être sûr que l'ordre de la flatList est maj
-      //   (()=>setReadyToDisplayRank(false))();
-      //   dispatch(setExploreScreenNeedReload(false));
-      //   (()=>setReadyToDisplayRank(true))();
-      //   }
-      // }
     });
     return unsubscribe;
   }, [navigation]);

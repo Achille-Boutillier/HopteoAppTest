@@ -28,12 +28,110 @@ import { Provider } from "react-redux";
 import store from "./core";
 import RecoveryCode from "./screen/AuthScreen/RecoveryCode";
 import OnBoardScreen from "./screen/OnBoardScreen";
-
+import MatomoTracker, { MatomoProvider, useMatomo } from "matomo-tracker-react-native";
 const BottomTab = createBottomTabNavigator();
 const NativeStack = createNativeStackNavigator();
 
 // import { createStackNavigator } from "@react-navigation/stack";
 // const Stack = createStackNavigator();
+
+
+
+export default function App() {
+  // const [isScreenCharged, setIsScreenCharged] = useState(false);
+  // const [initialRouteName, setInitialRouteName] = useState("Splash Screen");
+
+  const instance = new MatomoTracker({
+    urlBase: 'https://hopteo.matomo.cloud', // required
+    siteId: 2, // required, number matching your Matomo project
+    // trackerUrl: 'https://LINK.TO.DOMAIN/tracking.php', // optional, default value: `${urlBase}matomo.php`
+    // userId: 'UID76903202' // optional, default value: `undefined`.
+    // disabled: false, // optional, default value: false. Disables all tracking operations if set to true.
+    // log: false  // optional, default value: false. Enables some logs if set to true.
+  });
+
+  // useEffect(() => {
+  //   setInitialRouteName("Login Screen");
+  //   setIsScreenCharged(true);
+  // }, [] )
+
+  // if (isScreenCharged) {
+  return (
+    <MatomoProvider instance={instance}>
+      <Provider store={store}>
+        <SafeAreaView style={{ flex: 1 }}>
+          <StatusBar
+            barStyle={"dark-content"}
+            backgroundColor={Colors.backgroundColor}
+          />
+          <AllNavigationScreens/>
+        </SafeAreaView>
+      </Provider>
+    </MatomoProvider>
+  );
+  // }
+  // else {
+  //   return (<ChargingScreen/>)
+  // }
+}
+
+
+// ============ screens globaux ======================================
+
+function AllNavigationScreens() {
+
+  const { trackAppStart } = useMatomo();
+  
+  useEffect(() => {
+    trackAppStart();
+  }, []);
+
+  return (
+    <NavigationContainer>
+      <NativeStack.Navigator
+        screenOptions={{ headerShown: false }}
+        initialRouteName={"Splash Screen"}
+      >
+        <NativeStack.Screen name="Splash Screen" component={SplashScreen} />
+        <NativeStack.Screen name="OnBoardScreen" component={OnBoardScreen} />
+        <NativeStack.Screen name="Signup Screen" component={SignUp} />
+        <NativeStack.Screen name="Login Screen" component={Login} />
+        <NativeStack.Screen name="RecoveryCode" component={RecoveryCode} />
+
+        <NativeStack.Screen
+          name="First Questions Screen"
+          component={FirstQuestionsScreen}
+          // initialParams={{backStatus: backStatus}}
+        />
+        <NativeStack.Screen
+          name="Main Screens"
+          component={ScreensWithBottomTab}
+        />
+        <NativeStack.Screen name="School Page" component={SchoolPage} />
+        <NativeStack.Screen name="Settings" component={Settings} />
+        <NativeStack.Screen
+          name="Modify Password"
+          component={ModifyPassword}
+        />
+        <NativeStack.Screen name="App Info" component={AppInfo} />
+        <NativeStack.Screen
+          name="Privacy Policy"
+          component={PrivacyPolicy}
+        />
+
+        {/* <NativeStack.Group screenOptions={{ presetation: "modal"}}>
+
+      </NativeStack.Group> */}
+      </NativeStack.Navigator>
+    </NavigationContainer>
+  )
+}
+
+
+
+
+// ========== screen with bottom tab =================================
+
 
 function ScreensWithBottomTab() {
   return (
@@ -90,68 +188,4 @@ function ScreensWithBottomTab() {
       />
     </BottomTab.Navigator>
   );
-}
-
-export default function App() {
-  // const [isScreenCharged, setIsScreenCharged] = useState(false);
-  const [initialRouteName, setInitialRouteName] = useState("Splash Screen");
-  
-
-  // useEffect(() => {
-  //   setInitialRouteName("Login Screen");
-  //   setIsScreenCharged(true);
-  // }, [] )
-
-  // if (isScreenCharged) {
-  return (
-    <Provider store={store}>
-      <SafeAreaView style={{ flex: 1 }}>
-        <StatusBar
-          barStyle={"dark-content"}
-          backgroundColor={Colors.backgroundColor}
-        />
-        <NavigationContainer>
-          <NativeStack.Navigator
-            screenOptions={{ headerShown: false }}
-            initialRouteName={initialRouteName}
-          >
-            <NativeStack.Screen name="Splash Screen" component={SplashScreen} />
-            <NativeStack.Screen name="OnBoardScreen" component={OnBoardScreen} />
-            <NativeStack.Screen name="Signup Screen" component={SignUp} />
-            <NativeStack.Screen name="Login Screen" component={Login} />
-            <NativeStack.Screen name="RecoveryCode" component={RecoveryCode} />
-
-            <NativeStack.Screen
-              name="First Questions Screen"
-              component={FirstQuestionsScreen}
-              // initialParams={{backStatus: backStatus}}
-            />
-            <NativeStack.Screen
-              name="Main Screens"
-              component={ScreensWithBottomTab}
-            />
-            <NativeStack.Screen name="School Page" component={SchoolPage} />
-            <NativeStack.Screen name="Settings" component={Settings} />
-            <NativeStack.Screen
-              name="Modify Password"
-              component={ModifyPassword}
-            />
-            <NativeStack.Screen name="App Info" component={AppInfo} />
-            <NativeStack.Screen
-              name="Privacy Policy"
-              component={PrivacyPolicy}
-            />
-
-            {/* <NativeStack.Group screenOptions={{ presetation: "modal"}}>
-
-          </NativeStack.Group> */}
-          </NativeStack.Navigator>
-        </NavigationContainer>
-      </SafeAreaView>
-    </Provider>
-  );
-  // }
-  // else {
-  //   return (<ChargingScreen/>)
-  // }
 }

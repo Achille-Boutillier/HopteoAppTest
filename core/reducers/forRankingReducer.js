@@ -11,6 +11,7 @@ export const forRankingSlice = createSlice({
     },
     getForRankingSuccess: (state, action) => {
       const {cards, schoolIdObj} = action.payload
+      console.log("[schoolIdObj]", schoolIdObj)
       state.cards = cards ;
       state.schoolIdObj = schoolIdObj;
       state.loading = false;
