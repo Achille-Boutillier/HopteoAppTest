@@ -253,6 +253,41 @@ export async function storeUserSetting(cursustype, userFiliere, moyBac) {
   }
 }
 
+export async function storeUserStudyYear(cursustype, studyYear) {
+  let authData = await getAuthData();
+
+  const requestOptions = {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: "Bearer " + authData.token,
+    },
+    body: JSON.stringify({
+      cursusType: cursustype,
+      studyYear: studyYear,
+    }),
+  };
+
+  try {
+    let response = await fetch(route + "/storeStudyYear", requestOptions);
+    console.log("[STORE_USER_STUDY_YEAR]", response.status);
+    const data = await response.json();
+    console.log("[STORE_USER_STUDY_YEAR]", data);
+    if (response.status === 200) {
+      return {...data, success: true};
+    } else {
+      console.error("[STORE_USER_STUDY_YEAR]", data.error);
+      return {...data, success: false};
+    }
+  } catch (error) {
+    console.error("[STORE_USER_STUDY_YEAR]", error);
+    return {
+      success: false,
+      error: "L'enregistrement des données renseignées à échoué"
+    };
+  }
+}
+
 // ==================== password forgotten ====================================
 
 

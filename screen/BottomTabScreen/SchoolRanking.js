@@ -191,9 +191,9 @@ function SchoolRanking({ navigation}) {
       }
       <View style={styles.topContainer}>
         <Text style={styles.titleText}>Ton classement</Text>
-        <View style={styles.screenshotButtonContainer} >
+        {/* <View style={styles.screenshotButtonContainer} >
           <PrimaryButton onPress={onPressFilterRank} name="options-outline" size={30} color={Colors.orange500}/>
-        </View>
+        </View> */}
         <View style={styles.screenshotButtonContainer} >
           <PrimaryButton onPress={onPressCapture} name="share-social" size={30} color={Colors.orange500}/>
         </View>

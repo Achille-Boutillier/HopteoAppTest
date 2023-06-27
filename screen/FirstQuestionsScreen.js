@@ -3,7 +3,7 @@ import { useState, useEffect, useLayoutEffect } from "react";
 import { useDispatch } from "react-redux";
 
 import { Colors } from "../constant/Colors";
-import { storeSplashData, storeUserSetting } from "../BackEnd/controllers/userData";
+import { storeSplashData, storeUserSetting, storeUserStudyYear } from "../BackEnd/controllers/userData";
 import UserStudyField from "../component/firstQuestionsComponents/UserStudyField";
 import UserBacMean from "../component/firstQuestionsComponents/UserBacMean";
 import { alertProvider } from "../BackEnd/errorHandler";
@@ -13,31 +13,50 @@ import { disconnect } from "../BackEnd/controllers/setting";
 import PrimaryButton from "../component/buttons/PrimaryButton";
 import QuestionComponent from "../component/firstQuestionsComponents/QuestionComponent";
 
-const screenNameList = ["yearNumber", "studyField"];
-const questionList = [
-  "Quelle est ta situation actuelle ?",
-  "Selectionne ta filière",
-];
+// const screenNameList = ["", "yearNumber", "studyField"];
+// const questionList = [
+//   "Quelle est ta situation actuelle ?",
+//   "En quelle année es-tu ?",
+//   "Selectionne ta filière",
+// ];
 
-const buttonLists = [
-  [`Prépa 1re Année`, "Prépa 2ème Année", "Autre"],
-  ["MP", "PC", "PSI", "Autre"]
-]
+// const buttonLists = [
+//   ["Prépa Scientifique", "Autre"],
+//   ["1ᵉ Année", "2ᵉ Année"],
+//   ["MP", "PC", "PSI", "Autre"]
+// ]
+
+
 
 
 export default function FirstQuestionsScreen({ navigation }) {
   const [studyField, setStudyField] = useState();
-  const [bacMean, setBacMean] = useState("");
+  const [bacMean, setBacMean] = useState();
   const [allQuestionsAnswered, setAllQuestionsAnswered] = useState(false);
-  const [currentQuestion, setCurrentQuestion] = useState("studyField");
-  const [previousQuestion, setPreviousQuestion] = useState(null);
+  // const [currentQuestion, setCurrentQuestion] = useState("studyField");
+  // const [previousQuestion, setPreviousQuestion] = useState(null);
   const [screenToShow, setScreenToShow] = useState(null);
 
 
   // const [beforeOtherScreen, setBeforeOtherScreen] = useState(null);
   const [isNotCovered, setIsNotCovered] = useState(false);
   const [screenNumber, setScreenNumber] = useState(0);
-
+  // const [screenNameList, setScreenNameList] = useState(["situation", "studyYear", "studyField"]);
+  // const [questionList, setQuestionList] = useState([
+  //   "Quelle est ta situation actuelle ?",
+  //   "En quelle année es-tu ?",
+  //   "Selectionne ta filière",
+  // ]);
+  const screenNameList = ["situation", "studyYear", "studyField"];
+  const questionList = [
+    "Quelle est ta situation actuelle ?",
+    "En quelle année es-tu ?",
+    "Selectionne ta filière",
+  ];
+  const [buttonLists, setButtonLists] = useState([
+    ["Prépa Scientifique", "Autre"],
+    ["1ᵉ Année", "2ᵉ Année"]
+  ]);
 
   const dispatch = useDispatch();
 
@@ -76,10 +95,10 @@ export default function FirstQuestionsScreen({ navigation }) {
     //     break;
     // }
 
-    if (screenNameList.length === screenNumber) {
+    if (screenNumber===screenNameList.length) {
       setScreenToShow(
         <UserBacMean
-          bacMeanInputHandler={(enteredNumber) => setBacMean(enteredNumber)}
+          bacMeanInputHandler={(enteredNumber) => {setBacMean(enteredNumber)}}
           bacMean={bacMean}
           nextPressed={() => setAllQuestionsAnswered(true)}
         />
@@ -121,16 +140,28 @@ export default function FirstQuestionsScreen({ navigation }) {
 
 
 
-  function onPressButton(buttonName) {
+  async function onPressButton(buttonName) {
     if (buttonName==="Autre") {
       setIsNotCovered(true);
-    } else {
-      //! function backend
-      setScreenNumber((number)=> number + 1);
-      // setStudyField(buttonName);
-      // setCurrentQuestion("userBacMean");
+      return; 
+    } 
+
+    // si pas "Autre"
+    if (screenNameList[screenNumber]==="studyYear") {
+      const answer = await storeUserStudyYear("ingenieur", parseInt(buttonName[0]))
+      !answer.success 
+        ? alertProvider("L'enregistement des données a échoué")
+        : (
+          setButtonLists((list)=> [...list, answer.fieldList])
+        ) ;
+    } else if (screenNameList[screenNumber]==="studyField") {
+      setStudyField(buttonName);
     }
+    //! function backend
+    setScreenNumber((number)=> number + 1);
+    // setCurrentQuestion("userBacMean");
   }
+
 
   useEffect(() => {
     if (allQuestionsAnswered) {

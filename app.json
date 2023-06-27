@@ -2,7 +2,7 @@
   "expo": {
     "name": "Hopteo",
     "slug": "Hopteo",
-    "version": "1.0.19",
+    "version": "1.0.20",
     "orientation": "portrait",
     "icon": "./assets/logo/favicon595px.png",   // 595x595
     "userInterfaceStyle": "light",
@@ -22,11 +22,11 @@
     },
     "android": {
       "package": "com.hopteo.hopteoApp",
-      "versionCode": 21,
+      "versionCode": 22,
       "adaptiveIcon": {
         "foregroundImage": "./assets/logo/favicon512px.png",
         "backgroundColor": "#FFFFFF"
-      },
+      }
       // "permissions": [
       //   "ACCESS_NETWORK_STATE",
       //   "INTERNET",

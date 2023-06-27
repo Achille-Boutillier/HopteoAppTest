@@ -1,19 +1,21 @@
 import { useState, useEffect, useRef } from "react";
 import { 
   Keyboard,
-  View, StyleSheet, TextInput, Text, TouchableOpacity,
+  View, StyleSheet, TextInput, Text, Alert
 } from "react-native";
 import { Colors } from "../constant/Colors";
 import PrimaryButton from "./buttons/PrimaryButton";
+import Modal from "react-native-modal";
 
 
 // import { Dimensions } from "react-native";
 
 // const deviceHeight = Dimensions.get("screen").height
 
-export default function InputComponent({title, inputType, setInput, input, onSubmitEditing, setIsEditing,}) {
+export default function InputComponent({title, inputType, setInput, input, onSubmitEditing, setIsEditing}) {
   const [textInputSetting, setTextInputSetting] = useState({});
   const [isPasswordVisible, setIsPasswordVisible] = useState(true);
+  const [isMailExplicationVisible, setIsMailExplicationVisible] = useState(false);
 
   const inputRef = useRef(null);
 
@@ -78,10 +80,20 @@ export default function InputComponent({title, inputType, setInput, input, onSub
     setIsPasswordVisible((bool)=> !bool);
   }
 
+  function toggleEmailExplication() {
+    setIsMailExplicationVisible((bool)=> !bool);
+  }
+
 
   return (
     <View style={styles.mainContainer} >
       <Text style={styles.titleText}>{title}</Text>
+
+      {inputType==="email" 
+        ? (
+          <PrimaryButton style={styles.visibilityButton} onPress={toggleEmailExplication} name={"help-circle-outline"} size={23} color={Colors.orange500}/>
+        ) : null
+      }
 
       {inputType==="password" 
         ? (
@@ -106,6 +118,29 @@ export default function InputComponent({title, inputType, setInput, input, onSub
         // onEndEditing={onEndEditing}
         onBlur={onBlur}
       />
+
+      <Modal isVisible={isMailExplicationVisible}>
+        <View style={styles.modal}>
+          <View style={styles.modalHeader}>
+            {/* <Text style={styles.modalHeaderText}>Pourquoi créer un compte avec email ?</Text> */}
+            <PrimaryButton
+              onPress={toggleEmailExplication}
+              name="close-outline"
+              size={30}
+              color={Colors.orange500}
+              style={{position: "absolute", top: 5, rigth: 5}}
+            />
+          </View>
+          <View style={styles.modalBody}>
+            <Text style={styles.modalBodyText}>
+              {"L'authentification utilise un email : \n1) L'ambition du projet est d'aider les étudiants de la 6ème à la vie active. L'appli va donc grandement évoluer et subir de nombreuses mises à jour ce qui est beaucoup plus simple avec la création d'un compte. 2) pour permettre la récupération du compte en cas de perte du mot de passe."}
+            </Text>
+            
+          </View>
+        </View>
+      </Modal>
+
+
     </View>
   );
 }
@@ -146,8 +181,43 @@ const styles = StyleSheet.create({
     right: 15,
     top: 5
   },
-  visibilityButtonText: {
 
+
+  // modal -----------------------
+
+  modal: {
+    height: "90%",
+    width: "100%",
+    backgroundColor: Colors.white,
+    alignSelf: "center",
+    alignItems: "center",
+    borderRadius: 20,
+    padding: 10,
+  },
+  modalHeader: {
+    // justifyContent: "space-between",
+    // alignItems: "center",
+    // flexDirection: "row",
+    width: "100%",
+  },
+  modalHeaderText: {
+    fontSize: 20,
+    textAlign: "center",
+    marginLeft: 10,
+    fontWeight: "500",
+  },
+  modalBody: {
+    justifyContent: "space-evenly",
+    // borderWidth: 1,
+    alignItems: "center",
+    flex: 1,
+    width: "90%",
+  },
+  modalBodyText: {
+    fontSize: 18,
+    textAlign: "left",
+    // selectable: true,
+    // marginVertical: 30,
   },
   
 });
