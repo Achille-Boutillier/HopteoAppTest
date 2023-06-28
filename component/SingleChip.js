@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View} from 'react-native';
 import { Colors } from '../constant/Colors';
 
-export default function Chip({children}) {
+export default function SingleChip({children}) {
   if (children) {     // empecher les bulles vides
     return (
       <View style={styles.container}>

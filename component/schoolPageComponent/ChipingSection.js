@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react";
-import { StyleSheet, View, Text, TouchableOpacity, } from "react-native";
+import { StyleSheet, View, Text, } from "react-native";
 import { Colors } from "../../constant/Colors";
-import Chip from "../Chip";
+import SingleChip from "../SingleChip";
 import TerciaryButton from "../buttons/TerciaryButton";
 
-export default function OptionComponent({optionSynthese, optionDetail}) {
+export default function ChipingSection({firstData, secondData}) {
   const [isPressed, setIsPressed ] = useState(false);
-  const [optionToSchow, setOptionToSchow] = useState([]);
-  const [buttonName, setButtonName] = useState();
-  const [title, setTitle] = useState("");
+
+  // const [optionToSchow, setOptionToSchow] = useState([]);
+  // const [buttonName, setButtonName] = useState();
+  // const [title, setTitle] = useState("");
+
+  const [sectionData, setSectionData] = useState(["", [], ""]);
 
   function onPress(){
     setIsPressed(bool => !bool)
@@ -16,34 +19,35 @@ export default function OptionComponent({optionSynthese, optionDetail}) {
   
   useEffect(() => {
     if (isPressed) {
-      // console.log(optionDetailList)
-      setOptionToSchow(optionDetail);
-      // setOptionToSchow(["test1", "test2"]); //todo: request optionDetail
-      setButtonName("Voir la synthèse");
-      setTitle("Détail")
-
+      // // console.log(optionDetailList)
+      // setOptionToSchow(optionDetail);
+      // // setOptionToSchow(["test1", "test2"]); //todo: request optionDetail
+      // setButtonName("Voir la synthèse");
+      // setTitle("Détail")
+      setSectionData(secondData);
     } else {
-      setOptionToSchow(optionSynthese);
-      // setOptionToSchow(optionSynthese);
-      setButtonName("Voir le détail");
-      setTitle("Synthèse")
-      // console.log(optionSynthese);
+      // setTitle(firstData[0])
+      // setOptionToSchow(firstData[1]);
+      // setButtonName(firstData[2]);
 
+      setSectionData(firstData);
     } 
   }, [isPressed])
 
   return (
     <View style={styles.mainContainer} > 
-      <Text style={styles.textStyle} >{title}</Text>
+      <Text style={styles.textStyle} >{sectionData[0]}</Text>
       <View style={styles.chipContainer}>
-        {optionToSchow.map((item, index)=>
-          <Chip key={index} >{item}</Chip>
+        {sectionData[1].map((item, index)=>
+          <SingleChip key={index}>{item}</SingleChip>
           )
         }
       </View>
 
-      <TerciaryButton title = {buttonName} onPress={onPress} color ={Colors.orange500} isFullColor={!isPressed} fontSize={15} />
-
+      { secondData 
+      ? <TerciaryButton title = {sectionData[2]} onPress={onPress} color ={Colors.orange500} isFullColor={!isPressed} fontSize={15} />
+      : null
+      }
     </View>
   );
 };
@@ -59,7 +63,7 @@ const styles = StyleSheet.create({
     width: "90%",
     borderRadius: 10,
     paddingHorizontal: "3%",
-    // marginBottom: 50,
+    marginBottom: 20,
     paddingTop: 10,
     paddingBottom: 20,
   },

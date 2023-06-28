@@ -13,13 +13,13 @@ import { useState, useEffect } from "react";
 import { setSchoolLike } from "../core/reducers/schoolReducer";
 import SCEIComponent from "../component/schoolPageComponent/SCEIComponent/SCEIComponent";
 import MainNumberComponent from "../component/schoolPageComponent/MainNumberComponent";
-import OptionComponent from "../component/schoolPageComponent/OptionComponent";
 import ProfessionalOpportunities from "../component/schoolPageComponent/ProfessionalOpportunities";
 import { useSelector, useDispatch } from "react-redux";
 import {getSchoolPageRequest, getSchoolPageSuccess, getSchoolPageFailure, } from "../core/reducers/schoolReducer";
 import { getPageData } from "../BackEnd/controllers/school";
 import RibbonComponent from "../component/RibbonComponent";
 import { BrandComponent } from "../component/TopBar";
+import ChipingSection from "../component/schoolPageComponent/ChipingSection";
 
 export default function SchoolPage({ navigation, route }) {
   const schoolId = route.params.schoolId;
@@ -132,15 +132,26 @@ export default function SchoolPage({ navigation, route }) {
           />
   
           <SecondaryHeader>Les options de formation</SecondaryHeader>
-          <OptionComponent
-            singleSchoolData={singleSchoolData}
-            optionSynthese={singleSchoolData.optionSynthese}
-            optionDetail={singleSchoolData.optionDetail}
+          <ChipingSection
+            firstData={["Synthèse" , singleSchoolData.optionSynthese, "Voir le détail"]}
+            secondData={ ["Détail", singleSchoolData.optionDetail, "Voir la synthèse"]}
           />
   
           <SecondaryHeader>Les débouchés</SecondaryHeader>
           <ProfessionalOpportunities
             secteurDebouche={singleSchoolData.secteurDebouche}
+          />
+
+          <SecondaryHeader>Les sports</SecondaryHeader>
+          <ChipingSection
+            firstData={["" , singleSchoolData.sportList.slice(0,6), "Afficher plus"]}
+            secondData={ ["", singleSchoolData.sportList, "Afficher moins"]}
+          />
+
+          <SecondaryHeader>Les Associations</SecondaryHeader>
+          <ChipingSection
+            firstData={["" , singleSchoolData.assoList.slice(0,6), "Afficher plus"]}
+            secondData={ ["", singleSchoolData.assoList, "Afficher moins"]}
           />
   
           {/* <SecondaryHeader>Score global</SecondaryHeader>

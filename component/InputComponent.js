@@ -122,19 +122,35 @@ export default function InputComponent({title, inputType, setInput, input, onSub
       <Modal isVisible={isMailExplicationVisible}>
         <View style={styles.modal}>
           <View style={styles.modalHeader}>
-            {/* <Text style={styles.modalHeaderText}>Pourquoi créer un compte avec email ?</Text> */}
+            {/* <Text style={styles.modalHeaderText}>A propos de l'email</Text> */}
             <PrimaryButton
               onPress={toggleEmailExplication}
               name="close-outline"
               size={30}
               color={Colors.orange500}
-              style={{position: "absolute", top: 5, rigth: 5}}
+              style={{alignItems: "flex-end" }}
             />
           </View>
           <View style={styles.modalBody}>
-            <Text style={styles.modalBodyText}>
-              {"L'authentification utilise un email : \n1) L'ambition du projet est d'aider les étudiants de la 6ème à la vie active. L'appli va donc grandement évoluer et subir de nombreuses mises à jour ce qui est beaucoup plus simple avec la création d'un compte. 2) pour permettre la récupération du compte en cas de perte du mot de passe."}
+            <Text style={styles.modalBodyTitle}>
+              Confidentialité de l'email : 
             </Text>
+            <Text style={styles.modalBodyText}>
+              {"Hopteo accorde une importance particulière au respect de ta vie privée. Ton adresse email restera confidentielle : nous ne la partagerons en aucun cas avec des tiers. \n"}
+            </Text>
+            <Text style={styles.modalBodyTitle}>
+              Pourquoi un email plutôt qu'un pseudo ?
+            </Text>
+            <Text style={styles.modalBodyText}>
+              {"L'utilisation d'un email permet de récupérer ton compte en cas de perte du mot de passe. \n"}
+            </Text>
+            <Text style={styles.modalBodyTitle}>
+              Pourquoi créer un compte ?
+            </Text>
+            <Text style={styles.modalBodyText}>
+              {"L'application étant très récente, elle est en constante évolution avec des mises à jour majeures, notamment des restructurations plus optimisées des schémas de données. La création d'un compte permet d'assurer la compatibilité avec les futures mises à jour."}
+            </Text>
+            
             
           </View>
         </View>
@@ -186,7 +202,6 @@ const styles = StyleSheet.create({
   // modal -----------------------
 
   modal: {
-    height: "90%",
     width: "100%",
     backgroundColor: Colors.white,
     alignSelf: "center",
@@ -195,10 +210,9 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   modalHeader: {
-    // justifyContent: "space-between",
-    // alignItems: "center",
-    // flexDirection: "row",
     width: "100%",
+    // flexDirection: "row",
+    // borderWidth: 1
   },
   modalHeaderText: {
     fontSize: 20,
@@ -207,17 +221,20 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   modalBody: {
-    justifyContent: "space-evenly",
-    // borderWidth: 1,
-    alignItems: "center",
-    flex: 1,
+    // alignItems: "center",
+    paddingVertical: 20,
     width: "90%",
   },
-  modalBodyText: {
-    fontSize: 18,
+  modalBodyTitle: {
+    fontSize: 16,
+    fontWeight: "600",
     textAlign: "left",
-    // selectable: true,
-    // marginVertical: 30,
+    marginBottom: 5,
+  },
+  modalBodyText: {
+    fontSize: 14,
+    textAlign: "left",
+    textAlign: "justify"
   },
   
 });
