@@ -38,6 +38,7 @@ export default function UserBacMean({bacMeanInputHandler, bacMean, nextPressed,}
 
 const styles = StyleSheet.create({
   mainContainer: {
+    alignSelf: "center",
     // backgroundColor: Colors.blue400,
     alignItems: "center",
     justifyContent: "space-evenly",

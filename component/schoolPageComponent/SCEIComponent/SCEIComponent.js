@@ -51,6 +51,7 @@ export default function SCEIComponent({ parcoursChoix, admission }) {
         return 0; // Ne change pas l'ordre
       }
     });
+    
     return filiereList;
   }
 

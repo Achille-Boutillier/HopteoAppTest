@@ -126,8 +126,7 @@ export default function SchoolPage({ navigation, route }) {
   
           <MainNumberComponent
             moyenneBac={singleSchoolData.moyenneBac}
-            // medianWageNoPrime={singleSchoolData.medianWageNoPrime}
-            salaireMoyen={singleSchoolData.medianWageNoPrime}
+            medianWage={singleSchoolData.medianWage}
             fraisScolarite={singleSchoolData.fraisScolarite}
           />
   
@@ -144,14 +143,14 @@ export default function SchoolPage({ navigation, route }) {
 
           <SecondaryHeader>Les sports</SecondaryHeader>
           <ChipingSection
-            firstData={["" , singleSchoolData.sportList.slice(0,6), "Afficher plus"]}
-            secondData={ ["", singleSchoolData.sportList, "Afficher moins"]}
+            firstData={["" , singleSchoolData.sportList.slice(0,6), ""]}
+            secondData={ ["", singleSchoolData.sportList, ""]}
           />
 
           <SecondaryHeader>Les Associations</SecondaryHeader>
           <ChipingSection
-            firstData={["" , singleSchoolData.assoList.slice(0,6), "Afficher plus"]}
-            secondData={ ["", singleSchoolData.assoList, "Afficher moins"]}
+            firstData={["" , singleSchoolData.assoList.slice(0,6), ""]}
+            secondData={ ["", singleSchoolData.assoList, ""]}
           />
   
           {/* <SecondaryHeader>Score global</SecondaryHeader>

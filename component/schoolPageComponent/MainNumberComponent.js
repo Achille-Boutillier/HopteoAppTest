@@ -2,7 +2,7 @@ import { StyleSheet, View, Text, } from "react-native";
 import { Colors } from "../../constant/Colors";
 import OneNumber from "./OneNumber";
 
-export default function MainNumberComponent({ moyenneBac, salaireMoyen, fraisScolarite}) {
+export default function MainNumberComponent({ moyenneBac, medianWage, fraisScolarite}) {
   
   return (
     <View style={styles.mainContainer}>
@@ -16,8 +16,8 @@ export default function MainNumberComponent({ moyenneBac, salaireMoyen, fraisSco
       <View style={styles.separation} />
       
       <OneNumber
-        // number={`${medianWageNoPrime} €/an`}
-        number={`${salaireMoyen} €/an`}
+        number={`${medianWage} €/an`}
+        // number={`${salaireMoyen} €/an`}
         numberName={"SALAIRE MEDIAN SORTIE\n(sans prime)"}
         width="45%"
 

@@ -13,40 +13,20 @@ import { disconnect } from "../BackEnd/controllers/setting";
 import PrimaryButton from "../component/buttons/PrimaryButton";
 import QuestionComponent from "../component/firstQuestionsComponents/QuestionComponent";
 
-// const screenNameList = ["", "yearNumber", "studyField"];
-// const questionList = [
-//   "Quelle est ta situation actuelle ?",
-//   "En quelle année es-tu ?",
-//   "Selectionne ta filière",
-// ];
-
-// const buttonLists = [
-//   ["Prépa Scientifique", "Autre"],
-//   ["1ᵉ Année", "2ᵉ Année"],
-//   ["MP", "PC", "PSI", "Autre"]
-// ]
-
-
 
 
 export default function FirstQuestionsScreen({ navigation }) {
   const [studyField, setStudyField] = useState();
   const [bacMean, setBacMean] = useState();
   const [allQuestionsAnswered, setAllQuestionsAnswered] = useState(false);
-  // const [currentQuestion, setCurrentQuestion] = useState("studyField");
-  // const [previousQuestion, setPreviousQuestion] = useState(null);
+  
   const [screenToShow, setScreenToShow] = useState(null);
 
 
   // const [beforeOtherScreen, setBeforeOtherScreen] = useState(null);
   const [isNotCovered, setIsNotCovered] = useState(false);
   const [screenNumber, setScreenNumber] = useState(0);
-  // const [screenNameList, setScreenNameList] = useState(["situation", "studyYear", "studyField"]);
-  // const [questionList, setQuestionList] = useState([
-  //   "Quelle est ta situation actuelle ?",
-  //   "En quelle année es-tu ?",
-  //   "Selectionne ta filière",
-  // ]);
+  
   const screenNameList = ["situation", "studyYear", "studyField"];
   const questionList = [
     "Quelle est ta situation actuelle ?",
@@ -68,32 +48,8 @@ export default function FirstQuestionsScreen({ navigation }) {
   }
 
 
-  // useEffect(()=> {
-
-  // }, [screenNumber])
-
 
   useEffect(()=> {
-    // switch (currentQuestion) {
-    //   case "studyField" :
-    //     setScreenToShow(<UserStudyField onPressField={onPressButton} />);
-    //     setPreviousQuestion(null);
-    //     break;
-    //   case "userBacMean" :
-    //     setScreenToShow(
-    //       <UserBacMean
-    //         bacMeanInputHandler={(enteredNumber) => setBacMean(enteredNumber)}
-    //         bacMean={bacMean}
-    //         nextPressed={() => setAllQuestionsAnswered(true)}
-    //       />
-    //     );
-    //     setPreviousQuestion("studyField");
-    //     break;
-    //   case "notCoveredField" :
-    //     setScreenToShow(<NotCoveredField/>);
-    //     setPreviousQuestion("studyField");
-    //     break;
-    // }
 
     if (screenNumber===screenNameList.length) {
       setScreenToShow(
@@ -212,7 +168,6 @@ export default function FirstQuestionsScreen({ navigation }) {
           ? <NotCoveredField/>
           : screenToShow
         }
-        {/* <QuestionComponent/> */}
       </View>
       
     </View>
@@ -224,6 +179,7 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     backgroundColor: Colors.backgroundColor, 
+    // width: "100%",
     // borderWidth: 1,
   },
   headerContainer: {
@@ -241,9 +197,6 @@ const styles = StyleSheet.create({
   },
   bodyContainer: {
     flex: 1,
-    // justifyContent: "center",
-    alignItems: "center",
-    // borderWidth: 1,
   },
 
 });

@@ -11,12 +11,12 @@ export default function QuestionComponent({ onPressField, question, buttonList }
   
   // const leftField = buttonList.slice(0, Math.round(buttonList.length/2));
   // const rightField = buttonList.slice(Math.round(buttonList.length/2), buttonList.length);
-
+  // const test = ["hahaha1", "hahaha2", "hahaha3", "hahaha4", "hahaha5", "hahaha6", "hahaha7", "hahaha8", "hahaha9", "hahaha10", "hahaha11"]
 
   return (
     <View style={styles.mainContainer}> 
 
-      {/* <ScrollView contentContainerStyle={styles.mainContainer} showsVerticalScrollIndicator={false} > */}
+      <ScrollView contentContainerStyle={styles.mainContainer} showsVerticalScrollIndicator={false} >
 
 
       <View style={styles.questionContainer}>
@@ -36,7 +36,7 @@ export default function QuestionComponent({ onPressField, question, buttonList }
         </View>
       ) : <ActivityComponent/> }
 
-      {/* </ScrollView> */}
+      </ScrollView>
 
     </View>
 
@@ -48,8 +48,9 @@ const styles = StyleSheet.create({
   mainContainer: {
     alignItems: "center",
     // justifyContent: "space-around",
-    width: "90%",
-    flex: 1,
+    // width: "100%",
+    // flex: 1,
+    // borderWidth: 1
   },
   questionContainer: {
     // width: "70%",
