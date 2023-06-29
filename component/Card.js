@@ -6,6 +6,7 @@ import { getDetails } from "../BackEnd/controllers/cards";
 
 import { Colors } from "../constant/Colors";
 import PrimaryButton from "./buttons/PrimaryButton";
+import { trackingFunction } from "../BackEnd/googleAnalyticsTracker";
 
 export default function Card({ cardValue, currentTheme, setSwipeButtonZIndex, swipeCardHeigth }) {
   const [isCardDetailVisible, setIsCardDetailVisible] = useState(false);
@@ -34,6 +35,8 @@ export default function Card({ cardValue, currentTheme, setSwipeButtonZIndex, sw
     if (isCardDetailVisible && !cardDetail) {
       getCardDetail();
     }
+    isCardDetailVisible ? trackingFunction("card_event", "home", {event_label: `theme: ${cardValue.idTheme} carte: ${cardDetail.id}`, event_category: "detail_pressed"}) : null ;
+
     
   }, [isCardDetailVisible])
 

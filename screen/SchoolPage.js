@@ -7,6 +7,7 @@ import BlueContainer from "../component/BlueContainer";
 import SecondaryHeader from "../component/secondaryHeader";
 // import ScoreBar from "../component/ScoreBar";
 // import ScorePerTheme from "../component/ScorePerTheme";
+import { trackingFunction } from "../BackEnd/googleAnalyticsTracker";
 
 
 import { useState, useEffect } from "react";
@@ -55,6 +56,7 @@ export default function SchoolPage({ navigation, route }) {
     if (!singleSchoolData.ville) {
       getMissingData();
     }
+    trackingFunction("screen_focus", "school_page", {event_label: schoolId});
   }, [])
 
   useEffect(()=> {

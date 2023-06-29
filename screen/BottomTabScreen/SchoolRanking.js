@@ -26,7 +26,8 @@ import store from "../../core";
 import PrimaryButton from "../../component/buttons/PrimaryButton";
 import InfoPopup from "../../component/popup/InfoPopup";
 import { alertProvider } from "../../BackEnd/errorHandler";
-import { useMatomo } from "matomo-tracker-react-native";
+// import { useMatomo } from "matomo-tracker-react-native";
+import { trackingFunction } from "../../BackEnd/googleAnalyticsTracker";
 
 
 function SchoolRanking({ navigation}) {
@@ -36,7 +37,7 @@ function SchoolRanking({ navigation}) {
   const [readyToDisplayRank, setReadyToDisplayRank] = useState(false);
   const [isScreenshotMode, setIsScreenshotMode] = useState(false);
   const dispatch = useDispatch();
-  const {trackAction} = useMatomo();
+  // const {trackAction} = useMatomo();
   
 
   // ---------- rank calcul -------------------------------------------
@@ -58,7 +59,8 @@ function SchoolRanking({ navigation}) {
   useEffect(() => {
     // 'focus' quand on atteri sur le screen; 'blur' quand on quitte
     const unsubscribe = navigation.addListener("focus", () => {
-      trackAction({name: "SchoolRanking"});
+      trackingFunction("screen_focus", "schoolRanking");
+      // trackAction({name: "SchoolRanking"});
       const swipeStateHasChanged = store.getState().swipeReducer.swipeStateHasChanged;
       if (swipeStateHasChanged){    // if new calcul needed
         calculateNewRank(setReadyToDisplayRank, dispatch); 
@@ -95,9 +97,9 @@ function SchoolRanking({ navigation}) {
   function onPressCapture() {
     setIsScreenshotMode(true);
   }
-  function onPressFilterRank() {
-    return
-  }
+  // function onPressFilterRank() {
+  //   return
+  // }
 
   async function handlePressCapture() {
 

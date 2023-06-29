@@ -28,7 +28,11 @@ import { Provider } from "react-redux";
 import store from "./core";
 import RecoveryCode from "./screen/AuthScreen/RecoveryCode";
 import OnBoardScreen from "./screen/OnBoardScreen";
-import MatomoTracker, { MatomoProvider, useMatomo } from "matomo-tracker-react-native";
+import { trackingFunction } from "./BackEnd/googleAnalyticsTracker";
+// import MatomoTracker, { MatomoProvider, useMatomo } from "matomo-tracker-react-native";
+// import { Analytics, PageHit, Event } from 'expo-analytics';    //! erreur :  Constants.installationId has been deprecated in favor of generating and storing your own ID
+// import { GoogleAnalyticsTracker } from "react-native-google-analytics-bridge";
+
 const BottomTab = createBottomTabNavigator();
 const NativeStack = createNativeStackNavigator();
 
@@ -41,23 +45,14 @@ export default function App() {
   // const [isScreenCharged, setIsScreenCharged] = useState(false);
   // const [initialRouteName, setInitialRouteName] = useState("Splash Screen");
 
-  const instance = new MatomoTracker({
-    urlBase: 'https://hopteo.matomo.cloud', // required
-    siteId: 2, // required, number matching your Matomo project
-    // trackerUrl: 'https://LINK.TO.DOMAIN/tracking.php', // optional, default value: `${urlBase}matomo.php`
-    // userId: 'UID76903202' // optional, default value: `undefined`.
-    // disabled: false, // optional, default value: false. Disables all tracking operations if set to true.
-    // log: false  // optional, default value: false. Enables some logs if set to true.
-  });
+  // const instance = new MatomoTracker({
+  //   urlBase: 'https://hopteo.matomo.cloud', // required
+  //   siteId: 2, // required, number matching your Matomo project
+   
+  // });
 
-  // useEffect(() => {
-  //   setInitialRouteName("Login Screen");
-  //   setIsScreenCharged(true);
-  // }, [] )
-
-  // if (isScreenCharged) {
   return (
-    <MatomoProvider instance={instance}>
+    // <MatomoProvider instance={instance}>
       <Provider store={store}>
         <SafeAreaView style={{ flex: 1 }}>
           <StatusBar
@@ -67,12 +62,9 @@ export default function App() {
           <AllNavigationScreens/>
         </SafeAreaView>
       </Provider>
-    </MatomoProvider>
+    // </MatomoProvider>
   );
-  // }
-  // else {
-  //   return (<ChargingScreen/>)
-  // }
+  
 }
 
 
@@ -80,10 +72,36 @@ export default function App() {
 
 function AllNavigationScreens() {
 
-  const { trackAppStart } = useMatomo();
+  // const { trackAppStart } = useMatomo();
   
+  // useEffect(() => {
+  //   trackAppStart();
+  // }, []);
+
+  // async function setupAnalytics() {
+  //   const trackerId = 'G-QZ53RWJ51Q'; // Replace with your own tracking ID
+  //   const tracker = new GoogleAnalyticsTracker(trackerId);
+
+  //   await tracker.trackScreenView('Home'); // Example: Track a screen view
+
+  //   const event = {
+  //     category: 'Video',
+  //     action: 'Play',
+  //     label: 'The Big Lebowski',
+  //     value: 123,
+  //   };
+  //   await tracker.trackEvent(event); // Example: Track a custom event
+
+  //   // Get installation ID
+  //   const installationId =
+  //     await Application.androidId() || // For Android
+  //     (await SecureStore.getItemAsync('installationId')) || // For iOS
+  //     'UNKNOWN';
+  //   console.log('Installation ID:', installationId);
+  // };
+
   useEffect(() => {
-    trackAppStart();
+    trackingFunction("app_start");
   }, []);
 
   return (

@@ -3,10 +3,9 @@ import {StyleSheet, Text, View, ActivityIndicator, TouchableOpacity, Button, Ale
 import { useSelector, useDispatch } from "react-redux";
 
 import { useState, useEffect, useLayoutEffect, createRef, useRef  } from "react";
-// import VersionCheck from 'react-native-version-check-expo';
-// import VersionCheck from "react-native-version-check";
+import { trackingFunction } from "../../BackEnd/googleAnalyticsTracker";
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
+// import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import Swiper from "react-native-deck-swiper";
 
@@ -22,7 +21,7 @@ import SwipeButton from "../../component/buttons/SwipeButton";
 import { updateBackData } from "../../BackEnd/updateBackData";
 import ActivityComponent from "../../component/ActivityComponent";
 import store from "../../core";
-import { useMatomo } from "matomo-tracker-react-native";
+// import { useMatomo } from "matomo-tracker-react-native";
 // import store from "../../core";
 const swiperRef = createRef();
 
@@ -35,6 +34,7 @@ export default function Home({ navigation, route }) {
   const themeState = useSelector((state) => state.themeReducer.themeObj);
   const swipeReducer = useSelector(state => state.swipeReducer);
   const [latestSwipeReducer, setLatestSwipeReducer] = useState(swipeReducer);
+
 
   useEffect(()=> {
     setLatestSwipeReducer(swipeReducer);
@@ -125,12 +125,13 @@ export default function Home({ navigation, route }) {
   }, [appState])
 
 
-  const {trackAction} = useMatomo();
+  // const {trackAction} = useMatomo();
    
   useEffect(() => {
     // 'focus' quand on atteri sur le screen; 'blur' quand on quitte
     const unsubscribe = navigation.addListener("focus", () => {
-      trackAction({name: "Home"});
+      trackingFunction("screenFocus", "Home");
+      // trackAction({name: "Home"});
     });
     return unsubscribe;
   }, [navigation]);
