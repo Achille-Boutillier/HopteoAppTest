@@ -9,6 +9,11 @@ import { setSchoolLike } from "../../core/reducers/schoolReducer";
 import { useEffect, useState} from "react";
 
 import { Colors } from "../../constant/Colors";
+import { trackingFunction } from "../../BackEnd/googleAnalyticsTracker";
+import { trackingDesignation } from "../../constant/trakingDesignation";
+
+const pageTitle = trackingDesignation.pageTitle.explore;
+
 
 export default function ExploreSchoolBanner({ schoolId }) {
 
@@ -24,7 +29,10 @@ export default function ExploreSchoolBanner({ schoolId }) {
   }
 
   async function handleLikePress() {
-    dispatch( setSchoolLike({schoolId, newLike: !currentLike}) );
+    const newLike = !currentLike;
+    dispatch( setSchoolLike({schoolId, newLike}) );
+    trackingFunction(trackingDesignation.actionName.likeAction, pageTitle, {event_label: `${schoolId}_${newLike}` , event_category: trackingDesignation.eventCategory.school, event_action: trackingDesignation.eventAction.click});
+
   }
 
   // ! ----- manage minimal fontSize (Android) -----------------

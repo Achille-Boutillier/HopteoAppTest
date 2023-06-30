@@ -10,8 +10,13 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import RibbonComponent from "./RibbonComponent";
 import { setSchoolLike } from "../core/reducers/schoolReducer";
+import { trackingFunction } from "../BackEnd/googleAnalyticsTracker";
+import { trackingDesignation } from "../constant/trakingDesignation";
 
 const screenWidth = Dimensions.get("window").width;
+
+const pageTitle = trackingDesignation.pageTitle.schoolRanking;
+
 
 export default function SchoolBanner({schoolId}) {    //id, rank, nomEcole, typeFormation, like
   const navigation = useNavigation();
@@ -20,11 +25,11 @@ export default function SchoolBanner({schoolId}) {    //id, rank, nomEcole, type
   const currentLike = useSelector((state) => state.schoolReducer.likedSchoolObject[schoolId]);
   const [bannerColor, setBannerColor] = useState(null);
 
-  useEffect(()=>{
-    if (singleSchoolData?.rank<3) {
-    // console.log( "[singleSchoolData]" , singleSchoolData);
-    }
-  }, [singleSchoolData])
+  // useEffect(()=>{
+  //   if (singleSchoolData?.rank<3) {
+  //   // console.log( "[singleSchoolData]" , singleSchoolData);
+  //   }
+  // }, [singleSchoolData])
 
   // function loginScreenNavigation() {
   //   navigation.navigate("Login Screen");
@@ -33,7 +38,9 @@ export default function SchoolBanner({schoolId}) {    //id, rank, nomEcole, type
   // --------------- like ecole -------------------------------------
   
   async function handleLikePress() {
-    dispatch(setSchoolLike({schoolId, newLike: !currentLike}));
+    const newLike = !currentLike;
+    dispatch(setSchoolLike({schoolId, newLike}));
+    trackingFunction(trackingDesignation.actionName.likeAction, pageTitle, {event_label: `${schoolId}_${newLike}` , event_category: trackingDesignation.eventCategory.school, event_action: trackingDesignation.eventAction.click});
   }
   // --------------- fin like ecole -------------------------------------
 

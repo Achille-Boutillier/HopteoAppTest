@@ -7,6 +7,7 @@ import { getDetails } from "../BackEnd/controllers/cards";
 import { Colors } from "../constant/Colors";
 import PrimaryButton from "./buttons/PrimaryButton";
 import { trackingFunction } from "../BackEnd/googleAnalyticsTracker";
+import { trackingDesignation } from "../constant/trakingDesignation";
 
 export default function Card({ cardValue, currentTheme, setSwipeButtonZIndex, swipeCardHeigth }) {
   const [isCardDetailVisible, setIsCardDetailVisible] = useState(false);
@@ -30,12 +31,11 @@ export default function Card({ cardValue, currentTheme, setSwipeButtonZIndex, sw
 
 
   useEffect(()=> {
-    // console.log("----------------- changement de taille ------------")
     setSwipeButtonZIndex(isCardDetailVisible ? 0 : 2);
     if (isCardDetailVisible && !cardDetail) {
       getCardDetail();
     }
-    isCardDetailVisible ? trackingFunction("card_event", "home", {event_label: `theme: ${cardValue.idTheme} carte: ${cardDetail.id}`, event_category: "detail_pressed"}) : null ;
+    isCardDetailVisible ? trackingFunction(trackingDesignation.actionName.detailAction, trackingDesignation.pageTitle.home, {event_label: cardValue.id, event_category: `card_${cardValue.idTheme}` }) : null ;
 
     
   }, [isCardDetailVisible])

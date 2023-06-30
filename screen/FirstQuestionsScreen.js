@@ -12,6 +12,8 @@ import NotCoveredField from "../component/firstQuestionsComponents/NotCoveredFie
 import { disconnect } from "../BackEnd/controllers/setting";
 import PrimaryButton from "../component/buttons/PrimaryButton";
 import QuestionComponent from "../component/firstQuestionsComponents/QuestionComponent";
+import { trackingFunction } from "../BackEnd/googleAnalyticsTracker";
+import { trackingDesignation } from "../constant/trakingDesignation";
 
 
 
@@ -141,6 +143,8 @@ export default function FirstQuestionsScreen({ navigation }) {
       const data = await storeUserSetting("ingenieur", studyField, bacMeanNumber);
       if (data.success) {
         storeSplashData(data.splashData, dispatch);
+        trackingFunction(trackingDesignation.actionName.userData, trackingDesignation.pageTitle.firstQuestionScreen, {event_category: trackingDesignation.eventCategory.account, event_label: studyField, event_action: trackingDesignation.eventAction.enteredText });
+
         resetNavigationScreen("Main Screens");
       } else {
         alertProvider();

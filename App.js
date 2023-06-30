@@ -29,6 +29,7 @@ import store from "./core";
 import RecoveryCode from "./screen/AuthScreen/RecoveryCode";
 import OnBoardScreen from "./screen/OnBoardScreen";
 import { trackingFunction } from "./BackEnd/googleAnalyticsTracker";
+import { trackingDesignation } from "./constant/trakingDesignation";
 // import MatomoTracker, { MatomoProvider, useMatomo } from "matomo-tracker-react-native";
 // import { Analytics, PageHit, Event } from 'expo-analytics';    //! erreur :  Constants.installationId has been deprecated in favor of generating and storing your own ID
 // import { GoogleAnalyticsTracker } from "react-native-google-analytics-bridge";
@@ -101,7 +102,7 @@ function AllNavigationScreens() {
   // };
 
   useEffect(() => {
-    trackingFunction("app_start");
+    trackingFunction(trackingDesignation.actionName.appStart);
   }, []);
 
   return (

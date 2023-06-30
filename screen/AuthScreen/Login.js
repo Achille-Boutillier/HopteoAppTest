@@ -8,6 +8,7 @@ import validator from "validator";
 import AuthComponent from "../../component/AuthComponent";
 import ActivityComponent from "../../component/ActivityComponent";
 import { storeAllFiliereList } from "../../core/reducers/userSettingReducer";
+import { trackingDesignation } from "../../constant/trakingDesignation";
 
 
 export default function Login({ navigation }) {
@@ -81,6 +82,7 @@ export default function Login({ navigation }) {
   function goToSignup() {
     setErrorMessage();
     navigation.navigate("Signup Screen");
+    trackingFunction(trackingDesignation.actionName.screenView, trackingDesignation.pageTitle.signup, {event_category: trackingDesignation.eventCategory.navigation});
   }
 
 

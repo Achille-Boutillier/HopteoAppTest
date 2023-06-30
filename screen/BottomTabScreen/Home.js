@@ -21,6 +21,7 @@ import SwipeButton from "../../component/buttons/SwipeButton";
 import { updateBackData } from "../../BackEnd/updateBackData";
 import ActivityComponent from "../../component/ActivityComponent";
 import store from "../../core";
+import { trackingDesignation } from "../../constant/trakingDesignation";
 // import { useMatomo } from "matomo-tracker-react-native";
 // import store from "../../core";
 const swiperRef = createRef();
@@ -28,6 +29,7 @@ const swiperRef = createRef();
 const deviceHeight = Dimensions.get("window").height;
 const swipeCardHeigth = 0.52*deviceHeight;
 
+const pageTitle = trackingDesignation.pageTitle.home;
 
 export default function Home({ navigation, route }) {
   // const screenParams = route.params;
@@ -130,7 +132,7 @@ export default function Home({ navigation, route }) {
   useEffect(() => {
     // 'focus' quand on atteri sur le screen; 'blur' quand on quitte
     const unsubscribe = navigation.addListener("focus", () => {
-      trackingFunction("screenFocus", "Home");
+      trackingFunction(trackingDesignation.actionName.screenView, pageTitle);
       // trackAction({name: "Home"});
     });
     return unsubscribe;
@@ -299,6 +301,7 @@ export default function Home({ navigation, route }) {
     if (!latestSwipeReducer.swipeStateHasChanged){
       dispatch(setSwipeStateHasChanged(true));
     }
+    trackingFunction(trackingDesignation.actionName.swipeAction, pageTitle, {event_label: id, event_action: swipeType, event_category: `card_${idTheme}`})
     // const isSuccessfull = await swipeHandler(id, swipeType);
     // if (!isSuccessfull) {
     //   dispatch(removeSwipe({id, idTheme}));

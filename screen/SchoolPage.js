@@ -21,6 +21,10 @@ import { getPageData } from "../BackEnd/controllers/school";
 import RibbonComponent from "../component/RibbonComponent";
 import { BrandComponent } from "../component/TopBar";
 import ChipingSection from "../component/schoolPageComponent/ChipingSection";
+import { trackingDesignation } from "../constant/trakingDesignation";
+
+
+const pageTitle = trackingDesignation.pageTitle.schoolPage;
 
 export default function SchoolPage({ navigation, route }) {
   const schoolId = route.params.schoolId;
@@ -29,10 +33,10 @@ export default function SchoolPage({ navigation, route }) {
 
   const [readyToDisplay, setReadyToDisplay] = useState(false);
   
-  console.log("[hahahahahha --------------------]", singleSchoolData);
+  // console.log("[hahahahahha --------------------]", singleSchoolData);
   // const id = singleSchoolData.id;
   const previousScreen = route.params.previousScreen;
-  console.log(previousScreen);
+  // console.log(previousScreen);
   const dispatch = useDispatch();
 
 
@@ -56,7 +60,7 @@ export default function SchoolPage({ navigation, route }) {
     if (!singleSchoolData.ville) {
       getMissingData();
     }
-    trackingFunction("screen_focus", "school_page", {event_label: schoolId});
+    trackingFunction(trackingDesignation.actionName.screenView, `${pageTitle}_from_${previousScreen}`, {event_label: schoolId});
   }, [])
 
   useEffect(()=> {
@@ -72,7 +76,9 @@ export default function SchoolPage({ navigation, route }) {
   // --------------- like ecole -------------------------------------
   
   async function handleLikePress() {
-    dispatch( setSchoolLike({schoolId, newLike: !currentLike}) );
+    const newLike = !currentLike;
+    dispatch( setSchoolLike({schoolId, newLike}) );
+    trackingFunction(trackingDesignation.actionName.likeAction, pageTitle, {event_label: `${schoolId}_${newLike}` , event_category: trackingDesignation.eventCategory.school, event_action: trackingDesignation.eventAction.click});
   }
   // --------------- fin like ecole -------------------------------------
 

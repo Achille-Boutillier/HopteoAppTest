@@ -24,8 +24,11 @@ import SearchedComponent from "../../component/exploreComponents/SearchedCompone
 import ExploreByArea from "../../component/exploreComponents/ExploreByArea";
 import { calculateNewRank } from "../../BackEnd/rankingFunction";
 import { trackingFunction } from "../../BackEnd/googleAnalyticsTracker";
+import { trackingDesignation } from "../../constant/trakingDesignation";
 // import { ActivityIndicator } from "react-native";
 // import { useMatomo } from "matomo-tracker-react-native";
+
+const pageTitle = trackingDesignation.pageTitle.explore;
 
 const width = Dimensions.get("window").width;
 
@@ -86,7 +89,7 @@ export default function Explore({ navigation}) {
   useEffect(() => {
     // 'focus' quand on atteri sur le screen; 'blur' quand on quitte
     const unsubscribe = navigation.addListener("focus", () => {
-      trackingFunction("screen_focus", "explore");
+      trackingFunction(trackingDesignation.actionName.screenView, pageTitle);
       // trackAction({name: "Explore"});
       const swipeStateHasChanged = store.getState().swipeReducer.swipeStateHasChanged;
       // const exploreScreenNeedReload = store.getState().swipeReducer.exploreScreenNeedReload;
@@ -117,7 +120,7 @@ export default function Explore({ navigation}) {
 
   function onSubmitResearch(){  ///!! appelé que quand j'appuie sur rechercher, il faut qu'elle soit appelé onfocus du textInput
     setIsResearchSubmited(true);
-    trackingFunction("research", "explore", {event_label: searchInput});
+    trackingFunction(trackingDesignation.actionName.research, pageTitle, {event_label: searchInput, event_category: trackingDesignation.eventCategory.research});
     // setSearchInput(userInput);
   }
 

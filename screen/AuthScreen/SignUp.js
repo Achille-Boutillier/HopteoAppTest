@@ -7,6 +7,8 @@ import ActivityComponent from "../../component/ActivityComponent";
 import { storeAllFiliereList } from "../../core/reducers/userSettingReducer";
 import { useDispatch } from "react-redux";
 import validator from "validator";
+import { trackingFunction } from "../../BackEnd/googleAnalyticsTracker";
+import { trackingDesignation } from "../../constant/trakingDesignation";
 // import { ScrollView } from "react-native-gesture-handler";
 
 
@@ -47,6 +49,7 @@ export default function SignUp({ navigation, route }) {
       storeNewAuthData(signUpAnswer.authData);
       dispatch(storeAllFiliereList(signUpAnswer.filiereList));
       navigation.navigate("OnBoardScreen");
+      trackingFunction(trackingDesignation.actionName.newAccount, trackingDesignation.pageTitle.signup, {event_category: trackingDesignation.eventCategory.account});
     } else {
       if (signUpAnswer.errorMessage) {
         setErrorMessage(signUpAnswer.errorMessage);
@@ -61,6 +64,7 @@ export default function SignUp({ navigation, route }) {
   function goToLogin() {
     setErrorMessage();
     navigation.navigate("Login Screen");
+    trackingFunction(trackingDesignation.actionName.screenView, trackingDesignation.pageTitle.login, {event_category: trackingDesignation.eventCategory.navigation});
   }
 
   return (
