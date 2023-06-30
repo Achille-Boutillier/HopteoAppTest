@@ -6,7 +6,7 @@ import SecondaryButton from "../buttons/SecondaryButton";
 import ActivityComponent from "../ActivityComponent";
 // import { useSelector } from "react-redux";
 
-export default function QuestionComponent({ onPressField, question, buttonList }) {
+export default function QuestionComponent({ onPressField, question, buttonList, twoColumns }) {
 
   
   // const leftField = buttonList.slice(0, Math.round(buttonList.length/2));

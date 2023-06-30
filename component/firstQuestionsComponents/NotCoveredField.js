@@ -12,7 +12,7 @@ export default function NotCoveredField({}) {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    // alignSelf: "center",
+    alignSelf: "center",
     alignItems: "center",
     justifyContent: "center",
     // height: 250,

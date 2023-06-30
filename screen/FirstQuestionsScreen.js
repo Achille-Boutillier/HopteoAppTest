@@ -62,7 +62,8 @@ export default function FirstQuestionsScreen({ navigation }) {
         />
       );
     } else {
-      setScreenToShow(<QuestionComponent onPressField={onPressButton} question={questionList[screenNumber]} buttonList={buttonLists[screenNumber]}/>)
+      const twoColumns = screenNameList[screenNumber]==="studyField"; //todo: diviser /2 dans question
+      setScreenToShow(<QuestionComponent onPressField={onPressButton} question={questionList[screenNumber]} buttonList={buttonLists[screenNumber]} twoColumns={twoColumns}/>)
     }
 
   }, [screenNumber])
@@ -81,6 +82,15 @@ export default function FirstQuestionsScreen({ navigation }) {
   //   return unsubscribe;
   // }, [navigation]);
 
+  function removeLastElement(arr) {
+    if (!Array.isArray(arr) || arr.length === 0) {
+      // Vérifie que l'entrée est bien un tableau non vide
+      throw new Error('Veuillez fournir un tableau non vide en entrée.');
+    }
+  
+    const newArray = arr.slice(0, arr.length - 1); // Crée une copie du tableau sans le dernier élément
+    return newArray;
+  }
 
 
 
@@ -93,6 +103,7 @@ export default function FirstQuestionsScreen({ navigation }) {
       // navigation.navigate("Login Screen");
     } else {
       setScreenNumber((number) => number - 1);
+      screenNameList[screenNumber]==="studyField" ? setButtonLists((list)=> removeLastElement(list)) : null ;
     }
   }
 
