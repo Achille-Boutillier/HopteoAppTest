@@ -60,7 +60,7 @@ export async function getRankingAlgoData() {
       },
     };
 
-    const response = await fetch("https://app.hopteo.fr/api/v1/ranking/data", requestOptions);
+    const response = await fetch("https://app.hopteo.com/api/v1/ranking/data", requestOptions);
     // console.log( , response.status)
     const data = await response.json();
     console.log("[getSchoolRanking()]", data);

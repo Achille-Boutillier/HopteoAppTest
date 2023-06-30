@@ -72,7 +72,7 @@ async function sendToBack(notSentToBackAnswers, filteredSwipeTypeObj, removedIdS
       }),
     };
 
-    const response = await fetch("https://app.hopteo.fr/api/v1/user/storeUserAction", requestOptions);
+    const response = await fetch("https://app.hopteo.com/api/v1/user/storeUserAction", requestOptions);
     // console.log(response.status);
     const data = await response.json();
     // console.log(data);
