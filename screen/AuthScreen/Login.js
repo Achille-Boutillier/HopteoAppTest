@@ -9,6 +9,7 @@ import AuthComponent from "../../component/AuthComponent";
 import ActivityComponent from "../../component/ActivityComponent";
 import { storeAllFiliereList } from "../../core/reducers/userSettingReducer";
 import { trackingDesignation } from "../../constant/trakingDesignation";
+import { trackingFunction } from "../../BackEnd/googleAnalyticsTracker";
 
 
 export default function Login({ navigation }) {

@@ -2,7 +2,7 @@
   "expo": {
     "name": "Hopteo",
     "slug": "Hopteo",
-    "version": "1.0.20",
+    "version": "1.0.23",
     "orientation": "portrait",
     "icon": "./assets/logo/favicon595px.png",   // 595x595
     "userInterfaceStyle": "light",
@@ -22,7 +22,7 @@
     },
     "android": {
       "package": "com.hopteo.hopteoApp",
-      "versionCode": 22,
+      "versionCode": 25,
       "adaptiveIcon": {
         "foregroundImage": "./assets/logo/favicon512px.png",
         "backgroundColor": "#FFFFFF"
