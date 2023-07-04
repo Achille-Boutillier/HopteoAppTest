@@ -23,12 +23,13 @@ import { BrandComponent, HeaderButton } from "../../component/TopBar";
 import { useSelector, useDispatch } from "react-redux";
 import { setSwipeStateHasChanged} from "../../core/reducers/swipeReducer"; 
 import store from "../../core";
-import PrimaryButton from "../../component/buttons/PrimaryButton";
-import InfoPopup from "../../component/popup/InfoPopup";
+// import PrimaryButton from "../../component/buttons/PrimaryButton";
+import InfoBanner from "../../component/popup/InfoBanner";
 import { alertProvider } from "../../BackEnd/errorHandler";
 // import { useMatomo } from "matomo-tracker-react-native";
 import { trackingFunction } from "../../BackEnd/googleAnalyticsTracker";
 import { trackingDesignation } from "../../constant/trakingDesignation";
+import RankingHeaderComponent from "../../component/RankingHeaderComponent";
 
 const pageTitle = trackingDesignation.pageTitle.schoolRanking;
 
@@ -189,22 +190,14 @@ function SchoolRanking({ navigation}) {
   return (
     // <View style={styles.mainContainer}>
     <View style={styles.mainContainer} ref={viewRef} pointerEvents= {isScreenshotMode ? "none" : "auto"}>
-      {forRankingReducer.showRankingPopup && !isScreenshotMode //! modif
-        ? <InfoPopup message="Retourne swiper pour affiner ton classement" />
-        : null 
-      }
-      <View style={styles.topContainer}>
-        <Text style={styles.titleText}>Ton classement</Text>
-        {/* <View style={styles.screenshotButtonContainer} >
-          <PrimaryButton onPress={onPressFilterRank} name="options-outline" size={30} color={Colors.orange500}/>
-        </View> */}
-        <View style={styles.screenshotButtonContainer} >
-          <PrimaryButton onPress={onPressCapture} name="share-social" size={30} color={Colors.orange500}/>
-        </View>
-      </View>
+      
+      <InfoBanner 
+        message="Retourne swiper pour affiner ton classement." 
+        dontShow={!forRankingReducer.showRankingPopup || isScreenshotMode || !readyToDisplayRank}  
+      />
 
-      {isScreenshotMode //! modif
-        ? <View style={styles.brandForScreenshot}><BrandComponent /></View>
+      {isScreenshotMode //! pour screen avec fond coloré
+        ? <View style={styles.brandForScreenshot}></View>
         : null
       }
 
@@ -219,6 +212,7 @@ function SchoolRanking({ navigation}) {
                   // extraData={schoolReducer.rankIdList} 
                   keyExtractor={(item) => item + "rank"}
                   showsVerticalScrollIndicator={false}
+                  ListHeaderComponent={()=><RankingHeaderComponent onPressCapture={onPressCapture} isScreenshotMode={isScreenshotMode} />}
                   renderItem={({item}) => {
                     return (<SchoolBanner schoolId={item} />);
                   } }
@@ -263,13 +257,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
-  topContainer: {
-    marginHorizontal: "5%",
-    marginBottom: "5%",
-    marginTop: "4%",
-    flexDirection: "row",
-    justifyContent: "space-between",
-  }, 
   brandForScreenshot: {
     position: "absolute",
     top: 0,
@@ -282,24 +269,6 @@ const styles = StyleSheet.create({
     paddingTop: "4%",
     // borderWidth: 1
 
-  },
-
-  titleText: {
-    fontWeight: "500",
-    fontSize: 18,
-    color: Colors.grey,
-    verticalAlign: "middle",
-    // borderWidth: 1
-  },
-
-  screenshotButtonContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 40,
-    // paddingLeft: -5,
-    backgroundColor: Colors.white,
-    alignItems: "center",
-    justifyContent: "center",
   },
 
   listContainer: {

@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 
 import { Colors } from "../constant/Colors";
 import { storeSplashData, storeUserSetting, storeUserStudyYear } from "../BackEnd/controllers/userData";
-import UserStudyField from "../component/firstQuestionsComponents/UserStudyField";
+// import UserStudyField from "../component/firstQuestionsComponents/UserStudyField";
 import UserBacMean from "../component/firstQuestionsComponents/UserBacMean";
 import { alertProvider } from "../BackEnd/errorHandler";
 import {BrandComponent} from "../component/TopBar";
