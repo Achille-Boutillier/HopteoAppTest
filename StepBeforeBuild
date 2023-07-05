@@ -1,0 +1,10 @@
+1 - Replace .fr by .com in variable :
+  a - "mainUrl" in "BackEnd/controller/userData.js"
+  b - the url of "getRankingAlgoData()" in "BackEnd/controller/ranking.js"
+  c - the url of "sendToBack()" in "BackEnd/updateBackData.js"
+
+2 - Set "isDevelopping" to "false" in "BackEnd/googleAnalyticsTracker.js"   
+
+3 - Upgrade the version number : 
+  a - In app.json ("version" and "versionNumber")
+  b - In "core/store/userSettingState.js"

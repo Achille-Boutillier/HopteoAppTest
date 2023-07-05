@@ -60,7 +60,7 @@ export default function SchoolPage({ navigation, route }) {
     if (!singleSchoolData.ville) {
       getMissingData();
     }
-    trackingFunction(trackingDesignation.actionName.screenView, `${pageTitle}_from_${previousScreen}`, {event_label: schoolId});
+    trackingFunction(trackingDesignation.actionName.screenView, `${pageTitle.toLowerCase()}_from_${previousScreen.toLowerCase()}`, {event_label: schoolId});
   }, [])
 
   useEffect(()=> {
@@ -78,7 +78,7 @@ export default function SchoolPage({ navigation, route }) {
   async function handleLikePress() {
     const newLike = !currentLike;
     dispatch( setSchoolLike({schoolId, newLike}) );
-    trackingFunction(trackingDesignation.actionName.likeAction, pageTitle, {event_label: `${schoolId}_${newLike}` , event_category: trackingDesignation.eventCategory.school, event_action: trackingDesignation.eventAction.click});
+    trackingFunction(trackingDesignation.actionName.likeAction, pageTitle.toLowerCase(), {event_label: `${schoolId}_${newLike}` , event_category: trackingDesignation.eventCategory.school, event_action: trackingDesignation.eventAction.click});
   }
   // --------------- fin like ecole -------------------------------------
 

@@ -7,30 +7,31 @@ import { BrandComponent } from "./TopBar";
 import ScrollableChipingLine from "./ScrollableChipingLine";
 
 const width = Dimensions.get('window').width;
-const scrollableLineWidth = width*0.9-40 -30;
+const scrollableLineWidth = width*0.9 -40 -30;
 
 export default function RankingHeaderComponent({ onPressCapture, isScreenshotMode}) {
 
-  const filterList = ["concours", "type de formation", "ville"];
+  const filterList = ["concours", "type de formation", "ville", "jndljvnfv"];
 
   return (
-    // <View style={{}}>
-    <View style={styles.mainContainer}>
-      <View style={styles.leftContainer}>
-        {isScreenshotMode 
-          ? <BrandComponent/>
-          : <ScrollableChipingLine titleList={filterList}/>
-          // : <Text style={styles.titleText}>Ton classement</Text>
-        }
-      </View>
-      <View style={styles.rigthContainer}>
-        <View style={styles.screenshotButtonBackground}>
-          <PrimaryButton onPress={onPressCapture} name="share-social" size={20} color={Colors.orange500}/>
+    <View style={{}}>
+      <View style={styles.mainContainer}>
+        <View style={styles.leftContainer}>
+          {isScreenshotMode 
+            ? <BrandComponent/>
+            // : <ScrollableChipingLine titleList={filterList}/>
+            : <Text style={styles.titleText}>Ton classement</Text>
+          }
+        </View>
+        <View style={styles.rigthContainer}>
+          <View style={styles.screenshotButtonBackground}>
+            <PrimaryButton onPress={onPressCapture} name="share-social" size={20} color={Colors.orange500}/>
+          </View>
         </View>
       </View>
-    </View>
+      {/* <ScrollableChipingLine titleList={filterList}/> */}
       
-    // </View>
+    </View>
   );
 }
 

@@ -1,7 +1,8 @@
 export const trackingDesignation = {
   actionName: {
     appStart: "app_start",
-    screenView: "screen_view",
+    screenView: "screen_focus",
+    // screenView: "screen_focus",
     shareButtonClicked: "share_button_clicked", 
     login: "login",
     newAccount: "new_account",

@@ -1,13 +1,14 @@
 import React from 'react';
-import { StyleSheet, Text, View} from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import { Colors } from '../constant/Colors';
 
-export default function SingleChip({children}) {
+export default function SingleChip({children, isPressable, onPress, style={}}) {
   if (children) {     // empecher les bulles vides
+    
     return (
-      <View style={styles.container}>
+      <TouchableOpacity style={[styles.container, style]} onPress={()=>onPress(children)} disabled={!isPressable}>
         <Text style={styles.title}>{children}</Text>
-      </View>
+      </TouchableOpacity>
     );
   } else {
     return null;
