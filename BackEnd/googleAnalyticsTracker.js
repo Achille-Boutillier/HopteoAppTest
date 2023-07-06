@@ -1,4 +1,4 @@
-const isDevelopping = true;         //! toggle when going in prod
+const isDevelopping = false;         //! false when going in prod
 
 
  export function trackingFunction(actionName, screenName, params={}) { 
