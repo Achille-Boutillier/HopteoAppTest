@@ -6,32 +6,92 @@ import FilterPopup from "./popup/FilterPopup";
 
 
 export default function ScrollableChipingLine({titleList}) {
- 
-  const [pressedName, setPressedName] = useState("");
+
+  const [sortedTitleList, setSortedTitleList] = useState(titleList);
+  const [currentSelectedName, setCurrentSelectedName] = useState("");
   const [isFilterPopupVisible, setIsFilterPopupVisible] = useState(false);
+  const [activeFilterNameList, setActiveFilterNameList ] = useState([]);
+
+// ------------- sort titleList ----------------
+  function sortedFunction(list) {
+    let newList = list.slice();
+    newList.sort((a, b) => {
+      const isActiveA = activeFilterNameList.includes(a);
+      const isActiveB = activeFilterNameList.includes(b);
+    
+      if (isActiveA !== isActiveB) {
+        return isActiveA ? -1 : 1; // put the active element in first
+      }
+      return 0; // save initial position
+    });
+    console.log("[newList]", newList);
+
+    return newList;
+  }
+
+  useEffect(()=> {
+    if (activeFilterNameList.length>0) {
+      
+      setTimeout(() => {
+        setSortedTitleList((list)=>sortedFunction(list))
+      }, 300);
+      console.log("[activeFilterNameList]", activeFilterNameList);
+      
+    }
+  }, [activeFilterNameList])
+
+
+// ---------- fin sort ----------------
+
+
+// ---- chip pressed ------------------------
+
   function onPress(pressedItem) {
-    setPressedName(pressedItem);
-    setIsFilterPopupVisible(true);
+    setCurrentSelectedName(pressedItem);
   }
 
   function onFilterClose() {
+    // if (!isActive) {
+      // const index = activeFilterNameList.indexOf(currentSelectedName);
+      // console.log(currentSelectedName);
+      // console.log(index)
+      // if (index > -1) {
+
+    setActiveFilterNameList((list)=>list.filter(item => item !== currentSelectedName));
+      // }
+    // }
     setIsFilterPopupVisible(false);
+    setCurrentSelectedName("");   // reset the state
   }
 
+  useEffect(()=> {
+    if (currentSelectedName.length>0) {
+      const newActiveFilterNameList = [...activeFilterNameList, currentSelectedName] ;
+      setActiveFilterNameList([...new Set(newActiveFilterNameList)]); // suppress redundent items
+      setIsFilterPopupVisible(true);
+    
+    }
+  }, [currentSelectedName])
+
+  // ------- fin chip pressed -----------------------------------
+
+  
   return (
     <>
       <ScrollView contentContainerStyle={styles.mainContainer} horizontal showsHorizontalScrollIndicator={false}>
-        {titleList.map((item, index)=>
+        {sortedTitleList.map((item, index)=>
           <SingleChip 
             key={index} 
             onPress={onPress}
             isPressable={true}
+            isSelected ={activeFilterNameList.includes(item)}
+            // style={}
           >
             {item}
           </SingleChip>
         )}
       </ScrollView>
-      <FilterPopup isPopupVisible={isFilterPopupVisible} onClose={onFilterClose} filterName={pressedName}/>
+      <FilterPopup isPopupVisible={isFilterPopupVisible} onClose={onFilterClose} filterName={currentSelectedName}/>
     </>
 
   );

@@ -11,7 +11,7 @@ const scrollableLineWidth = width*0.9 -40 -30;
 
 export default function RankingHeaderComponent({ onPressCapture, isScreenshotMode}) {
 
-  const filterList = ["concours", "type de formation", "ville", "jndljvnfv"];
+  let filterList = ["Concours", "Formation", "Ville", "jndljvnfv"];
 
   return (
     <View style={{}}>
@@ -29,7 +29,7 @@ export default function RankingHeaderComponent({ onPressCapture, isScreenshotMod
           </View>
         </View>
       </View>
-      {/* <ScrollableChipingLine titleList={filterList}/> */}
+      <ScrollableChipingLine titleList={filterList}/>
       
     </View>
   );

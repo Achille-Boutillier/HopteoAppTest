@@ -1,9 +1,10 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Modal from "react-native-modal";
+import { Colors } from '../../constant/Colors';
 
 
-export default function BottomPopup({ isPopupVisible, onClose }) {
+export default function BottomPopup({ isPopupVisible, onClose, children, modalContentStyle }) {
 
   return (
     <Modal 
@@ -15,40 +16,37 @@ export default function BottomPopup({ isPopupVisible, onClose }) {
       onSwipeComplete={onClose}
       // onBackdropPress={onClose}
       swipeDirection={['down']}
-      style={styles.modal}
+      style={styles.modalComponentStyle}
     >
-      <View style={styles.container}>
-        <View style={styles.popup}>
+      <View style={styles.innerModal}>
 
-          {/* Barre horizontale indiquant que la fenêtre est déroulable */}
-          <View style={styles.scrollIndicator} />
+        {/* Barre horizontale indiquant que la fenêtre est déroulable */}
+        <View style={styles.scrollIndicator} />
 
-          {/* Contenu de votre popup */}
-          <Text>Contenu du popup</Text>
-
-          {/* Bouton de fermeture */}
-          <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-            <Text style={styles.closeButtonText}>Fermer</Text>
-          </TouchableOpacity>
+        <View style={[styles.modalContent, modalContentStyle]}>
+          {children}
         </View>
+    
+
+        {/* Bouton de fermeture */}
+        <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+          <Text style={styles.closeButtonText}>Fermer</Text>
+        </TouchableOpacity>
       </View>
     </Modal>
   );
 };
 
 const styles = StyleSheet.create({
-  modal: {
+  modalComponentStyle: {
     justifyContent: 'flex-end',
     margin: 0,
 
   },
-  container: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  popup: {
-    backgroundColor: '#fff',
+  
+  innerModal: {
+    height: "70%",
+    backgroundColor: Colors.white,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: 20,
@@ -61,12 +59,16 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     borderRadius: 2,
   },
+  modalContent: {
+    flex: 1,
+    paddingVertical: "5%",
+  },
   closeButton: {
     alignSelf: 'flex-end',
     paddingVertical: 10,
   },
   closeButtonText: {
-    color: 'blue',
+    color: Colors.orange500,
     fontWeight: 'bold',
   },
 });
