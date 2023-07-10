@@ -34,6 +34,10 @@ export const forRankingSlice = createSlice({
       state.showRankingPopup = !state.showRankingPopup;
     },
 
+    setRankingFilter: (state, action) => {
+      const {filterName, selectedFilterList} = action.payload;
+      state.activeFilterObject[filterName] = selectedFilterList;
+    }
   
   },
 });

@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { StyleSheet, View, Text, } from "react-native";
 import { Colors } from "../../constant/Colors";
-import SingleChip from "../SingleChip";
+// import SingleChip from "../ChipComponents/SingleChip";
 import TerciaryButton from "../buttons/TerciaryButton";
 import PrimaryButton from "../buttons/PrimaryButton";
+import SeveralChip from "../ChipComponents/SeveralChip";
 
 export default function ChipingSection({firstData, secondData }) {
   const isButtonDisplayed = !!secondData && JSON.stringify(firstData) !== JSON.stringify(secondData) ;
@@ -41,10 +42,13 @@ export default function ChipingSection({firstData, secondData }) {
       {sectionData[0].length === 0 ? null : <Text style={styles.textStyle} >{sectionData[0]}</Text>}
       {/* <Text style={styles.textStyle} >{sectionData[0]}</Text> */}
       <View style={styles.chipContainer}>
-        {sectionData[1].map((item, index)=>
+        {/* {sectionData[1].map((item, index)=>
           <SingleChip key={index}>{item}</SingleChip>
           )
-        }
+        } */}
+        <SeveralChip
+          chipingList={sectionData[1]}
+        />
       </View>
 
       { isButtonDisplayed 

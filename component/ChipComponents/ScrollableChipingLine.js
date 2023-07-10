@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { StyleSheet, View, Text, ScrollView } from "react-native";
-import { Colors } from "../constant/Colors";
-import SingleChip from "./SingleChip";
-import FilterPopup from "./popup/FilterPopup";
+// import { Colors } from "../../constant/Colors";
+// import SingleChip from "./SingleChip";
+import FilterPopup from "../popup/FilterPopup";
+import SeveralChip from "./SeveralChip";
 
 
-export default function ScrollableChipingLine({titleList}) {
+export default function ScrollableChipingLine({nameList}) {
 
-  const [sortedTitleList, setSortedTitleList] = useState(titleList);
+  const [sortedTitleList, setSortedTitleList] = useState(nameList);
   const [currentSelectedName, setCurrentSelectedName] = useState("");
   const [isFilterPopupVisible, setIsFilterPopupVisible] = useState(false);
   const [activeFilterNameList, setActiveFilterNameList ] = useState([]);
@@ -79,17 +80,23 @@ export default function ScrollableChipingLine({titleList}) {
   return (
     <>
       <ScrollView contentContainerStyle={styles.mainContainer} horizontal showsHorizontalScrollIndicator={false}>
-        {sortedTitleList.map((item, index)=>
+        {/* {sortedTitleList.map((item, index)=>
           <SingleChip 
             key={index} 
             onPress={onPress}
             isPressable={true}
             isSelected ={activeFilterNameList.includes(item)}
             // style={}
-          >
+          > //todo : creer un composant intermédiaire nommé "filterComponent" entre rankingHeader et scrollableChipingLine, déplacer FilterPopup dedans et toute la logique du clickage
             {item}
           </SingleChip>
-        )}
+        )} */}
+        <SeveralChip
+          chipingList={sortedTitleList}
+          onPress={onPress}
+          isPressable={true}
+          selectedList={activeFilterNameList}
+        />
       </ScrollView>
       <FilterPopup isPopupVisible={isFilterPopupVisible} onClose={onFilterClose} filterName={currentSelectedName}/>
     </>

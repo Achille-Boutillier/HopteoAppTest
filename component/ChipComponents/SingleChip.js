@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity} from 'react-native';
-import { Colors } from '../constant/Colors';
+import { Colors } from '../../constant/Colors';
 
 export default function SingleChip({children, isPressable, onPress, style={}, isSelected}) {
   if (children) {     // empecher les bulles vides

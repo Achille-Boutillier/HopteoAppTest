@@ -4,22 +4,24 @@ import { View, StyleSheet, Text, Button, TextInput, ScrollView, Dimensions } fro
 import { Colors } from "../constant/Colors";
 import PrimaryButton from "./buttons/PrimaryButton";
 import { BrandComponent } from "./TopBar";
-import ScrollableChipingLine from "./ScrollableChipingLine";
+import ScrollableChipingLine from "./ChipComponents/ScrollableChipingLine";
+import { useSelector } from "react-redux";
 
 const width = Dimensions.get('window').width;
 const scrollableLineWidth = width*0.9 -40 -30;
 
 export default function RankingHeaderComponent({ onPressCapture, isScreenshotMode}) {
 
-  let filterList = ["Concours", "Formation", "Ville", "jndljvnfv"];
-
+  // let filterSectionList = ["Concours", "Formation", "Ville", "jndljvnfv"];
+  const activeFilterObject = useSelector((state)=> state.forRankingReducer.activeFilterObject);
+  const filterSectionList = Object.keys(activeFilterObject).map((item)=>item.substring(0, 1).toUpperCase() + item.substring(1));
   return (
     <View style={{}}>
       <View style={styles.mainContainer}>
         <View style={styles.leftContainer}>
           {isScreenshotMode 
             ? <BrandComponent/>
-            // : <ScrollableChipingLine titleList={filterList}/>
+            // : <ScrollableChipingLine titleList={filterSectionList}/>
             : <Text style={styles.titleText}>Ton classement</Text>
           }
         </View>
@@ -29,7 +31,7 @@ export default function RankingHeaderComponent({ onPressCapture, isScreenshotMod
           </View>
         </View>
       </View>
-      <ScrollableChipingLine titleList={filterList}/>
+      <ScrollableChipingLine nameList={filterSectionList}/>
       
     </View>
   );
