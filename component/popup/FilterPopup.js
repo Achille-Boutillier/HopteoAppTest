@@ -5,16 +5,18 @@ import BottomPopup from './BottomPopup';
 // import SingleChip from '../ChipComponents/SingleChip';
 import { Colors } from '../../constant/Colors';
 import SeveralChip from '../ChipComponents/SeveralChip';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { setRankingFilters } from '../../core/reducers/forRankingReducer';
 
 
 export default function FilterPopup({ isPopupVisible, onClose, filterName }) {
-  // todo : set le contenu du filtre
+  
+  // todo : relier le store redux des filtres au usestate de selectedFilterList
   const [filterList, setFilterList] = useState([""]);
   // const [isActive, setIsActive] = useState(false);
   const {rankIdList, schoolsData} = useSelector((state)=> state.schoolReducer);
-  const [pressedFilterList, setPressedFilterList] = useState([]);
-
+  const [selectedFilterList, setSelectedFilterList] = useState([]);
+  const dispatch = useDispatch();
 
   function getConcourFilters(){
     let list = [];
@@ -57,14 +59,27 @@ export default function FilterPopup({ isPopupVisible, onClose, filterName }) {
 
   // ----------- item pressed -------------------------
 
-  function onItemPressed(){
-    //todo: continuer
-    return
+  function onItemPressed(item){
+    let updatedList;
+    if (selectedFilterList.includes(item)) {
+      updatedList = selectedFilterList.filter((element) => element !== item);
+    } else {
+      updatedList = selectedFilterList.concat(item);
+    }
+    setSelectedFilterList(updatedList);
+  }
+
+
+  //------------------------------------------
+
+  function handleClosing(){
+    onClose();
+    dispatch(setRankingFilters({filterName, selectedFilterList})) 
   }
 
 
   return (
-    <BottomPopup isPopupVisible={isPopupVisible} onClose={onClose}>
+    <BottomPopup isPopupVisible={isPopupVisible} onClose={handleClosing}>
       <View style={styles.modalTitle}>
         <Text style={styles.modalTitleText}>{`Filtrer par ${filterName.toLowerCase()}`}</Text>
       </View>
@@ -79,7 +94,7 @@ export default function FilterPopup({ isPopupVisible, onClose, filterName }) {
             singleChipStyle={{backgroundColor: Colors.grey300}}
             isPressable={true}
             onPress={onItemPressed}
-            selectedList={pressedFilterList}
+            selectedList={selectedFilterList}
           />
         </View>
       </View>

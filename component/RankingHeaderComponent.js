@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text, Button, TextInput, ScrollView, Dimensions } from "react-native";
+import { View, StyleSheet, Text, Dimensions } from "react-native";
 // import { useState, useEffect } from "react";
 
 import { Colors } from "../constant/Colors";
@@ -6,6 +6,7 @@ import PrimaryButton from "./buttons/PrimaryButton";
 import { BrandComponent } from "./TopBar";
 import ScrollableChipingLine from "./ChipComponents/ScrollableChipingLine";
 import { useSelector } from "react-redux";
+import FilterComponent from "./FilterComponent";
 
 const width = Dimensions.get('window').width;
 const scrollableLineWidth = width*0.9 -40 -30;
@@ -31,7 +32,8 @@ export default function RankingHeaderComponent({ onPressCapture, isScreenshotMod
           </View>
         </View>
       </View>
-      <ScrollableChipingLine nameList={filterSectionList}/>
+      <FilterComponent filterSectionList={filterSectionList}/>
+      {/* <ScrollableChipingLine nameList={filterSectionList}/> */}
       
     </View>
   );

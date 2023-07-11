@@ -34,7 +34,7 @@ export const forRankingSlice = createSlice({
       state.showRankingPopup = !state.showRankingPopup;
     },
 
-    setRankingFilter: (state, action) => {
+    setRankingFilters: (state, action) => {
       const {filterName, selectedFilterList} = action.payload;
       state.activeFilterObject[filterName] = selectedFilterList;
     }
@@ -48,6 +48,7 @@ export const {
   getForRankingFailure,
   reinitialiseForRankingReducer,
   toggleShowRankingPopup,
+  setRankingFilters,
 } = forRankingSlice.actions;
 
 export default forRankingSlice.reducer;

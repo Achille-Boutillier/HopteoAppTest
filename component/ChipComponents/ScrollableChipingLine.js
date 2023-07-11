@@ -6,75 +6,7 @@ import FilterPopup from "../popup/FilterPopup";
 import SeveralChip from "./SeveralChip";
 
 
-export default function ScrollableChipingLine({nameList}) {
-
-  const [sortedTitleList, setSortedTitleList] = useState(nameList);
-  const [currentSelectedName, setCurrentSelectedName] = useState("");
-  const [isFilterPopupVisible, setIsFilterPopupVisible] = useState(false);
-  const [activeFilterNameList, setActiveFilterNameList ] = useState([]);
-
-// ------------- sort titleList ----------------
-  function sortedFunction(list) {
-    let newList = list.slice();
-    newList.sort((a, b) => {
-      const isActiveA = activeFilterNameList.includes(a);
-      const isActiveB = activeFilterNameList.includes(b);
-    
-      if (isActiveA !== isActiveB) {
-        return isActiveA ? -1 : 1; // put the active element in first
-      }
-      return 0; // save initial position
-    });
-    console.log("[newList]", newList);
-
-    return newList;
-  }
-
-  useEffect(()=> {
-    if (activeFilterNameList.length>0) {
-      
-      setTimeout(() => {
-        setSortedTitleList((list)=>sortedFunction(list))
-      }, 300);
-      console.log("[activeFilterNameList]", activeFilterNameList);
-      
-    }
-  }, [activeFilterNameList])
-
-
-// ---------- fin sort ----------------
-
-
-// ---- chip pressed ------------------------
-
-  function onPress(pressedItem) {
-    setCurrentSelectedName(pressedItem);
-  }
-
-  function onFilterClose() {
-    // if (!isActive) {
-      // const index = activeFilterNameList.indexOf(currentSelectedName);
-      // console.log(currentSelectedName);
-      // console.log(index)
-      // if (index > -1) {
-
-    setActiveFilterNameList((list)=>list.filter(item => item !== currentSelectedName));
-      // }
-    // }
-    setIsFilterPopupVisible(false);
-    setCurrentSelectedName("");   // reset the state
-  }
-
-  useEffect(()=> {
-    if (currentSelectedName.length>0) {
-      const newActiveFilterNameList = [...activeFilterNameList, currentSelectedName] ;
-      setActiveFilterNameList([...new Set(newActiveFilterNameList)]); // suppress redundent items
-      setIsFilterPopupVisible(true);
-    
-    }
-  }, [currentSelectedName])
-
-  // ------- fin chip pressed -----------------------------------
+export default function ScrollableChipingLine({nameList, onPress, activeFilterNameList}) {
 
   
   return (
@@ -92,13 +24,13 @@ export default function ScrollableChipingLine({nameList}) {
           </SingleChip>
         )} */}
         <SeveralChip
-          chipingList={sortedTitleList}
+          chipingList={nameList}
           onPress={onPress}
           isPressable={true}
           selectedList={activeFilterNameList}
         />
       </ScrollView>
-      <FilterPopup isPopupVisible={isFilterPopupVisible} onClose={onFilterClose} filterName={currentSelectedName}/>
+      {/* <FilterPopup isPopupVisible={isFilterPopupVisible} onClose={onFilterClose} filterName={currentSelectedName}/> */}
     </>
 
   );
